@@ -4,7 +4,7 @@
   <title><![CDATA[Daniels Cai's Blog]]></title>
   <link href="http://danielscai.github.com/atom.xml" rel="self"/>
   <link href="http://danielscai.github.com/"/>
-  <updated>2013-04-03T11:08:02+08:00</updated>
+  <updated>2013-04-03T13:44:58+08:00</updated>
   <id>http://danielscai.github.com/</id>
   <author>
     <name><![CDATA[Daniels Cai]]></name>
@@ -12,6 +12,145 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[openstack 无法删除虚拟机 一例]]></title>
+    <link href="http://danielscai.github.com/blog/2013/04/03/openstack-error-sample1/"/>
+    <updated>2013-04-03T13:18:00+08:00</updated>
+    <id>http://danielscai.github.com/blog/2013/04/03/openstack-error-sample1</id>
+    <content type="html"><![CDATA[<p>运行<code>nova delete ceph01</code>删除虚拟机ceph01,发现无法删除虚拟机，</p>
+
+<h1>1. controller节点</h1>
+
+<ul>
+<li>查看虚拟机状态</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># nova show ceph01
+</span><span class='line'>+-------------------------------------+----------------------------------------------------------+
+</span><span class='line'>| Property                            | Value                                                    |
+</span><span class='line'>+-------------------------------------+----------------------------------------------------------+
+</span><span class='line'>| OS-DCF:diskConfig                   | MANUAL                                                   |
+</span><span class='line'>| OS-EXT-SRV-ATTR:host                | compute2                                                 |
+</span><span class='line'>| OS-EXT-SRV-ATTR:hypervisor_hostname | compute2                                                 |
+</span><span class='line'>| OS-EXT-SRV-ATTR:instance_name       | instance-00000114                                        |
+</span><span class='line'>| OS-EXT-STS:power_state              | 1                                                        |
+</span><span class='line'>| OS-EXT-STS:task_state               | deleting                                                 |
+</span><span class='line'>| OS-EXT-STS:vm_state                 | active                                                   |
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!-- more -->
+
+
+<ul>
+<li>查看日志发现无任何报错</li>
+</ul>
+
+
+<h1>2. compute节点</h1>
+
+<ul>
+<li>虚拟机所在的物理机上<code>/var/log/nova/nova-compute.log</code>有如下错误</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp     return self.api.client.post(url, body=body)
+</span><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp   File "/usr/lib/python2.7/dist-packages/cinderclient/client.py", line 141, in post
+</span><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp     return self._cs_request(url, 'POST', **kwargs)
+</span><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp   File "/usr/lib/python2.7/dist-packages/cinderclient/client.py", line 126, in _cs_request
+</span><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp     **kwargs)
+</span><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp   File "/usr/lib/python2.7/dist-packages/cinderclient/client.py", line 109, in request
+</span><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp     raise exceptions.from_response(resp, body)
+</span><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp ClientException: The server has either erred or is incapable of performing the requested operation. (HTTP 500) (Request-ID: req-a9122ed1-9198-4464-8da9-7458fb581379)
+</span><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp
+</span><span class='line'>2013-04-03 13:04:17 DEBUG nova.utils [req-195b0553-4ff9-4cd5-9e06-63324e8865da 77e43059b67e4c139cb6a9cbb08ef20d f7de462059fb419f90f37006dd4e27e9] Got semaphore "92e08fe5-89a3-494c-85b9-96072bcb051b" for method "do_terminate_instance"... inner /usr/lib/python2.7/dist-packages/nova/utils.py:765
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>使用 <code>virsh list --all</code> 发现虚拟机应经不存在了</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># virsh list 
+</span><span class='line'> Id    Name                           State
+</span><span class='line'>----------------------------------------------------
+</span><span class='line'> 108   instance-000000f4              running
+</span><span class='line'> 110   instance-000000f5              running
+</span><span class='line'> 122   instance-0000010c              running
+</span><span class='line'> 123   instance-0000010d              running
+</span><span class='line'> 124   instance-00000110              running
+</span><span class='line'> 128   instance-0000011b              running
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ol>
+<li>解决方法
+之前部署过多controller节点，然后将其关闭了，可能导致删除的时候，compute节点消息没有传递回来，具体机制还不明朗。
+目前先清空数据库中相应的条目</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@controller3:/var/log/cinder# mysql -uroot -p
+</span><span class='line'>Enter password: 
+</span><span class='line'>mysql&gt; use nova;
+</span><span class='line'>
+</span><span class='line'>mysql&gt; update  instances set deleted=1 where display_name='ceph01';
+</span><span class='line'>Query OK, 1 row affected (0.03 sec)
+</span><span class='line'>Rows matched: 1  Changed: 1  Warnings: 0
+</span><span class='line'>
+</span><span class='line'>mysql&gt; quit
+</span><span class='line'>Bye
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[OpenStack Folsom 基本功能使用指南]]></title>

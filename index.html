@@ -9,8 +9,18 @@
   <meta name="author" content="Daniels Cai">
 
   
-  <meta name="description" content="作者: Daniels Cai
-版本: 1.0 1.虚拟机操作 1.1. 从image启动虚拟机 需要参数 image id 和 flavor id 运行nova image-list 得到image id # nova image-list &hellip;">
+  <meta name="description" content="运行nova delete ceph01删除虚拟机ceph01,发现无法删除虚拟机， 1. controller节点 查看虚拟机状态 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+# nova show ceph01 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +76,83 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/03/openstack-error-sample1/">Openstack 无法删除虚拟机 一例</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-03T13:18:00+08:00" pubdate data-updated="true">Apr 3<span>rd</span>, 2013</time>
+        
+         | <a href="/blog/2013/04/03/openstack-error-sample1/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>运行<code>nova delete ceph01</code>删除虚拟机ceph01,发现无法删除虚拟机，</p>
+
+<h1>1. controller节点</h1>
+
+<ul>
+<li>查看虚拟机状态</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># nova show ceph01
+</span><span class='line'>+-------------------------------------+----------------------------------------------------------+
+</span><span class='line'>| Property                            | Value                                                    |
+</span><span class='line'>+-------------------------------------+----------------------------------------------------------+
+</span><span class='line'>| OS-DCF:diskConfig                   | MANUAL                                                   |
+</span><span class='line'>| OS-EXT-SRV-ATTR:host                | compute2                                                 |
+</span><span class='line'>| OS-EXT-SRV-ATTR:hypervisor_hostname | compute2                                                 |
+</span><span class='line'>| OS-EXT-SRV-ATTR:instance_name       | instance-00000114                                        |
+</span><span class='line'>| OS-EXT-STS:power_state              | 1                                                        |
+</span><span class='line'>| OS-EXT-STS:task_state               | deleting                                                 |
+</span><span class='line'>| OS-EXT-STS:vm_state                 | active                                                   |
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/04/03/openstack-error-sample1/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -142,6 +229,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/04/03/openstack-error-sample1/">openstack 无法删除虚拟机 一例</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/04/03/test/">OpenStack Folsom 基本功能使用指南</a>
