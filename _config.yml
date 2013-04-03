@@ -3,9 +3,9 @@
 # ----------------------- #
 
 url: http://danielscai.github.com
-title: My Octopress Blog
-subtitle: A blogging framework for hackers.
-author: Your Name
+title: Daniels Cai's Blog
+subtitle: proficient in Linux, proficient in Thinking.
+author: Daniels Cai
 simple_search: http://google.com/search
 description:
 
@@ -85,7 +85,7 @@ delicious_user:
 delicious_count: 3
 
 # Disqus Comments
-disqus_short_name:
+disqus_short_name: danielscai
 disqus_show_comment_count: false
 
 # Google Analytics
