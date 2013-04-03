@@ -4,7 +4,7 @@
   <title><![CDATA[Daniels Cai's Blog]]></title>
   <link href="http://danielscai.github.com/atom.xml" rel="self"/>
   <link href="http://danielscai.github.com/"/>
-  <updated>2013-04-03T10:30:26+08:00</updated>
+  <updated>2013-04-03T11:08:02+08:00</updated>
   <id>http://danielscai.github.com/</id>
   <author>
     <name><![CDATA[Daniels Cai]]></name>
@@ -18,9 +18,7 @@
     <link href="http://danielscai.github.com/blog/2013/04/03/test/"/>
     <updated>2013-04-03T09:51:00+08:00</updated>
     <id>http://danielscai.github.com/blog/2013/04/03/test</id>
-    <content type="html"><![CDATA[<p> OpenStack Folsom 基本功能使用指南</p>
-
-<ul>
+    <content type="html"><![CDATA[<ul>
 <li>作者: Daniels Cai</li>
 <li>版本: 1.0</li>
 </ul>
@@ -42,6 +40,9 @@
  | 533a5c7b-2177-4db2-b128-b88ac1779b5b | precise                 | ACTIVE |        |
  +--------------------------------------+-------------------------+--------+--------+
 </code></pre>
+
+<!-- more -->
+
 
 <p>运行<code>nova flavor-list</code>得到flavor id</p>
 
