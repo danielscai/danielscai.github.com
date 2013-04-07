@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
+    <url>
+        <loc>http://danielscai.github.com/blog/2013/04/03/test/</loc>
+        <lastmod>2013-04-03T11:07:44+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://danielscai.github.com/blog/2013/04/03/openstack-error-sample1/</loc>
+        <lastmod>2013-04-03T13:43:54+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://danielscai.github.com/robots.txt</loc>
+        <lastmod>2013-04-03T09:27:56+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://danielscai.github.com/blog/archives/</loc>
+        <lastmod>2013-04-03T13:43:54+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://danielscai.github.com/</loc>
+        <lastmod>2013-04-03T13:43:54+08:00</lastmod>
+    </url>
+</urlset>
