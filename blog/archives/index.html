@@ -9,9 +9,9 @@
   <meta name="author" content="Daniels Cai">
 
   
-  <meta name="description" content=" Blog Archive 2013 openstack 无法删除虚拟机 一例
+  <meta name="description" content="Blog Archive 2013 openstack 无法删除虚拟机 一例
 Apr 03 2013 OpenStack Folsom 基本功能使用指南
-Apr 03 2013 Recent Posts openstack 无法删除虚拟机 一例 OpenStack Folsom 基本功能使用指南 ">
+Apr 03 2013 Recent Posts openstack 无法删除虚拟机 一例 OpenStack Folsom 基本功能使用指南 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -132,6 +132,35 @@ Apr 03 2013 Recent Posts openstack 无法删除虚拟机 一例 OpenStack Folsom
       </li>
     
   </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/danielscai">@danielscai</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'danielscai',
+            count: 8,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
 </section>
 
 
