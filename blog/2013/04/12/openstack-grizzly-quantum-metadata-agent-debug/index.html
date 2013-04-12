@@ -5,22 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>openstack 无法删除虚拟机 一例 - Daniels Cai's Blog</title>
+  <title>openstack grizzly quantum-metadata-agent debug - Daniels Cai's Blog</title>
   <meta name="author" content="Daniels Cai">
 
   
-  <meta name="description" content="运行nova delete ceph01删除虚拟机ceph01,发现无法删除虚拟机， 1. controller节点 查看虚拟机状态 1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-# nova show ceph01 &hellip;">
+  <meta name="description" content="一个错误的配置导致 quantum-metadata-agent 无法启动，也没有相关log 在/var/log/quantum/metadata-agent.log 中没有发现任何log 在/var/log/syslog中只有如下一条简单的错误日志 1
+Apr 11 15:24:47 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -29,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://danielscai.github.com/blog/2013/04/03/openstack-error-sample1">
+  <link rel="canonical" href="http://danielscai.github.com/blog/2013/04/12/openstack-grizzly-quantum-metadata-agent-debug">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Daniels Cai's Blog" type="application/atom+xml">
@@ -91,7 +81,7 @@
   
   <header>
     
-      <h1 class="entry-title">Openstack 无法删除虚拟机 一例</h1>
+      <h1 class="entry-title">Openstack Grizzly Quantum-metadata-agent Debug</h1>
     
     
       <p class="meta">
@@ -107,7 +97,7 @@
   
 
 
-<time datetime="2013-04-03T13:18:00+08:00" pubdate data-updated="true">Apr 3<span>rd</span>, 2013</time>
+<time datetime="2013-04-12T09:36:00+08:00" pubdate data-updated="true">Apr 12<span>th</span>, 2013</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -116,14 +106,24 @@
   </header>
 
 
-<div class="entry-content"><p>运行<code>nova delete ceph01</code>删除虚拟机ceph01,发现无法删除虚拟机，</p>
+<div class="entry-content"><p>一个错误的配置导致 quantum-metadata-agent 无法启动，也没有相关log</p>
 
-<h1>1. controller节点</h1>
+<p>在<code>/var/log/quantum/metadata-agent.log</code> 中没有发现任何log</p>
 
-<ul>
-<li>查看虚拟机状态</li>
-</ul>
+<p>在<code>/var/log/syslog</code>中只有如下一条简单的错误日志</p>
 
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Apr 11 15:24:47 network1 kernel: [ 4511.402916] init: quantum-metadata-agent main process (26599) terminated with status 1</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!-- more -->
+
+
+<p>查看启动脚本 <code>/etc/init.d/quantum-metadata-agent</code> 发现是一个upstart job</p>
+
+<p>查看 <code>/etc/init/quantum-metadata-agent.conf</code></p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -136,36 +136,32 @@
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'># nova show ceph01
-</span><span class='line'>+-------------------------------------+----------------------------------------------------------+
-</span><span class='line'>| Property                            | Value                                                    |
-</span><span class='line'>+-------------------------------------+----------------------------------------------------------+
-</span><span class='line'>| OS-DCF:diskConfig                   | MANUAL                                                   |
-</span><span class='line'>| OS-EXT-SRV-ATTR:host                | compute2                                                 |
-</span><span class='line'>| OS-EXT-SRV-ATTR:hypervisor_hostname | compute2                                                 |
-</span><span class='line'>| OS-EXT-SRV-ATTR:instance_name       | instance-00000114                                        |
-</span><span class='line'>| OS-EXT-STS:power_state              | 1                                                        |
-</span><span class='line'>| OS-EXT-STS:task_state               | deleting                                                 |
-</span><span class='line'>| OS-EXT-STS:vm_state                 | active                                                   |
-</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># cat /etc/init/quantum-metadata-agent.conf 
+</span><span class='line'>description "Quantum metadata plugin agent"
+</span><span class='line'>author "Yolanda Robla &lt;yolanda.robla@canonical.com&gt;"
+</span><span class='line'>
+</span><span class='line'>start on runlevel [2345]
+</span><span class='line'>stop on runlevel [016]
+</span><span class='line'>
+</span><span class='line'>chdir /var/run
+</span><span class='line'>
+</span><span class='line'>pre-start script
+</span><span class='line'>mkdir -p /var/run/quantum
+</span><span class='line'>chown quantum:root /var/run/quantum
+</span><span class='line'>end script
+</span><span class='line'>
+</span><span class='line'>exec start-stop-daemon --start --chuid quantum --exec /usr/bin/quantum-metadata-agent -- \
+</span><span class='line'>            --config-file=/etc/quantum/quantum.conf --config-file=/etc/quantum/metadata_agent.ini \
+</span><span class='line'>            --log-file=/var/log/quantum/metadata-agent.log</span></code></pre></td></tr></table></div></figure>
 
 
-
-
-<!-- more -->
-
-
-<ul>
-<li>查看日志发现无任何报错</li>
-</ul>
-
-
-<h1>2. compute节点</h1>
-
-<ul>
-<li>虚拟机所在的物理机上<code>/var/log/nova/nova-compute.log</code>有如下错误</li>
-</ul>
-
+<p>手动运行这条命令,找到python的报错信息，提示配置文件错误 <code>Section must be started before assignment</code></p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -177,51 +173,22 @@
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp     return self.api.client.post(url, body=body)
-</span><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp   File "/usr/lib/python2.7/dist-packages/cinderclient/client.py", line 141, in post
-</span><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp     return self._cs_request(url, 'POST', **kwargs)
-</span><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp   File "/usr/lib/python2.7/dist-packages/cinderclient/client.py", line 126, in _cs_request
-</span><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp     **kwargs)
-</span><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp   File "/usr/lib/python2.7/dist-packages/cinderclient/client.py", line 109, in request
-</span><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp     raise exceptions.from_response(resp, body)
-</span><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp ClientException: The server has either erred or is incapable of performing the requested operation. (HTTP 500) (Request-ID: req-a9122ed1-9198-4464-8da9-7458fb581379)
-</span><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp
-</span><span class='line'>2013-04-03 13:04:17 DEBUG nova.utils [req-195b0553-4ff9-4cd5-9e06-63324e8865da 77e43059b67e4c139cb6a9cbb08ef20d f7de462059fb419f90f37006dd4e27e9] Got semaphore "92e08fe5-89a3-494c-85b9-96072bcb051b" for method "do_terminate_instance"... inner /usr/lib/python2.7/dist-packages/nova/utils.py:765
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># /usr/bin/quantum-metadata-agent --config-file=/etc/quantum/quantum.conf --config-file=/etc/quantum/metadata_agent.ini --log-file=/var/log/quantum/metadata-agent.log
+</span><span class='line'>Traceback (most recent call last):
+</span><span class='line'>  File "/usr/bin/quantum-metadata-agent", line 20, in &lt;module&gt;
+</span><span class='line'>    main()
+</span><span class='line'>  File "/usr/lib/python2.7/dist-packages/quantum/agent/metadata/agent.py", line 223, in main
+</span><span class='line'>    cfg.CONF(project='quantum')
+</span><span class='line'>  File "/usr/lib/python2.7/dist-packages/oslo/config/cfg.py", line 1180, in __call__
+</span><span class='line'>    self._parse_config_files()
+</span><span class='line'>  File "/usr/lib/python2.7/dist-packages/oslo/config/cfg.py", line 1651, in _parse_config_files
+</span><span class='line'>    raise ConfigFileParseError(pe.filename, str(pe))
+</span><span class='line'>oslo.config.cfg.ConfigFileParseError: Failed to parse /etc/quantum/metadata_agent.ini: at /etc/quantum/metadata_agent.ini:3, Section must be started before assignment: None
 </span></code></pre></td></tr></table></div></figure>
 
 
-<ul>
-<li>使用 <code>virsh list --all</code> 发现虚拟机应经不存在了</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'># virsh list 
-</span><span class='line'> Id    Name                           State
-</span><span class='line'>----------------------------------------------------
-</span><span class='line'> 108   instance-000000f4              running
-</span><span class='line'> 110   instance-000000f5              running
-</span><span class='line'> 122   instance-0000010c              running
-</span><span class='line'> 123   instance-0000010d              running
-</span><span class='line'> 124   instance-00000110              running
-</span><span class='line'> 128   instance-0000011b              running
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ol>
-<li>解决方法
-之前部署过多controller节点，然后将其关闭了，可能导致删除的时候，compute节点消息没有传递回来，具体机制还不明朗。
-目前先清空数据库中相应的条目</li>
-</ol>
-
+<p>导致这个错误的原因很简单 <code>/etc/quantum/metadata_agent.ini</code> 开头的<code>[DEFAULT]</code>被漏掉了</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -233,16 +200,28 @@
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@controller3:/var/log/cinder# mysql -uroot -p
-</span><span class='line'>Enter password: 
-</span><span class='line'>mysql&gt; use nova;
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># cat /etc/quantum/metadata_agent.ini 
+</span><span class='line'>[DEFAULT]
+</span><span class='line'># The Quantum user information for accessing the Quantum API.
+</span><span class='line'>auth_url = http://controller1:35357/v2.0
+</span><span class='line'>auth_region = RegionOne
+</span><span class='line'>admin_tenant_name = service
+</span><span class='line'>admin_user = quantum
+</span><span class='line'>admin_password = service_pass
 </span><span class='line'>
-</span><span class='line'>mysql&gt; update  instances set deleted=1 where display_name='ceph01';
-</span><span class='line'>Query OK, 1 row affected (0.03 sec)
-</span><span class='line'>Rows matched: 1  Changed: 1  Warnings: 0
+</span><span class='line'># IP address used by Nova metadata server
+</span><span class='line'>nova_metadata_ip = 172.16.136.211
 </span><span class='line'>
-</span><span class='line'>mysql&gt; quit
-</span><span class='line'>Bye
+</span><span class='line'># TCP Port used by Nova metadata server
+</span><span class='line'>nova_metadata_port = 8775
+</span><span class='line'>
+</span><span class='line'>metadata_proxy_shared_secret = helloOpenStack
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -269,15 +248,21 @@
   
 
 
-<time datetime="2013-04-03T13:18:00+08:00" pubdate data-updated="true">Apr 3<span>rd</span>, 2013</time>
+<time datetime="2013-04-12T09:36:00+08:00" pubdate data-updated="true">Apr 12<span>th</span>, 2013</time>
       
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/cloud/'>cloud</a>
+  
+</span>
 
 
     </p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://danielscai.github.com/blog/2013/04/03/openstack-error-sample1/" data-via="" data-counturl="http://danielscai.github.com/blog/2013/04/03/openstack-error-sample1/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://danielscai.github.com/blog/2013/04/12/openstack-grizzly-quantum-metadata-agent-debug/" data-via="" data-counturl="http://danielscai.github.com/blog/2013/04/12/openstack-grizzly-quantum-metadata-agent-debug/" >Tweet</a>
   
   
   
@@ -286,10 +271,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/04/03/test/" title="Previous Post: OpenStack Folsom 基本功能使用指南">&laquo; OpenStack Folsom 基本功能使用指南</a>
+        <a class="basic-alignment left" href="/blog/2013/04/03/openstack-error-sample1/" title="Previous Post: openstack 无法删除虚拟机 一例">&laquo; openstack 无法删除虚拟机 一例</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/04/12/openstack-grizzly-quantum-metadata-agent-debug/" title="Next Post: openstack grizzly quantum-metadata-agent debug">openstack grizzly quantum-metadata-agent debug &raquo;</a>
       
     </p>
   </footer>
@@ -376,8 +359,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://danielscai.github.com/blog/2013/04/03/openstack-error-sample1/';
-        var disqus_url = 'http://danielscai.github.com/blog/2013/04/03/openstack-error-sample1/';
+        var disqus_identifier = 'http://danielscai.github.com/blog/2013/04/12/openstack-grizzly-quantum-metadata-agent-debug/';
+        var disqus_url = 'http://danielscai.github.com/blog/2013/04/12/openstack-grizzly-quantum-metadata-agent-debug/';
         var disqus_script = 'embed.js';
       
     (function () {

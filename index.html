@@ -9,18 +9,8 @@
   <meta name="author" content="Daniels Cai">
 
   
-  <meta name="description" content="运行nova delete ceph01删除虚拟机ceph01,发现无法删除虚拟机， 1. controller节点 查看虚拟机状态 1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-# nova show ceph01 &hellip;">
+  <meta name="description" content="一个错误的配置导致 quantum-metadata-agent 无法启动，也没有相关log 在/var/log/quantum/metadata-agent.log 中没有发现任何log 在/var/log/syslog中只有如下一条简单的错误日志 1
+Apr 11 15:24:47 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -88,6 +78,59 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/12/openstack-grizzly-quantum-metadata-agent-debug/">Openstack Grizzly Quantum-metadata-agent Debug</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-12T09:36:00+08:00" pubdate data-updated="true">Apr 12<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/04/12/openstack-grizzly-quantum-metadata-agent-debug/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>一个错误的配置导致 quantum-metadata-agent 无法启动，也没有相关log</p>
+
+<p>在<code>/var/log/quantum/metadata-agent.log</code> 中没有发现任何log</p>
+
+<p>在<code>/var/log/syslog</code>中只有如下一条简单的错误日志</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Apr 11 15:24:47 network1 kernel: [ 4511.402916] init: quantum-metadata-agent main process (26599) terminated with status 1</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/04/12/openstack-grizzly-quantum-metadata-agent-debug/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -241,6 +284,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/04/12/openstack-grizzly-quantum-metadata-agent-debug/">openstack grizzly quantum-metadata-agent debug</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/04/03/openstack-error-sample1/">openstack 无法删除虚拟机 一例</a>
