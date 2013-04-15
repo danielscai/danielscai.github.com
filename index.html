@@ -9,8 +9,9 @@
   <meta name="author" content="Daniels Cai">
 
   
-  <meta name="description" content="一个错误的配置导致 quantum-metadata-agent 无法启动，也没有相关log 在/var/log/quantum/metadata-agent.log 中没有发现任何log 在/var/log/syslog中只有如下一条简单的错误日志 1
-Apr 11 15:24:47 &hellip;">
+  <meta name="description" content="本文档主要讨论在实际环境下的puppet多环境配置，并使用git作为版本控制。 配置多环境主要目的在于 隔离生产环境和测试开发环境
+提供多个开发者独立环境 0. 配置puppet多环境 详细配置puppet多环境请参考puppet官方文档
+http://docs.puppetlabs.com/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +79,90 @@ Apr 11 15:24:47 &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/15/puppet-multi-environment/">Git版本控制下，配置puppet多环境</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-15T09:08:00+08:00" pubdate data-updated="true">Apr 15<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/04/15/puppet-multi-environment/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>本文档主要讨论在实际环境下的puppet多环境配置，并使用git作为版本控制。</p>
+
+<p>配置多环境主要目的在于</p>
+
+<ul>
+<li>隔离生产环境和测试开发环境</li>
+<li>提供多个开发者独立环境</li>
+</ul>
+
+
+<h1>0. 配置puppet多环境</h1>
+
+<p>详细配置puppet多环境请参考puppet官方文档
+http://docs.puppetlabs.com/guides/environment.html
+我们这里件4个环境production ,test,dev_a和dev_b
+<code>/etc/puppet/puppet.conf</code> 配置如下</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[production]
+</span><span class='line'>modulepath = $confdir/env/production/modules
+</span><span class='line'>manifest = $confdir/env/production/manifests/site.pp
+</span><span class='line'>[test]
+</span><span class='line'>modulepath = $confdir/env/test/modules
+</span><span class='line'>manifest = $confdir/env/test/manifests/site.pp
+</span><span class='line'>[dev_a]
+</span><span class='line'>modulepath = $confdir/env/dev_a/modules
+</span><span class='line'>manifest = $confdir/env/dev_a/manifests/site.pp
+</span><span class='line'>[dev_b]
+</span><span class='line'>modulepath = $confdir/env/dev_b/modules
+</span><span class='line'>manifest = $confdir/env/dev_b/manifests/site.pp</span></code></pre></td></tr></table></div></figure>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/04/15/puppet-multi-environment/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -284,6 +369,10 @@ Apr 11 15:24:47 &hellip;">
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/04/15/puppet-multi-environment/">git版本控制下，配置puppet多环境</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/04/12/openstack-grizzly-quantum-metadata-agent-debug/">openstack grizzly quantum-metadata-agent debug</a>
