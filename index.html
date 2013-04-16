@@ -153,12 +153,189 @@ http://docs.puppetlabs.com/guides/environment.html
 </span><span class='line'>manifest = $confdir/env/dev_b/manifests/site.pp</span></code></pre></td></tr></table></div></figure>
 
 
+<h1>1.建立git仓库</h1>
+
+<h2>1.1 建立两个git仓库</h2>
+
+<p>一个用来管理puppet中的modules，一个用来管理除了modules以外的所有内容
+我们将仓库称为 puppet 和modules , 其中modules 作为puppet 的一个子模块，子模块可以参考http://gitbook.liuhui998.com/5_10.html</p>
+
+<p>仓库可以建立在github或者任意你喜欢的git托管仓库上，这里我们建两个本地仓库作为演示,
+注意，如果是不是使用的本地仓库，请在commit后<code>git push</code>到server上</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd /tmp
+</span><span class='line'>mkdir puppet modules</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>1.2 初始化两个仓库</h2>
+
+<p>初始化仓库，并将modules作为子模块添加到 puppet仓库中,此模块作为默认环境，也就是production环境的modules文件</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd modules ; git init ; cd .. 
+</span><span class='line'>cd puppet ; git init
+</span><span class='line'>git submodule add ../modules env/production/modules</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>1.3添加排除文件</h2>
+
+<p>因为使用了modules子模块，因此我们需要将env/*/modules排除在puppet仓库的控制外，这样多个开发者就可以在各自的环境下开发而不影响当前puppet仓库
+但是我们的env/production/modules是一个子模块，仍然是需要控制的，因此我们将<code>.gitignore</code>设置为</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>env/*/modules
+</span><span class='line'>!env/production/modules</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>2. 管理puppet配置文件</h1>
+
+<h2>2.1 将现有环境中的puppet配置文件copy到puppet仓库下</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cp -r /etc/puppet/* ./
+</span><span class='line'>git add . 
+</span><span class='line'>git commit -m 'init' </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>2.2 管理modules</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd ../modules/
+</span><span class='line'>cp -r /etc/puppet/env/production/modules/* ./
+</span><span class='line'>git add .
+</span><span class='line'>git commit -m 'add modules'</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>3. 更新子模块</h1>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd ..
+</span><span class='line'>git submodule foreach git pull origin master</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>4.多开发者共同开发</h1>
+
+<p>开发者在各自的分支中开发，将测试好的代码<code>merge</code>到主干分支
+下面演示一个开发者(dev_a)建立自己的开发环境</p>
+
+<h2>4.1 拷贝<code>manifest</code></h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd /tmp/puppet/env/dev_a
+</span><span class='line'>cp -r ../production/manifests ./</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>4.2 建立modules分支</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git clone ../production/modules modules
+</span><span class='line'>cd modules/
+</span><span class='line'>git checkout -b dev_a</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>4.3 将开发版本合并到主干</h2>
+
+<p>开发者将完成开发任务并测试后将代码合并到主干分支，如果有测试团队，将代码先合并到测试团队分支是一个好主意，这里就直接合并到主干分支(<code>master</code>分支)上</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>touch 1
+</span><span class='line'>git add 1
+</span><span class='line'>git commit -m 'complete task 1 '</span></code></pre></td></tr></table></div></figure>
+
+
+<p>到目前为止开发都在dev_a分支上，当完成测试后，合并到主干</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git checkout master
+</span><span class='line'>git merge dev_a --no-ff
+</span><span class='line'>git push origin master</span></code></pre></td></tr></table></div></figure>
+
+
+<p>对于为何使用<code>--no-ff</code>参数，可以参考http://www.ruanyifeng.com/blog/2012/07/git.html</p>
+
+<p>在prodution环境签出最新代码</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd ../../production/modules/
+</span><span class='line'>git pull origin master</span></code></pre></td></tr></table></div></figure>
+
+
+<p>或者</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd ../../
+</span><span class='line'>git submodule foreach git pull origin master</span></code></pre></td></tr></table></div></figure>
+
+
+<ol>
+<li>部署新的puppet环境
+将仓库中的puppet配置部署到新的环境中
+在新的环境中安装好<code>puppet</code>，将配置文件备份到其他目录，签出puppet代码和其子模块的代码
+以<code>ubuntu 12.04 precise</code>为例,将 <code>/tmp/puppet</code>替换成你真实的git仓库地址</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>wget http://apt.puppetlabs.com/puppetlabs-release-precise.deb
+</span><span class='line'>dpkg -i puppetlabs-release-precise.deb
+</span><span class='line'>apt-get update
+</span><span class='line'>apt-get upgrade
+</span><span class='line'>
+</span><span class='line'>apt-get install puppetmaster 
+</span><span class='line'>mv /etc/puppet /etc/puppet.old 
+</span><span class='line'>cd /etc/</span></code></pre></td></tr></table></div></figure>
+
+
+<p>克隆仓库</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git clone /tmp/puppet puppet
+</span><span class='line'>git submodule init
+</span><span class='line'>git submodule update</span></code></pre></td></tr></table></div></figure>
+
+
+<p>或者换成</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git clone --recursive /tmp/puppet puppet</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考
+http://docs.puppetlabs.com/guides/environment.html
+http://gitbook.liuhui998.com/5_10.html
+http://www.ruanyifeng.com/blog/2012/07/git.html
+http://www.kafeitu.me/git/2012/03/27/git-submodule.html</p>
 </div>
   
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/04/15/puppet-multi-environment/">Read on &rarr;</a>
-    </footer>
   
 
 
