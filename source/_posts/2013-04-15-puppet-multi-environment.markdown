@@ -6,13 +6,12 @@ comments: true
 categories: coding
 ---
 
-
 本文档主要讨论在实际环境下的puppet多环境配置，并使用git作为版本控制。
 
 配置多环境主要目的在于
 
-- 隔离生产环境和测试开发环境
-- 提供多个开发者独立环境
+* 隔离生产环境和测试开发环境
+* 提供多个开发者独立环境
 
 
 0. 配置puppet多环境
@@ -35,7 +34,6 @@ manifest = $confdir/env/dev_a/manifests/site.pp
 modulepath = $confdir/env/dev_b/modules
 manifest = $confdir/env/dev_b/manifests/site.pp
 ```
-<!-- more -->
 
 1.建立git仓库
 ==================
@@ -92,7 +90,7 @@ git commit -m 'add modules'
 ==================
 ```
 cd ..
-git submodule update
+git submodule foreach git pull origin master
 ```
 
 4.多开发者共同开发
@@ -137,6 +135,12 @@ cd ../../production/modules/
 git pull origin master
 ```
 
+或者
+```
+cd ../../
+git submodule foreach git pull origin master
+```
+
 
 5. 部署新的puppet环境
 将仓库中的puppet配置部署到新的环境中
@@ -152,9 +156,23 @@ apt-get upgrade
 apt-get install puppetmaster 
 mv /etc/puppet /etc/puppet.old 
 cd /etc/
+```
 
+克隆仓库
+```
 git clone /tmp/puppet puppet
 git submodule init
 git submodule update
 ```
 
+或者换成
+```
+git clone --recursive /tmp/puppet puppet
+```
+
+
+参考
+http://docs.puppetlabs.com/guides/environment.html
+http://gitbook.liuhui998.com/5_10.html
+http://www.ruanyifeng.com/blog/2012/07/git.html
+http://www.kafeitu.me/git/2012/03/27/git-submodule.html
