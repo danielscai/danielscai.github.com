@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Daniels Cai's Blog</title>
+  <title>git版本控制下，配置puppet多环境 - Daniels Cai's Blog</title>
   <meta name="author" content="Daniels Cai">
 
   
@@ -20,7 +20,7 @@ http://docs.puppetlabs.com/ &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://danielscai.github.com">
+  <link rel="canonical" href="http://danielscai.github.com/blog/2013/04/15/puppet-multi-environment">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Daniels Cai's Blog" type="application/atom+xml">
@@ -77,15 +77,12 @@ http://docs.puppetlabs.com/ &hellip;">
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/04/15/puppet-multi-environment/">Git版本控制下，配置puppet多环境</a></h1>
+      <h1 class="entry-title">Git版本控制下，配置puppet多环境</h1>
     
     
       <p class="meta">
@@ -103,14 +100,14 @@ http://docs.puppetlabs.com/ &hellip;">
 
 <time datetime="2013-04-15T09:08:00+08:00" pubdate data-updated="true">Apr 15<span>th</span>, 2013</time>
         
-         | <a href="/blog/2013/04/15/puppet-multi-environment/#disqus_thread">Comments</a>
+         | <a href="#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>本文档主要讨论在实际环境下的puppet多环境配置，并使用git作为版本控制。</p>
+<div class="entry-content"><p>本文档主要讨论在实际环境下的puppet多环境配置，并使用git作为版本控制。</p>
 
 <p>配置多环境主要目的在于</p>
 
@@ -335,75 +332,16 @@ http://gitbook.liuhui998.com/5_10.html
 http://www.ruanyifeng.com/blog/2012/07/git.html
 http://www.kafeitu.me/git/2012/03/27/git-submodule.html</p>
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/12/openstack-grizzly-quantum-metadata-agent-debug/">Openstack Grizzly Quantum-metadata-agent Debug</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
   
 
+<span class="byline author vcard">Posted by <span class="fn">Daniels Cai</span></span>
 
-<time datetime="2013-04-12T09:36:00+08:00" pubdate data-updated="true">Apr 12<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/04/12/openstack-grizzly-quantum-metadata-agent-debug/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>一个错误的配置导致 quantum-metadata-agent 无法启动，也没有相关log</p>
-
-<p>在<code>/var/log/quantum/metadata-agent.log</code> 中没有发现任何log</p>
-
-<p>在<code>/var/log/syslog</code>中只有如下一条简单的错误日志</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Apr 11 15:24:47 network1 kernel: [ 4511.402916] init: quantum-metadata-agent main process (26599) terminated with status 1</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/04/12/openstack-grizzly-quantum-metadata-agent-debug/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/03/openstack-error-sample1/">Openstack 无法删除虚拟机 一例</a></h1>
-    
-    
-      <p class="meta">
-        
 
 
 
@@ -415,132 +353,46 @@ http://www.kafeitu.me/git/2012/03/27/git-submodule.html</p>
   
 
 
-<time datetime="2013-04-03T13:18:00+08:00" pubdate data-updated="true">Apr 3<span>rd</span>, 2013</time>
-        
-         | <a href="/blog/2013/04/03/openstack-error-sample1/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>运行<code>nova delete ceph01</code>删除虚拟机ceph01,发现无法删除虚拟机，</p>
-
-<h1>1. controller节点</h1>
-
-<ul>
-<li>查看虚拟机状态</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'># nova show ceph01
-</span><span class='line'>+-------------------------------------+----------------------------------------------------------+
-</span><span class='line'>| Property                            | Value                                                    |
-</span><span class='line'>+-------------------------------------+----------------------------------------------------------+
-</span><span class='line'>| OS-DCF:diskConfig                   | MANUAL                                                   |
-</span><span class='line'>| OS-EXT-SRV-ATTR:host                | compute2                                                 |
-</span><span class='line'>| OS-EXT-SRV-ATTR:hypervisor_hostname | compute2                                                 |
-</span><span class='line'>| OS-EXT-SRV-ATTR:instance_name       | instance-00000114                                        |
-</span><span class='line'>| OS-EXT-STS:power_state              | 1                                                        |
-</span><span class='line'>| OS-EXT-STS:task_state               | deleting                                                 |
-</span><span class='line'>| OS-EXT-STS:vm_state                 | active                                                   |
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/04/03/openstack-error-sample1/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
+<time datetime="2013-04-15T09:08:00+08:00" pubdate data-updated="true">Apr 15<span>th</span>, 2013</time>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/03/test/">OpenStack Folsom 基本功能使用指南</a></h1>
-    
-    
-      <p class="meta">
-        
 
-
-
-
-
-
-
-
+<span class="categories">
   
+    <a class='category' href='/blog/categories/coding/'>coding</a>
+  
+</span>
 
 
-<time datetime="2013-04-03T09:51:00+08:00" pubdate data-updated="true">Apr 3<span>rd</span>, 2013</time>
-        
-         | <a href="/blog/2013/04/03/test/#disqus_thread">Comments</a>
-        
-      </p>
+    </p>
     
-  </header>
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://danielscai.github.com/blog/2013/04/15/puppet-multi-environment/" data-via="" data-counturl="http://danielscai.github.com/blog/2013/04/15/puppet-multi-environment/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
 
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/04/12/openstack-grizzly-quantum-metadata-agent-debug/" title="Previous Post: openstack grizzly quantum-metadata-agent debug">&laquo; openstack grizzly quantum-metadata-agent debug</a>
+      
+      
+    </p>
+  </footer>
+</article>
 
-  <div class="entry-content"><ul>
-<li>作者: Daniels Cai</li>
-<li>版本: 1.0</li>
-</ul>
-
-
-<h1>1.虚拟机操作</h1>
-
-<h2>1.1. 从image启动虚拟机</h2>
-
-<p>需要参数 image id 和 flavor id</p>
-
-<p>运行<code>nova image-list</code> 得到image id</p>
-
-<pre><code> # nova image-list
- +--------------------------------------+-------------------------+--------+--------+
- | ID                                   | Name                    | Status | Server |
- +--------------------------------------+-------------------------+--------+--------+
- | 9ff7fcf4-f502-41c5-9a85-9a89ba2493f4 | centos_4M               | ACTIVE |        |
- | 533a5c7b-2177-4db2-b128-b88ac1779b5b | precise                 | ACTIVE |        |
- +--------------------------------------+-------------------------+--------+--------+
-</code></pre>
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/04/03/test/">Read on &rarr;</a>
-    </footer>
-  
 
-
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
 <aside class="sidebar">
   
     <section>
@@ -569,7 +421,7 @@ http://www.kafeitu.me/git/2012/03/27/git-submodule.html</p>
 <section>
   <h1>GitHub Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   
   <a href="https://github.com/danielscai">@danielscai</a> on GitHub
@@ -611,6 +463,7 @@ http://www.kafeitu.me/git/2012/03/27/git-submodule.html</p>
   
 </aside>
 
+
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -625,7 +478,10 @@ http://www.kafeitu.me/git/2012/03/27/git-submodule.html</p>
       var disqus_shortname = 'danielscai';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://danielscai.github.com/blog/2013/04/15/puppet-multi-environment/';
+        var disqus_url = 'http://danielscai.github.com/blog/2013/04/15/puppet-multi-environment/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

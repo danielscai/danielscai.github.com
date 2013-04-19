@@ -4,7 +4,7 @@
   <title><![CDATA[Daniels Cai's Blog]]></title>
   <link href="http://danielscai.github.com/atom.xml" rel="self"/>
   <link href="http://danielscai.github.com/"/>
-  <updated>2013-04-03T13:44:58+08:00</updated>
+  <updated>2013-04-16T15:27:10+08:00</updated>
   <id>http://danielscai.github.com/</id>
   <author>
     <name><![CDATA[Daniels Cai]]></name>
@@ -12,6 +12,366 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[git版本控制下，配置puppet多环境]]></title>
+    <link href="http://danielscai.github.com/blog/2013/04/15/puppet-multi-environment/"/>
+    <updated>2013-04-15T09:08:00+08:00</updated>
+    <id>http://danielscai.github.com/blog/2013/04/15/puppet-multi-environment</id>
+    <content type="html"><![CDATA[<p>本文档主要讨论在实际环境下的puppet多环境配置，并使用git作为版本控制。</p>
+
+<p>配置多环境主要目的在于</p>
+
+<ul>
+<li>隔离生产环境和测试开发环境</li>
+<li>提供多个开发者独立环境</li>
+</ul>
+
+
+<h1>0. 配置puppet多环境</h1>
+
+<p>详细配置puppet多环境请参考puppet官方文档
+http://docs.puppetlabs.com/guides/environment.html
+我们这里件4个环境production ,test,dev_a和dev_b
+<code>/etc/puppet/puppet.conf</code> 配置如下</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[production]
+</span><span class='line'>modulepath = $confdir/env/production/modules
+</span><span class='line'>manifest = $confdir/env/production/manifests/site.pp
+</span><span class='line'>[test]
+</span><span class='line'>modulepath = $confdir/env/test/modules
+</span><span class='line'>manifest = $confdir/env/test/manifests/site.pp
+</span><span class='line'>[dev_a]
+</span><span class='line'>modulepath = $confdir/env/dev_a/modules
+</span><span class='line'>manifest = $confdir/env/dev_a/manifests/site.pp
+</span><span class='line'>[dev_b]
+</span><span class='line'>modulepath = $confdir/env/dev_b/modules
+</span><span class='line'>manifest = $confdir/env/dev_b/manifests/site.pp</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>1.建立git仓库</h1>
+
+<h2>1.1 建立两个git仓库</h2>
+
+<p>一个用来管理puppet中的modules，一个用来管理除了modules以外的所有内容
+我们将仓库称为 puppet 和modules , 其中modules 作为puppet 的一个子模块，子模块可以参考http://gitbook.liuhui998.com/5_10.html</p>
+
+<p>仓库可以建立在github或者任意你喜欢的git托管仓库上，这里我们建两个本地仓库作为演示,
+注意，如果是不是使用的本地仓库，请在commit后<code>git push</code>到server上</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd /tmp
+</span><span class='line'>mkdir puppet modules</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>1.2 初始化两个仓库</h2>
+
+<p>初始化仓库，并将modules作为子模块添加到 puppet仓库中,此模块作为默认环境，也就是production环境的modules文件</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd modules ; git init ; cd .. 
+</span><span class='line'>cd puppet ; git init
+</span><span class='line'>git submodule add ../modules env/production/modules</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>1.3添加排除文件</h2>
+
+<p>因为使用了modules子模块，因此我们需要将env/*/modules排除在puppet仓库的控制外，这样多个开发者就可以在各自的环境下开发而不影响当前puppet仓库
+但是我们的env/production/modules是一个子模块，仍然是需要控制的，因此我们将<code>.gitignore</code>设置为</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>env/*/modules
+</span><span class='line'>!env/production/modules</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>2. 管理puppet配置文件</h1>
+
+<h2>2.1 将现有环境中的puppet配置文件copy到puppet仓库下</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cp -r /etc/puppet/* ./
+</span><span class='line'>git add . 
+</span><span class='line'>git commit -m 'init' </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>2.2 管理modules</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd ../modules/
+</span><span class='line'>cp -r /etc/puppet/env/production/modules/* ./
+</span><span class='line'>git add .
+</span><span class='line'>git commit -m 'add modules'</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>3. 更新子模块</h1>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd ..
+</span><span class='line'>git submodule foreach git pull origin master</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>4.多开发者共同开发</h1>
+
+<p>开发者在各自的分支中开发，将测试好的代码<code>merge</code>到主干分支
+下面演示一个开发者(dev_a)建立自己的开发环境</p>
+
+<h2>4.1 拷贝<code>manifest</code></h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd /tmp/puppet/env/dev_a
+</span><span class='line'>cp -r ../production/manifests ./</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>4.2 建立modules分支</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git clone ../production/modules modules
+</span><span class='line'>cd modules/
+</span><span class='line'>git checkout -b dev_a</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>4.3 将开发版本合并到主干</h2>
+
+<p>开发者将完成开发任务并测试后将代码合并到主干分支，如果有测试团队，将代码先合并到测试团队分支是一个好主意，这里就直接合并到主干分支(<code>master</code>分支)上</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>touch 1
+</span><span class='line'>git add 1
+</span><span class='line'>git commit -m 'complete task 1 '</span></code></pre></td></tr></table></div></figure>
+
+
+<p>到目前为止开发都在dev_a分支上，当完成测试后，合并到主干</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git checkout master
+</span><span class='line'>git merge dev_a --no-ff
+</span><span class='line'>git push origin master</span></code></pre></td></tr></table></div></figure>
+
+
+<p>对于为何使用<code>--no-ff</code>参数，可以参考http://www.ruanyifeng.com/blog/2012/07/git.html</p>
+
+<p>在prodution环境签出最新代码</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd ../../production/modules/
+</span><span class='line'>git pull origin master</span></code></pre></td></tr></table></div></figure>
+
+
+<p>或者</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd ../../
+</span><span class='line'>git submodule foreach git pull origin master</span></code></pre></td></tr></table></div></figure>
+
+
+<ol>
+<li>部署新的puppet环境
+将仓库中的puppet配置部署到新的环境中
+在新的环境中安装好<code>puppet</code>，将配置文件备份到其他目录，签出puppet代码和其子模块的代码
+以<code>ubuntu 12.04 precise</code>为例,将 <code>/tmp/puppet</code>替换成你真实的git仓库地址</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>wget http://apt.puppetlabs.com/puppetlabs-release-precise.deb
+</span><span class='line'>dpkg -i puppetlabs-release-precise.deb
+</span><span class='line'>apt-get update
+</span><span class='line'>apt-get upgrade
+</span><span class='line'>
+</span><span class='line'>apt-get install puppetmaster 
+</span><span class='line'>mv /etc/puppet /etc/puppet.old 
+</span><span class='line'>cd /etc/</span></code></pre></td></tr></table></div></figure>
+
+
+<p>克隆仓库</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git clone /tmp/puppet puppet
+</span><span class='line'>git submodule init
+</span><span class='line'>git submodule update</span></code></pre></td></tr></table></div></figure>
+
+
+<p>或者换成</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git clone --recursive /tmp/puppet puppet</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考
+http://docs.puppetlabs.com/guides/environment.html
+http://gitbook.liuhui998.com/5_10.html
+http://www.ruanyifeng.com/blog/2012/07/git.html
+http://www.kafeitu.me/git/2012/03/27/git-submodule.html</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[openstack grizzly quantum-metadata-agent debug]]></title>
+    <link href="http://danielscai.github.com/blog/2013/04/12/openstack-grizzly-quantum-metadata-agent-debug/"/>
+    <updated>2013-04-12T09:36:00+08:00</updated>
+    <id>http://danielscai.github.com/blog/2013/04/12/openstack-grizzly-quantum-metadata-agent-debug</id>
+    <content type="html"><![CDATA[<p>一个错误的配置导致 quantum-metadata-agent 无法启动，也没有相关log</p>
+
+<p>在<code>/var/log/quantum/metadata-agent.log</code> 中没有发现任何log</p>
+
+<p>在<code>/var/log/syslog</code>中只有如下一条简单的错误日志</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Apr 11 15:24:47 network1 kernel: [ 4511.402916] init: quantum-metadata-agent main process (26599) terminated with status 1</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!-- more -->
+
+
+<p>查看启动脚本 <code>/etc/init.d/quantum-metadata-agent</code> 发现是一个upstart job</p>
+
+<p>查看 <code>/etc/init/quantum-metadata-agent.conf</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># cat /etc/init/quantum-metadata-agent.conf 
+</span><span class='line'>description "Quantum metadata plugin agent"
+</span><span class='line'>author "Yolanda Robla &lt;yolanda.robla@canonical.com&gt;"
+</span><span class='line'>
+</span><span class='line'>start on runlevel [2345]
+</span><span class='line'>stop on runlevel [016]
+</span><span class='line'>
+</span><span class='line'>chdir /var/run
+</span><span class='line'>
+</span><span class='line'>pre-start script
+</span><span class='line'>mkdir -p /var/run/quantum
+</span><span class='line'>chown quantum:root /var/run/quantum
+</span><span class='line'>end script
+</span><span class='line'>
+</span><span class='line'>exec start-stop-daemon --start --chuid quantum --exec /usr/bin/quantum-metadata-agent -- \
+</span><span class='line'>            --config-file=/etc/quantum/quantum.conf --config-file=/etc/quantum/metadata_agent.ini \
+</span><span class='line'>            --log-file=/var/log/quantum/metadata-agent.log</span></code></pre></td></tr></table></div></figure>
+
+
+<p>手动运行这条命令,找到python的报错信息，提示配置文件错误 <code>Section must be started before assignment</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># /usr/bin/quantum-metadata-agent --config-file=/etc/quantum/quantum.conf --config-file=/etc/quantum/metadata_agent.ini --log-file=/var/log/quantum/metadata-agent.log
+</span><span class='line'>Traceback (most recent call last):
+</span><span class='line'>  File "/usr/bin/quantum-metadata-agent", line 20, in &lt;module&gt;
+</span><span class='line'>    main()
+</span><span class='line'>  File "/usr/lib/python2.7/dist-packages/quantum/agent/metadata/agent.py", line 223, in main
+</span><span class='line'>    cfg.CONF(project='quantum')
+</span><span class='line'>  File "/usr/lib/python2.7/dist-packages/oslo/config/cfg.py", line 1180, in __call__
+</span><span class='line'>    self._parse_config_files()
+</span><span class='line'>  File "/usr/lib/python2.7/dist-packages/oslo/config/cfg.py", line 1651, in _parse_config_files
+</span><span class='line'>    raise ConfigFileParseError(pe.filename, str(pe))
+</span><span class='line'>oslo.config.cfg.ConfigFileParseError: Failed to parse /etc/quantum/metadata_agent.ini: at /etc/quantum/metadata_agent.ini:3, Section must be started before assignment: None
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>导致这个错误的原因很简单 <code>/etc/quantum/metadata_agent.ini</code> 开头的<code>[DEFAULT]</code>被漏掉了</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># cat /etc/quantum/metadata_agent.ini 
+</span><span class='line'>[DEFAULT]
+</span><span class='line'># The Quantum user information for accessing the Quantum API.
+</span><span class='line'>auth_url = http://controller1:35357/v2.0
+</span><span class='line'>auth_region = RegionOne
+</span><span class='line'>admin_tenant_name = service
+</span><span class='line'>admin_user = quantum
+</span><span class='line'>admin_password = service_pass
+</span><span class='line'>
+</span><span class='line'># IP address used by Nova metadata server
+</span><span class='line'>nova_metadata_ip = 172.16.136.211
+</span><span class='line'>
+</span><span class='line'># TCP Port used by Nova metadata server
+</span><span class='line'>nova_metadata_port = 8775
+</span><span class='line'>
+</span><span class='line'>metadata_proxy_shared_secret = helloOpenStack
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[openstack 无法删除虚拟机 一例]]></title>

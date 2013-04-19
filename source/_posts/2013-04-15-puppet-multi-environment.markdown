@@ -34,6 +34,7 @@ manifest = $confdir/env/dev_a/manifests/site.pp
 modulepath = $confdir/env/dev_b/modules
 manifest = $confdir/env/dev_b/manifests/site.pp
 ```
+<!-- more -->
 
 1.建立git仓库
 ==================
