@@ -3,7 +3,7 @@ layout: post
 title: "git 多开发者协作模式"
 date: 2013-04-23 14:35
 comments: true
-categories: coding
+categories: git
 ---
 
 

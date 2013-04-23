@@ -3,7 +3,7 @@ layout: post
 title: "openstack grizzly quantum-metadata-agent debug"
 date: 2013-04-12 09:36
 comments: true
-categories: cloud
+categories: openstack
 ---
 
 {% img right /images/main/grizzly.jpg 250 150 'puppet' 'puppet' %}

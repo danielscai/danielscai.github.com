@@ -3,7 +3,7 @@ layout: post
 title: "openstack 无法删除虚拟机 一例"
 date: 2013-04-03 13:18
 comments: true
-catagories: "cloud"
+catagories: openstack
 ---
 
 {% img right /images/main/OpenStack.jpeg 250 150 'openstack' 'openstack' %}

@@ -3,7 +3,7 @@ layout: post
 title: "ubuntu 12.04 部署octopress"
 date: 2013-04-20 13:01
 comments: true
-categories: os
+categories: octopress
 ---
 
 {% img right /images/main/clone-your-octopress-001.png 250 150 'octopress' 'octopress' %}
