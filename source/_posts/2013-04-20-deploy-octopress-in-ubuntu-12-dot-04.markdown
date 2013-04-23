@@ -5,17 +5,24 @@ date: 2013-04-20 13:01
 comments: true
 categories: os
 ---
-"deploy octopress in ubuntu 12.04"
+
+{% img right /images/main/clone-your-octopress-001.png 250 150 'octopress' 'octopress' %}
+ubuntu 12.04 需要安装`ruby 1.9.3` ，但是由于使用`rvm`安装`ruby 1.9.3`非常缓慢，部署就显得十分困难 
+
+使用淘宝的源可以加快安装速度,但有些时候taobao的源依旧无法工作
+
+本文介绍如何不使用rvm在ubuntu下安装`ruby 1.9.3` 并部署octopress
+
+<!-- more -->
 
 1.安装ruby
-=======================
+---
 1.1安装1.9.3
 -------------------------------------
 ```
 apt-get -y install ruby1.9.3
 ```
 
-<!-- more -->
 1.2.更新ruby 
 -------------------------------------
 
@@ -34,7 +41,7 @@ sudo update-alternatives --config gem
 ```
 
 2.部署octopress 环境
-====================
+---
 
 2.1.clone octopress
 -------------------------------
@@ -58,7 +65,7 @@ rake install
 ```
 
 3.部署到github pages
-====================
+---
 3.1 建立github 仓库
 -------------------------------
 新建一个以username.github.com  格式的github仓库，username是你的用户名

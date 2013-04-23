@@ -6,18 +6,19 @@ comments: true
 categories: cloud
 ---
 
+{% img right /images/main/grizzly.jpg 250 150 'puppet' 'puppet' %}
 一个错误的配置导致 quantum-metadata-agent 无法启动，也没有相关log
 
 在`/var/log/quantum/metadata-agent.log` 中没有发现任何log
 
 
 在`/var/log/syslog`中只有如下一条简单的错误日志
+<!-- more -->
 
 ```
 Apr 11 15:24:47 network1 kernel: [ 4511.402916] init: quantum-metadata-agent main process (26599) terminated with status 1
 ```
 
-<!-- more -->
 
 查看启动脚本 `/etc/init.d/quantum-metadata-agent` 发现是一个upstart job
  

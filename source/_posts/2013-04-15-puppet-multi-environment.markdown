@@ -6,12 +6,14 @@ comments: true
 categories: coding
 ---
 
+{% img right /images/main/Puppet-logo.png 250 150 'puppet' 'puppet' %}
 本文档主要讨论在实际环境下的puppet多环境配置，并使用git作为版本控制。
 
 配置多环境主要目的在于
 
 * 隔离生产环境和测试开发环境
 * 提供多个开发者独立环境
+<!-- more --> 
 
 
 0. 配置puppet多环境

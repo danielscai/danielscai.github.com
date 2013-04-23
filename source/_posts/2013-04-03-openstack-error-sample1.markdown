@@ -6,8 +6,14 @@ comments: true
 catagories: "cloud"
 ---
 
+{% img right /images/main/OpenStack.jpeg 250 150 'openstack' 'openstack' %}
+运行`nova delete ceph01`删除虚拟机ceph01,发现无法删除虚拟机
 
-运行`nova delete ceph01`删除虚拟机ceph01,发现无法删除虚拟机，
+日志中却没有任何报错
+
+在无法查找log时，我们如何debug出`nova`的错误,下面给出一例
+
+<!-- more -->
 
 1. controller节点
 ===============
@@ -28,7 +34,6 @@ catagories: "cloud"
 
 ```
 
-<!-- more -->
 * 查看日志发现无任何报错
 
 2. compute节点

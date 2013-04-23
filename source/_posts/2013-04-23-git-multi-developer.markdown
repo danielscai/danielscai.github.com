@@ -7,19 +7,21 @@ categories: coding
 ---
 
 
+{% img right /images/main/Git-Logo-1788C.png 350 350 'git' 'git' %}
 在多开发者共同开发一个项目时，git 的多分支可以帮助多个开发者在各自环境下开发而不影响到团队其他人员。
 
 下面是多个开发者在各自环境下工作时用到的一些命令
 
+<!-- more --> 
+
 1. 创建分支
-===
+---
 每个开发者需要有一个自己的分支，比如一个新的开发人员加入项目中，可能需要用到下面的命令创建分支
 
 **克隆新代码**
 
     git clone git_repo_path project_dir 
     
-<!-- more --> 
 
 **创建一个本地分支**
 
@@ -44,7 +46,7 @@ categories: coding
       remotes/origin/master
 
 2.在分支上工作
-===
+---
 
 在本地`dcai`分支上做出改动并测试通过后，将本次改动`commit`到远程`dcai`分支上 
 
@@ -71,7 +73,7 @@ categories: coding
     
 
 3. 合并到主干
-===
+---
 
 当你确定自己分支上的代码已经没有问题的时候，可以将代码合并到主干，就是`master`分支上 ，你需要做如下几个步骤
 
