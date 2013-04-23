@@ -6,9 +6,13 @@ comments: true
 categories: 
 ---
 
+{% img right /images/main/FOLSOM-graphic.png 250 150 'folsom' 'folsom' %}
+
 + 作者: Daniels Cai
 + 版本: 1.0 
 
+
+<!-- more -->
 1.虚拟机操作
 ==================
 
@@ -28,7 +32,6 @@ categories:
      | 533a5c7b-2177-4db2-b128-b88ac1779b5b | precise                 | ACTIVE |        |
      +--------------------------------------+-------------------------+--------+--------+
 
-<!-- more -->
 运行`nova flavor-list`得到flavor id
 
      # nova flavor-list
