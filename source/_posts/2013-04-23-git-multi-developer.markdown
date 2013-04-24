@@ -88,11 +88,11 @@ categories: git
 合并的时候如果有冲突，需要自己手动解决冲突。
 最后将合并结果`push`到远程git仓库中
 
-    `git push origin master`
+    git push origin master
     
 **最后不要忘记切换到自己的分支上，继续工作**
 
-    `git checkout dcai`
+    git checkout dcai
     
     
     
