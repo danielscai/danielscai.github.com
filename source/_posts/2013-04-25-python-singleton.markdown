@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "python 单例 singleton"
+title: "python 设计模式之单例 singleton"
 date: 2013-04-25 12:52
 comments: true
 categories: coding

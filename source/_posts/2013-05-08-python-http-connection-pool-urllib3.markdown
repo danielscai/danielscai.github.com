@@ -73,4 +73,14 @@ HostChangedError: Connection pool with host 'http://google.com' tried to
 open a foreign host: http://yahoo.com/
 ```
 
+**注意**
+如果代码是从httplib转过来的，httplib中的request函数和urllib3中的request函数是不一样的，需要使用 urllib3中的urlopen来替换以前的request函数
+
+这个比较坑爹，我花了很长时间在这个pitfall上面
+
+```
+>>> conn = urllib3.connection_from_url('http://google.com')
+>>> r1 = conn.urlopen('GET', 'http://google.com/')
+```
+
 参考 [http://urllib3.readthedocs.org/en/latest/](http://urllib3.readthedocs.org/en/latest/)
