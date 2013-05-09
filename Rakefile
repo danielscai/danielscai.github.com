@@ -27,6 +27,8 @@ new_post_ext    = "markdown"  # default new post file extension when using the n
 new_page_ext    = "markdown"  # default new page file extension when using the new_page task
 server_port     = "4000"      # port for preview server eg. localhost:4000
 
+slide_dir	= 'slides'
+
 
 desc "Initial setup for Octopress: copies the default theme into the path of Jekyll's generator. Rake install defaults to rake install[classic] to install a different theme run rake install[some_theme_name]"
 task :install, :theme do |t, args|
@@ -380,4 +382,79 @@ desc "list tasks"
 task :list do
   puts "Tasks: #{(Rake::Task.tasks - [Rake::Task[:list]]).join(', ')}"
   puts "(type rake -T for more detail)\n\n"
+end
+
+
+## slide support 
+
+desc "Create a new slide in #{source_dir}/#{slide_dir}/(filename)/index.#{new_page_ext}"
+task :new_slide, :filename do |t, args|
+  raise "### You haven't set anything up yet. First run `rake install` to set up an Octopress theme." unless File.directory?(source_dir)
+  args.with_defaults(:filename => 'new-slide')
+  page_dir = [source_dir, slide_dir] # [source_dir]
+  if args.filename.downcase =~ /(^.+\/)?(.+)/
+    filename, dot, extension = $2.rpartition('.').reject(&:empty?)         # Get filename and extension
+    title = filename
+    page_dir.concat($1.downcase.sub(/^\//, '').split('/')) unless $1.nil?  # Add path to page_dir Array
+    if extension.nil?
+      page_dir << filename
+      filename = "index"
+    end
+    extension ||= new_page_ext
+    page_dir = page_dir.map! { |d| d = d.to_url }.join('/')                # Sanitize path
+    filename = filename.downcase.to_url
+
+    mkdir_p page_dir
+    file = "#{page_dir}/#{filename}.#{extension}"
+    if File.exist?(file)
+      abort("rake aborted!") if ask("#{file} already exists. Do you want to overwrite?", ['y', 'n']) == 'n'
+    end
+    puts "Creating new page: #{file}"
+    open(file, 'w') do |page|
+      page.puts "---"
+      page.puts "layout: slides"
+      page.puts "title: \"#{title}\""
+      page.puts "date: #{Time.now.strftime('%Y-%m-%d %H:%M')}"
+      page.puts "theme: beige"
+      page.puts "---"
+    end
+  else
+    puts "Syntax error: #{args.filename} contains unsupported characters"
+  end
+end
+
+desc "Create a new slide in #{source_dir}/#{slide_dir}/(filename)/index.#{new_page_ext}"
+task :new_slide, :filename do |t, args|
+  raise "### You haven't set anything up yet. First run `rake install` to set up an Octopress theme." unless File.directory?(source_dir)
+  args.with_defaults(:filename => 'new-slide')
+  page_dir = [source_dir, slide_dir] # [source_dir]
+  if args.filename.downcase =~ /(^.+\/)?(.+)/
+    filename, dot, extension = $2.rpartition('.').reject(&:empty?)         # Get filename and extension
+    title = filename
+    page_dir.concat($1.downcase.sub(/^\//, '').split('/')) unless $1.nil?  # Add path to page_dir Array
+    if extension.nil?
+      page_dir << filename
+      filename = "index"
+    end
+    extension ||= new_page_ext
+    page_dir = page_dir.map! { |d| d = d.to_url }.join('/')                # Sanitize path
+    filename = filename.downcase.to_url
+
+    mkdir_p page_dir
+    file = "#{page_dir}/#{filename}.#{extension}"
+    if File.exist?(file)
+      abort("rake aborted!") if ask("#{file} already exists. Do you want to overwrite?", ['y', 'n']) == 'n'
+    end
+    puts "Creating new page: #{file}"
+    open(file, 'w') do |page|
+      page.puts "---"
+      page.puts "layout: slides"
+      page.puts "title: \"#{title}\""
+      page.puts "date: #{Time.now.strftime('%Y-%m-%d %H:%M')}"
+      page.puts "theme: beige"
+      page.puts "---"
+    end
+  else
+    puts "Syntax error: #{args.filename} contains unsupported characters"
+  end
 end
