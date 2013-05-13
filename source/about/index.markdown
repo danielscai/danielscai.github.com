@@ -9,9 +9,11 @@ footer: false
 
 Daniels Cai
 
-我的邮箱
+我的邮箱  
+
 email : `echo "ZGFueGNhaUBnbWFpbC5jb20K" | base64 -d`
 
-我的qq
+我的qq  
+
 qq: `echo "ibase=2;100100110010110011101110110" | bc` 
 
