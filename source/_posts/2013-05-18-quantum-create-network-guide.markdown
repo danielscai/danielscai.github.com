@@ -169,7 +169,7 @@ Created a new router:
 
 查看有哪些l3 agent 
 
-···
+```
 # quantum agent-list 
 +--------------------------------------+--------------------+----------+-------+----------------+
 | id                                   | agent_type         | host     | alive | admin_state_up |
@@ -182,7 +182,7 @@ Created a new router:
 | a39da87a-16ea-4924-8aff-d9e468e68f13 | DHCP agent         | network2 | :-)   | True           |
 | ccf26580-ba40-4148-9a73-c0cf67713a73 | L3 agent           | network1 | :-)   | True           |
 +--------------------------------------+--------------------+----------+-------+----------------+
-···
+```
 
 **4.3 将路由添加到network1的l3 agent上**
 
@@ -190,10 +190,10 @@ Created a new router:
       
     quantum l3-agent-router-add $l3_agent_ID router_id
 
-···
+```
 # quantum l3-agent-router-add  ccf26580-ba40-4148-9a73-c0cf67713a73 93a70ed7-ac17-41d3-9d92-4d8bfb0ee56a 
 Added router 93a70ed7-ac17-41d3-9d92-4d8bfb0ee56a to L3 agent
-···
+```
 
 **4.4 设置路由网关**
 
@@ -262,7 +262,7 @@ Created a new floatingip:
 
 ** 创建port **
 
-···
+```
 # quantum port-create --fixed-ip subnet_id=32fe8d37-5c35-453e-b7d4-a1c98ac7bf97 54f37003-7f4e-47f4-a865-c928de1ae9e3 
 Created a new port:
 +----------------------+-------------------------------------------------------------------------------------+
@@ -281,10 +281,10 @@ Created a new port:
 | status               | DOWN                                                                                |
 | tenant_id            | 180deec2c933457cb149ef5cf38322f8                                                    |
 +----------------------+-------------------------------------------------------------------------------------+
-···
+```
 
 **创建 volume**
-···
+```
 # cinder create --image-id 6b01928b-056f-4d2e-bb33-988a4853d7f9 --display-name dcai-precise 10 
 +---------------------+--------------------------------------+
 |       Property      |                Value                 |
@@ -304,7 +304,7 @@ Created a new port:
 |        status       |               creating               |
 |     volume_type     |                 None                 |
 +---------------------+--------------------------------------+
-···
+```
 
 **启动虚拟机**
 
