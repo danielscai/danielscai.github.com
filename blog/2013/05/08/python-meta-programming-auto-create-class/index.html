@@ -1,0 +1,366 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>python 元编程之 自动生成类 - Daniels Cai's Blog</title>
+  <meta name="author" content="Daniels Cai">
+
+  
+  <meta name="description" content="元编程是动态语言最大的特点，却是一个经常被程序员忽略的技巧。 元编程对初学者来讲，稍显复杂。那么元编程到底可以给我们带来什么特异功能呢？ 下面试用项目中用到的自动生成类的例子讲解元编程 需求 这段代码主要是生成项目中的http错误类，用来返回对应的http &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://danielscai.github.com/blog/2013/05/08/python-meta-programming-auto-create-class">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Daniels Cai's Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.useso.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.useso.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.useso.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-36496703-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Daniels Cai's Blog</a></h1>
+  
+    <h2>proficient in Linux, proficient in Thinking.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:danielscai.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">博客</a></li>
+  <li><a href="/blog/archives">归档</a></li>
+  <li><a href="/course">公开课程</a></li>
+  <li><a href="/slides">演示</a></li>
+  <li><a href="/about">本人</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Python 元编程之 自动生成类</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-08T23:06:00-07:00" pubdate data-updated="true">May 8<span>th</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img class="right" src="/images/main/python-logo.gif" width="250" height="150" title="python" alt="python"></p>
+
+<p>元编程是动态语言最大的特点，却是一个经常被程序员忽略的技巧。</p>
+
+<p>元编程对初学者来讲，稍显复杂。那么元编程到底可以给我们带来什么特异功能呢？</p>
+
+<p>下面试用项目中用到的自动生成类的例子讲解元编程</p>
+
+<!--more-->
+
+
+<p><strong>需求</strong></p>
+
+<p>这段代码主要是生成项目中的http错误类，用来返回对应的http code和一段封装成json的错误提示信息</p>
+
+<p><strong>代码</strong></p>
+
+<p>先来看下代码</p>
+
+<h2>1. 将错误类的类名和对应的错误码记录到一个字典中</h2>
+
+<p>下面字典的值，都是我已经定义好的，比如<code>BAD_REQUEST</code>就是400</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>except_dict={
+</span><span class='line'>    'ActionNotSupportedError': ACTION_NOT_SUPPORTED,
+</span><span class='line'>    'BadRequestError':BAD_REQUEST,
+</span><span class='line'>    'NotFoundError':NOT_FOUND,
+</span><span class='line'>    'UnauthorizedError':UNAUTHORIZED,
+</span><span class='line'>    'ConflictError':CONFLICT,
+</span><span class='line'>    'ParamsMissingError': PARAMS_MISSING,
+</span><span class='line'>    'OverlimitError': OVERLIMIT,
+</span><span class='line'>    'OSApiError': OSAPI_ERROR,
+</span><span class='line'>    'MethodNotAllowedError': METHOD_NOT_ALLOWED,
+</span><span class='line'>    'InternalServerError': INTERNAL_SERVER_ERROR,
+</span><span class='line'>}
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>2. 定义类的函数</h2>
+
+<p>这里定义了两个函数,一个是<code>__init__</code>和<code>__str__</code> ，然后将其写入属性字典<code>attr</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def __init__(self,errmsg):
+</span><span class='line'>    ''' make returned error message'''
+</span><span class='line'>    self.value='{"error_message":"%s"}' % errmsg
+</span><span class='line'>    zlog.logger("Exception: "+self.value)
+</span><span class='line'>
+</span><span class='line'>def __str__(self):
+</span><span class='line'>    return repr(self.value)
+</span><span class='line'>
+</span><span class='line'>exceptions_list=[]
+</span><span class='line'>bases=(Exception,)
+</span><span class='line'>attrs={
+</span><span class='line'>    '__init__':__init__,
+</span><span class='line'>    '__str__':__str__,
+</span><span class='line'>}
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>3. 生成类</h2>
+
+<p>最后一步，也是最重要的一步，遍历第1步中生成的字典<code>except_dict</code>,属性code 设置为字典对应key的值
+使用<code>type</code>生成一个类，使用globals()将类注册到当前模块空间</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>for (eklass_name,code) in except_dict.items():
+</span><span class='line'>    attrs['code']=code
+</span><span class='line'>    eklass=type(eklass_name,bases,attrs)
+</span><span class='line'>    exceptions_list.append(eklass)
+</span><span class='line'>    globals().update( {eklass_name: eklass } )
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这样一段扩展性非常高的错误处理代码就完成了，新添加一个错误码，只需要添加一行<code>except_dict</code>字典值，剩下的代码会帮你搞定。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Daniels Cai</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-08T23:06:00-07:00" pubdate data-updated="true">May 8<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/coding/'>coding</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/05/08/python-decorator-sample/" title="Previous Post: python 设计模式之 装饰器 ">&laquo; python 设计模式之 装饰器 </a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/05/08/python-pattern-strategy/" title="Next Post: python 设计模式之 策略模式 ">python 设计模式之 策略模式  &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+<h1>加微信<abbr title="The word 'QR Code' is a registered trademark of DENSO WAVE INCORPORATED. It applies only for the word 'QR Code', not for image."></abbr></h1>
+<a href="http://danielscai.github.com/blog/2013/05/08/python-meta-programming-auto-create-class/"><img src="/images/weixin_qr_code.jpeg" alt="post-qrcode"></a></section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/31/openstack-migrate-to-new-enviroment-pemission-denided-error/">openstack迁移环境引起的permission denied 错误</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/31/quantum-exceeded-maximim-amount-of-fixed-ips-per-port-error/">quantum Exceeded maximim amount of fixed ips per port 错误 </a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/31/openstack-database-chinese-character-encoding/">openstack 数据库中文乱码问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/18/clear-all-quantum-network-subnet-router-etc/">清空 quantum 网络 子网 路由 floatingip </a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/18/quantum-create-network-guide/">quantum 网络创建使用指南(quantum create network guide)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>分类</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/coding/'>coding (7)</a></li>
+<li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
+<li class='category'><a href='/blog/categories/octopress/'>octopress (1)</a></li>
+<li class='category'><a href='/blog/categories/openstack/'>openstack (14)</a></li>
+<li class='category'><a href='/blog/categories/statup/'>statup (1)</a></li>
+<li class='category'><a href='/blog/categories/virtualization/'>virtualization (1)</a></li>
+
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Daniels Cai -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'danielscai';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://danielscai.github.com/blog/2013/05/08/python-meta-programming-auto-create-class/';
+        var disqus_url = 'http://danielscai.github.com/blog/2013/05/08/python-meta-programming-auto-create-class/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

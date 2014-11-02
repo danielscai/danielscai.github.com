@@ -1,0 +1,382 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>openstack grizzly quantum-metadata-agent debug - Daniels Cai's Blog</title>
+  <meta name="author" content="Daniels Cai">
+
+  
+  <meta name="description" content="一个错误的配置导致 quantum-metadata-agent 无法启动，也没有相关log 在/var/log/quantum/metadata-agent.log 中没有发现任何log 在/var/log/syslog中只有如下一条简单的错误日志 1
+Apr 11 15:24:47 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://danielscai.github.com/blog/2013/04/12/openstack-grizzly-quantum-metadata-agent-debug">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Daniels Cai's Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.useso.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.useso.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.useso.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-36496703-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Daniels Cai's Blog</a></h1>
+  
+    <h2>proficient in Linux, proficient in Thinking.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:danielscai.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">博客</a></li>
+  <li><a href="/blog/archives">归档</a></li>
+  <li><a href="/course">公开课程</a></li>
+  <li><a href="/slides">演示</a></li>
+  <li><a href="/about">本人</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Openstack Grizzly Quantum-metadata-agent Debug</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-12T09:36:00-07:00" pubdate data-updated="true">Apr 12<span>th</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img class="right" src="/images/main/grizzly.jpg" width="250" height="150" title="puppet" alt="puppet">
+一个错误的配置导致 quantum-metadata-agent 无法启动，也没有相关log</p>
+
+<p>在<code>/var/log/quantum/metadata-agent.log</code> 中没有发现任何log</p>
+
+<p>在<code>/var/log/syslog</code>中只有如下一条简单的错误日志</p>
+
+<!-- more -->
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Apr 11 15:24:47 network1 kernel: [ 4511.402916] init: quantum-metadata-agent main process (26599) terminated with status 1</span></code></pre></td></tr></table></div></figure>
+
+
+<p>查看启动脚本 <code>/etc/init.d/quantum-metadata-agent</code> 发现是一个upstart job</p>
+
+<p>查看 <code>/etc/init/quantum-metadata-agent.conf</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># cat /etc/init/quantum-metadata-agent.conf 
+</span><span class='line'>description "Quantum metadata plugin agent"
+</span><span class='line'>author "Yolanda Robla &lt;yolanda.robla@canonical.com&gt;"
+</span><span class='line'>
+</span><span class='line'>start on runlevel [2345]
+</span><span class='line'>stop on runlevel [016]
+</span><span class='line'>
+</span><span class='line'>chdir /var/run
+</span><span class='line'>
+</span><span class='line'>pre-start script
+</span><span class='line'>mkdir -p /var/run/quantum
+</span><span class='line'>chown quantum:root /var/run/quantum
+</span><span class='line'>end script
+</span><span class='line'>
+</span><span class='line'>exec start-stop-daemon --start --chuid quantum --exec /usr/bin/quantum-metadata-agent -- \
+</span><span class='line'>            --config-file=/etc/quantum/quantum.conf --config-file=/etc/quantum/metadata_agent.ini \
+</span><span class='line'>            --log-file=/var/log/quantum/metadata-agent.log</span></code></pre></td></tr></table></div></figure>
+
+
+<p>手动运行这条命令,找到python的报错信息，提示配置文件错误 <code>Section must be started before assignment</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># /usr/bin/quantum-metadata-agent --config-file=/etc/quantum/quantum.conf --config-file=/etc/quantum/metadata_agent.ini --log-file=/var/log/quantum/metadata-agent.log
+</span><span class='line'>Traceback (most recent call last):
+</span><span class='line'>  File "/usr/bin/quantum-metadata-agent", line 20, in &lt;module&gt;
+</span><span class='line'>    main()
+</span><span class='line'>  File "/usr/lib/python2.7/dist-packages/quantum/agent/metadata/agent.py", line 223, in main
+</span><span class='line'>    cfg.CONF(project='quantum')
+</span><span class='line'>  File "/usr/lib/python2.7/dist-packages/oslo/config/cfg.py", line 1180, in __call__
+</span><span class='line'>    self._parse_config_files()
+</span><span class='line'>  File "/usr/lib/python2.7/dist-packages/oslo/config/cfg.py", line 1651, in _parse_config_files
+</span><span class='line'>    raise ConfigFileParseError(pe.filename, str(pe))
+</span><span class='line'>oslo.config.cfg.ConfigFileParseError: Failed to parse /etc/quantum/metadata_agent.ini: at /etc/quantum/metadata_agent.ini:3, Section must be started before assignment: None
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>导致这个错误的原因很简单 <code>/etc/quantum/metadata_agent.ini</code> 开头的<code>[DEFAULT]</code>被漏掉了</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># cat /etc/quantum/metadata_agent.ini 
+</span><span class='line'>[DEFAULT]
+</span><span class='line'># The Quantum user information for accessing the Quantum API.
+</span><span class='line'>auth_url = http://controller1:35357/v2.0
+</span><span class='line'>auth_region = RegionOne
+</span><span class='line'>admin_tenant_name = service
+</span><span class='line'>admin_user = quantum
+</span><span class='line'>admin_password = service_pass
+</span><span class='line'>
+</span><span class='line'># IP address used by Nova metadata server
+</span><span class='line'>nova_metadata_ip = 172.16.136.211
+</span><span class='line'>
+</span><span class='line'># TCP Port used by Nova metadata server
+</span><span class='line'>nova_metadata_port = 8775
+</span><span class='line'>
+</span><span class='line'>metadata_proxy_shared_secret = helloOpenStack
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Daniels Cai</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-12T09:36:00-07:00" pubdate data-updated="true">Apr 12<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/openstack/'>openstack</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/04/03/openstack-error-sample1/" title="Previous Post: openstack 无法删除虚拟机 一例">&laquo; openstack 无法删除虚拟机 一例</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/04/15/puppet-multi-environment/" title="Next Post: git版本控制下，配置puppet多环境">git版本控制下，配置puppet多环境 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+<h1>加微信<abbr title="The word 'QR Code' is a registered trademark of DENSO WAVE INCORPORATED. It applies only for the word 'QR Code', not for image."></abbr></h1>
+<a href="http://danielscai.github.com/blog/2013/04/12/openstack-grizzly-quantum-metadata-agent-debug/"><img src="/images/weixin_qr_code.jpeg" alt="post-qrcode"></a></section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/31/openstack-migrate-to-new-enviroment-pemission-denided-error/">openstack迁移环境引起的permission denied 错误</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/31/quantum-exceeded-maximim-amount-of-fixed-ips-per-port-error/">quantum Exceeded maximim amount of fixed ips per port 错误 </a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/31/openstack-database-chinese-character-encoding/">openstack 数据库中文乱码问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/18/clear-all-quantum-network-subnet-router-etc/">清空 quantum 网络 子网 路由 floatingip </a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/18/quantum-create-network-guide/">quantum 网络创建使用指南(quantum create network guide)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>分类</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/coding/'>coding (7)</a></li>
+<li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
+<li class='category'><a href='/blog/categories/octopress/'>octopress (1)</a></li>
+<li class='category'><a href='/blog/categories/openstack/'>openstack (14)</a></li>
+<li class='category'><a href='/blog/categories/statup/'>statup (1)</a></li>
+<li class='category'><a href='/blog/categories/virtualization/'>virtualization (1)</a></li>
+
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Daniels Cai -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'danielscai';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://danielscai.github.com/blog/2013/04/12/openstack-grizzly-quantum-metadata-agent-debug/';
+        var disqus_url = 'http://danielscai.github.com/blog/2013/04/12/openstack-grizzly-quantum-metadata-agent-debug/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

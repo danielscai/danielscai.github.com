@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: octopress | Daniels Cai's Blog]]></title>
+  <link href="http://danielscai.github.com/blog/categories/octopress/atom.xml" rel="self"/>
+  <link href="http://danielscai.github.com/"/>
+  <updated>2014-11-01T20:47:48-07:00</updated>
+  <id>http://danielscai.github.com/</id>
+  <author>
+    <name><![CDATA[Daniels Cai]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[ubuntu 12.04 部署octopress]]></title>
+    <link href="http://danielscai.github.com/blog/2013/04/20/deploy-octopress-in-ubuntu-12-dot-04/"/>
+    <updated>2013-04-20T13:01:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/04/20/deploy-octopress-in-ubuntu-12-dot-04</id>
+    <content type="html"><![CDATA[<p><img class="right" src="/images/main/clone-your-octopress-001.png" width="250" height="150" title="octopress" alt="octopress">
+ubuntu 12.04 需要安装<code>ruby 1.9.3</code> ，但是由于使用<code>rvm</code>安装<code>ruby 1.9.3</code>非常缓慢，部署就显得十分困难</p>
+
+<p>使用淘宝的源可以加快安装速度,但有些时候taobao的源依旧无法工作</p>
+
+<p>本文介绍如何不使用rvm在ubuntu下安装<code>ruby 1.9.3</code> 并部署octopress</p>
+
+<!-- more -->
+
+
+<h2>1.安装ruby</h2>
+
+<h2>1.1安装1.9.3</h2>
+
+<p><code>
+apt-get -y install ruby1.9.3
+</code></p>
+
+<h2>1.2.更新ruby </h2>
+
+<p>```
+sudo update-alternatives --install /usr/bin/ruby ruby /usr/bin/ruby1.9.3 400 \</p>
+
+<pre><code>     --slave   /usr/share/man/man1/ruby.1.gz ruby.1.gz \
+                    /usr/share/man/man1/ruby1.9.3.1.gz \
+    --slave   /usr/bin/ri ri /usr/bin/ri1.9.3 \
+    --slave   /usr/bin/irb irb /usr/bin/irb1.9.3 \
+    --slave   /usr/bin/rdoc rdoc /usr/bin/rdoc1.9.3
+</code></pre>
+
+<p><code>
+更改ruby使用1.9.3版本
+</code>
+sudo update-alternatives --config ruby
+sudo update-alternatives --config gem
+```</p>
+
+<h2>2.部署octopress 环境</h2>
+
+<h2>2.1.clone octopress</h2>
+
+<p><code>
+git clone https://github.com/imathis/octopress.git
+</code></p>
+
+<h2>2.2 修改Gemfile的source，使用淘宝的gem源</h2>
+
+<p><code>
+source "http://ruby.taobao.org"
+</code></p>
+
+<h2>2.3 安装gem包</h2>
+
+<p><code>
+gem install bundler
+bundle install
+rake install
+</code></p>
+
+<h2>3.部署到github pages</h2>
+
+<h2>3.1 建立github 仓库</h2>
+
+<p>新建一个以username.github.com  格式的github仓库，username是你的用户名</p>
+
+<h2>3.2 部署</h2>
+
+<p>部署到github pages ,按提示填写github仓库
+<code>
+rake setup_github_pages
+</code></p>
+
+<p><code>
+rake generate
+rake deploy
+</code></p>
+
+<h2>3.3 自定义</h2>
+
+<p>自定义设定可以在 <code>_config.yaml</code>中设置，包括 <code>github</code>,<code>google analytics</code>,<code>google plus</code> 等</p>
+]]></content>
+  </entry>
+  
+</feed>

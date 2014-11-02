@@ -9,7 +9,7 @@
   <meta name="author" content="Daniels Cai">
 
   
-  <meta name="description" content="openstack 迁移错误 openstack 迁移到新的环境。 在新的环境中启动一台虚拟机，发现一直是error状态 查看虚拟机状态提示ComputeHostNotFound_Remote和Compute host 1 could not be found. 但是其实并没有compute 1 &hellip;">
+  <meta name="description" content=" 运行nova delete ceph01删除虚拟机ceph01,发现无法删除虚拟机， 1. controller节点 查看虚拟机状态 如下 ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://danielscai.github.com">
+  <link rel="canonical" href="http://danielscai.github.com/blog/page/2">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Daniels Cai's Blog" type="application/atom+xml">
@@ -86,7 +86,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/05/31/openstack-migrate-to-new-enviroment-pemission-denided-error/">Openstack迁移环境引起的permission Denied 错误</a></h1>
+      <h1 class="entry-title"><a href="/blog/2013/05/18/openstack-can-not-delete-vm-a-sample/">Openstack不能删除虚拟机一例</a></h1>
     
     
       <p class="meta">
@@ -102,9 +102,9 @@
   
 
 
-<time datetime="2013-05-31T21:49:00-07:00" pubdate data-updated="true">May 31<span>st</span>, 2013</time>
+<time datetime="2013-05-18T11:59:00-07:00" pubdate data-updated="true">May 18<span>th</span>, 2013</time>
         
-         | <a href="/blog/2013/05/31/openstack-migrate-to-new-enviroment-pemission-denided-error/#disqus_thread">Comments</a>
+         | <a href="/blog/2013/05/18/openstack-can-not-delete-vm-a-sample/#disqus_thread">Comments</a>
         
       </p>
     
@@ -113,21 +113,22 @@
 
   <div class="entry-content"><p><img class="right" src="/images/main/OpenStack.jpeg" width="200" height="100" title="openstack" alt="openstack"></p>
 
-<p>openstack 迁移错误</p>
+<p>运行<code>nova delete ceph01</code>删除虚拟机ceph01,发现无法删除虚拟机，</p>
 
-<p>openstack 迁移到新的环境。</p>
+<h1>1. controller节点</h1>
 
-<p>在新的环境中启动一台虚拟机，发现一直是error状态</p>
+<ul>
+<li>查看虚拟机状态</li>
+</ul>
 
-<p>查看虚拟机状态提示<code>ComputeHostNotFound_Remote</code>和<code>Compute host 1 could not be found.</code></p>
 
-<p>但是其实并没有compute 1 节点。</p>
+<p>如下</p>
 
 </div>
   
   
     <footer>
-      <a rel="full-article" href="/blog/2013/05/31/openstack-migrate-to-new-enviroment-pemission-denided-error/">Read on &rarr;</a>
+      <a rel="full-article" href="/blog/2013/05/18/openstack-can-not-delete-vm-a-sample/">Read on &rarr;</a>
     </footer>
   
 
@@ -139,7 +140,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/05/31/quantum-exceeded-maximim-amount-of-fixed-ips-per-port-error/">Quantum Exceeded Maximim Amount of Fixed Ips Per Port 错误</a></h1>
+      <h1 class="entry-title"><a href="/blog/2013/05/18/quantum-agent-with-name-localhost-issue/">Quantum Agent 名称为 Localhost 问题(quantum Agent With Name Localhost Issue)</a></h1>
     
     
       <p class="meta">
@@ -155,213 +156,9 @@
   
 
 
-<time datetime="2013-05-31T21:39:00-07:00" pubdate data-updated="true">May 31<span>st</span>, 2013</time>
+<time datetime="2013-05-18T11:24:00-07:00" pubdate data-updated="true">May 18<span>th</span>, 2013</time>
         
-         | <a href="/blog/2013/05/31/quantum-exceeded-maximim-amount-of-fixed-ips-per-port-error/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img class="right" src="/images/main/OpenStack.jpeg" width="200" height="100" title="openstack" alt="openstack"></p>
-
-<p>openstack 运行过程中突然出现这个错误</p>
-
-<p>在 network节点上<code>/var/log/quantum/dhcp-agent.log</code></p>
-
-<p>出现如下错误日志</p>
-
-<p>提示<code>Exceeded maximim amount of fixed ips per port.</code></p>
-
-<p>应该是跟quota有关的。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/05/31/quantum-exceeded-maximim-amount-of-fixed-ips-per-port-error/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/31/openstack-database-chinese-character-encoding/">Openstack 数据库中文乱码问题</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-31T21:33:00-07:00" pubdate data-updated="true">May 31<span>st</span>, 2013</time>
-        
-         | <a href="/blog/2013/05/31/openstack-database-chinese-character-encoding/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img class="right" src="/images/main/OpenStack.jpeg" width="200" height="100" title="openstack" alt="openstack"></p>
-
-<p>openstack的sql connection 需要配置成utf-8才不会中文乱码</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>sql_connection = mysql://nova:xxx@qa-mysql1:3306/nova?charset='utf-8'</span></code></pre></td></tr></table></div></figure>
-
-
-<p>但是如果之前就没有设置utf-8，数据库又不能随便清空，想要更新openstack数据库某个字段，就不能直接采用utf-8的数据库连接，否则会出现插入到数据库中的是中文，但是openstack中显示的是乱码。更坏的是如果插入的是全角中文字符，openstack就会出错。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/05/31/openstack-database-chinese-character-encoding/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/18/clear-all-quantum-network-subnet-router-etc/">清空 Quantum 网络 子网 路由 Floatingip</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-18T12:45:00-07:00" pubdate data-updated="true">May 18<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/05/18/clear-all-quantum-network-subnet-router-etc/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img class="right" src="/images/main/OpenStack.jpeg" width="200" height="100" title="openstack" alt="openstack"></p>
-
-<p>清空 quantum 数据</p>
-
-<p><em>作者: Daniels Cai
-</em>主页: http://dnscai.com</p>
-
-<h2>1.清空floatingip </h2>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/05/18/clear-all-quantum-network-subnet-router-etc/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/18/quantum-create-network-guide/">Quantum 网络创建使用指南(quantum Create Network Guide)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-18T12:24:00-07:00" pubdate data-updated="true">May 18<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/05/18/quantum-create-network-guide/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img class="right" src="/images/main/OpenStack.jpeg" width="200" height="100" title="openstack" alt="openstack"></p>
-
-<p>quantum 网络创建使用指南</p>
-
-<h2>1. 创建网络</h2>
-
-<pre><code>quantum net-create network1
-</code></pre>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/05/18/quantum-create-network-guide/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/05/18/quantum-muliple-l3-agent-issue/">Quantum L3 Agent 多外部网问题(quantum Muliple L3 Agent Issue)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-18T12:19:00-07:00" pubdate data-updated="true">May 18<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/05/18/quantum-muliple-l3-agent-issue/#disqus_thread">Comments</a>
+         | <a href="/blog/2013/05/18/quantum-agent-with-name-localhost-issue/#disqus_thread">Comments</a>
         
       </p>
     
@@ -369,17 +166,220 @@
 
 
   <div class="entry-content"><p><img class="right" src="/images/main/OpenStack.jpeg" width="200" height="100" title="openstack" alt="openstack">
-quantum l3 agent 多外部网问题</p>
+quantum agent 名称为 localhost 问题</p>
 
-<p>问题描述</p>
+<p>两个环境中发现其中一个环境中quantum的agent 名称变成了ip6-localhost</p>
 
-<p>在 network 节点上<code>/var/log/quantum/l3-agent.log</code> 查看到如下log，</p>
+<p>运行<code>quantum agent-list</code>发现agent 名称都是localhost 或者是ip6-localhost</p>
+
+<p>如下</p>
 
 </div>
   
   
     <footer>
-      <a rel="full-article" href="/blog/2013/05/18/quantum-muliple-l3-agent-issue/">Read on &rarr;</a>
+      <a rel="full-article" href="/blog/2013/05/18/quantum-agent-with-name-localhost-issue/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/13/virt-command-summary/">Virt相关命令总结</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-13T20:29:00-07:00" pubdate data-updated="true">May 13<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/05/13/virt-command-summary/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img class="right" src="/images/main/libvirt.png" width="250" height="150" title="libvirt" alt="libvirt">
+在CentOS下面多部分命令都是有包<code>libguestfs-tools-c</code>提供,所以,首先需要安装它</p>
+
+<h2>virt-ls</h2>
+
+<p>virt-ls可以列出虚拟机中目录下的文件或目录,用法如下</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>virt-ls [--options] -d domname dir [dir ...]
+</span><span class='line'>virt-ls [--options] -a disk.img [-a disk.img ...] dir [dir ...]</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/05/13/virt-command-summary/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/08/python-pattern-strategy/">Python 设计模式之 策略模式</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-08T23:27:00-07:00" pubdate data-updated="true">May 8<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/05/08/python-pattern-strategy/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img class="right" src="/images/main/python-logo.gif" width="250" height="150" title="python" alt="python"></p>
+
+<p>策略模式的主体思想是将变与不变的部分分离。</p>
+
+<p>概括的说，不变的部分我们可以写成类生成的一个实例，或者模块。将变的部分写成一个类，然后每次根据条件的不同生成多个实例，再将这个变的实例通过参数的方式传入到不变的实例或者模块中。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/05/08/python-pattern-strategy/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/08/python-meta-programming-auto-create-class/">Python 元编程之 自动生成类</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-08T23:06:00-07:00" pubdate data-updated="true">May 8<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/05/08/python-meta-programming-auto-create-class/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img class="right" src="/images/main/python-logo.gif" width="250" height="150" title="python" alt="python"></p>
+
+<p>元编程是动态语言最大的特点，却是一个经常被程序员忽略的技巧。</p>
+
+<p>元编程对初学者来讲，稍显复杂。那么元编程到底可以给我们带来什么特异功能呢？</p>
+
+<p>下面试用项目中用到的自动生成类的例子讲解元编程</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/05/08/python-meta-programming-auto-create-class/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/05/08/python-decorator-sample/">Python 设计模式之 装饰器</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-08T22:40:00-07:00" pubdate data-updated="true">May 8<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/05/08/python-decorator-sample/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img class="right" src="/images/main/python-logo.gif" width="250" height="150" title="python" alt="python"></p>
+
+<p>之前介绍过 python 的<a href="http://dnscai.com/blog/2013/04/25/python-singleton/">单例</a></p>
+
+<p>其实python 不需要单例 (为什么？ 想一想，模块不就是最好的单例么？)</p>
+
+<p>本文主要讨论的是python 的装饰器，flask 的路由就是使用装饰器实现的，flask介绍可以参考 <a href="http://dnscai.com/blog/2013/04/25/python-flask-web-framework-intro/">http://dnscai.com/blog/2013/04/25/python-flask-web-framework-intro/</a></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/05/08/python-decorator-sample/">Read on &rarr;</a>
     </footer>
   
 
@@ -388,9 +388,11 @@ quantum l3 agent 多外部网问题</p>
   
   <div class="pagination">
     
-      <a class="prev" href="/blog/page/2/">&larr; Older</a>
+      <a class="prev" href="/blog/page/3/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/">Newer &rarr;</a>
     
   </div>
 </div>
@@ -398,7 +400,7 @@ quantum l3 agent 多外部网问题</p>
   
     <section>
 <h1>加微信<abbr title="The word 'QR Code' is a registered trademark of DENSO WAVE INCORPORATED. It applies only for the word 'QR Code', not for image."></abbr></h1>
-<a href="http://danielscai.github.com/index.html"><img src="/images/weixin_qr_code.jpeg" alt="post-qrcode"></a></section>
+<a href="http://danielscai.github.com/blog/page/2/index.html"><img src="/images/weixin_qr_code.jpeg" alt="post-qrcode"></a></section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">

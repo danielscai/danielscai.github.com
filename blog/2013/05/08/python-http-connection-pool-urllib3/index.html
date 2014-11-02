@@ -1,0 +1,351 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>python http connection pool urllib3 - Daniels Cai's Blog</title>
+  <meta name="author" content="Daniels Cai">
+
+  
+  <meta name="description" content="随着项目越来越庞大，直接http请求成为不可忽略的一个问题，需要有一种机制来管理和复用http链接，http连接池就是设计来解决这个问题的. 连接池是创建和管理一个连接的缓冲池的技术，这些连接准备好被任何需要它们的线程使用 使用连接池有如下好处 减少连接创建时间 http连接需要完成3次握手， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://danielscai.github.com/blog/2013/05/08/python-http-connection-pool-urllib3">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Daniels Cai's Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.useso.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.useso.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.useso.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-36496703-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Daniels Cai's Blog</a></h1>
+  
+    <h2>proficient in Linux, proficient in Thinking.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:danielscai.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">博客</a></li>
+  <li><a href="/blog/archives">归档</a></li>
+  <li><a href="/course">公开课程</a></li>
+  <li><a href="/slides">演示</a></li>
+  <li><a href="/about">本人</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Python Http Connection Pool Urllib3</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-08T19:39:00-07:00" pubdate data-updated="true">May 8<span>th</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img class="right" src="/images/main/python-logo.gif" width="250" height="150" title="python" alt="python">
+随着项目越来越庞大，直接http请求成为不可忽略的一个问题，需要有一种机制来管理和复用http链接，http连接池就是设计来解决这个问题的.</p>
+
+<p>连接池是创建和管理一个连接的缓冲池的技术，这些连接准备好被任何需要它们的线程使用</p>
+
+<p>使用连接池有如下好处</p>
+
+<!--more-->
+
+
+<p><strong>减少连接创建时间</strong></p>
+
+<p>http连接需要完成3次握手，建立一个连接，如果这类连接是“循环”使用的，使用该方式这些花销就可避免。</p>
+
+<p><strong>简化的编程模式</strong></p>
+
+<p>当使用连接池时，每一个单独的线程能够像创建了一个自己的http连接一样操作，允许用户直接使用从池中得到的连接编程。</p>
+
+<p><strong>控制资源使用</strong></p>
+
+<p>如果用户不使用连接池，而是每当线程需要时创建一个新的连接，那么用户的应用程序的资源使用会产生非常大的浪费并且可能会导致高负载下的异常发生。
+连接池能够使性能最大化，同时还能将资源利用控制在一定的水平之下，如果超过该水平，应用程序将崩溃而不仅仅是变慢。</p>
+
+<p>python 中可以使用<code>urllib3</code>来使用http 连接池</p>
+
+<h2>1. 安装</h2>
+
+<p>使用 pip</p>
+
+<pre><code>pip install urllib3
+</code></pre>
+
+<p>或者clone最新的代码 <a href="github.com/shazow/urllib3.">github.com/shazow/urllib3.</a></p>
+
+<h2>2. 使用</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt;&gt;&gt; import urllib3
+</span><span class='line'>&gt;&gt;&gt; http = urllib3.PoolManager()
+</span><span class='line'>&gt;&gt;&gt; r = http.request('GET', 'http://google.com/')
+</span><span class='line'>&gt;&gt;&gt; r.status
+</span><span class='line'>200
+</span><span class='line'>&gt;&gt;&gt; r.headers['server']
+</span><span class='line'>'gws'
+</span><span class='line'>&gt;&gt;&gt; r.data
+</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>3. 使用 connection from url</h2>
+
+<p>处理hostname有时候是一件非常恼人的事情，去除http头，得到端口等等。
+好在urllib3帮我们都处理了这些累活，使用connection from url 即可</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt;&gt;&gt; conn = urllib3.connection_from_url('http://google.com')
+</span><span class='line'>&gt;&gt;&gt; r1 = conn.request('GET', 'http://google.com/')
+</span><span class='line'>&gt;&gt;&gt; r2 = conn.request('GET', '/mail')
+</span><span class='line'>&gt;&gt;&gt; r3 = conn.request('GET', 'http://yahoo.com/')
+</span><span class='line'>Traceback (most recent call last)
+</span><span class='line'>  ...
+</span><span class='line'>HostChangedError: Connection pool with host 'http://google.com' tried to
+</span><span class='line'>open a foreign host: http://yahoo.com/</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>注意</strong>
+如果代码是从httplib转过来的，httplib中的request函数和urllib3中的request函数是不一样的，需要使用 urllib3中的urlopen来替换以前的request函数</p>
+
+<p>这个比较坑爹，我花了很长时间在这个pitfall上面</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt;&gt;&gt; conn = urllib3.connection_from_url('http://google.com')
+</span><span class='line'>&gt;&gt;&gt; r1 = conn.urlopen('GET', 'http://google.com/')</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考 <a href="http://urllib3.readthedocs.org/en/latest/">http://urllib3.readthedocs.org/en/latest/</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Daniels Cai</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-08T19:39:00-07:00" pubdate data-updated="true">May 8<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/coding/'>coding</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/04/30/cheng-hui-and-his-united-stack/" title="Previous Post: 程辉和他的UnitedStack">&laquo; 程辉和他的UnitedStack</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/05/08/python-decorator-sample/" title="Next Post: python 设计模式之 装饰器 ">python 设计模式之 装饰器  &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+<h1>加微信<abbr title="The word 'QR Code' is a registered trademark of DENSO WAVE INCORPORATED. It applies only for the word 'QR Code', not for image."></abbr></h1>
+<a href="http://danielscai.github.com/blog/2013/05/08/python-http-connection-pool-urllib3/"><img src="/images/weixin_qr_code.jpeg" alt="post-qrcode"></a></section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/31/openstack-migrate-to-new-enviroment-pemission-denided-error/">openstack迁移环境引起的permission denied 错误</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/31/quantum-exceeded-maximim-amount-of-fixed-ips-per-port-error/">quantum Exceeded maximim amount of fixed ips per port 错误 </a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/31/openstack-database-chinese-character-encoding/">openstack 数据库中文乱码问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/18/clear-all-quantum-network-subnet-router-etc/">清空 quantum 网络 子网 路由 floatingip </a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/18/quantum-create-network-guide/">quantum 网络创建使用指南(quantum create network guide)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>分类</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/coding/'>coding (7)</a></li>
+<li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
+<li class='category'><a href='/blog/categories/octopress/'>octopress (1)</a></li>
+<li class='category'><a href='/blog/categories/openstack/'>openstack (14)</a></li>
+<li class='category'><a href='/blog/categories/statup/'>statup (1)</a></li>
+<li class='category'><a href='/blog/categories/virtualization/'>virtualization (1)</a></li>
+
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Daniels Cai -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'danielscai';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://danielscai.github.com/blog/2013/05/08/python-http-connection-pool-urllib3/';
+        var disqus_url = 'http://danielscai.github.com/blog/2013/05/08/python-http-connection-pool-urllib3/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

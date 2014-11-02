@@ -1,0 +1,472 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>python 框架flask介绍 (python flask web framework intro) - Daniels Cai's Blog</title>
+  <meta name="author" content="Daniels Cai">
+
+  
+  <meta name="description" content="flask action是python轻量级框架flask的一个管理器， 可以帮助我们自动生成代码框架，实现一些管理功能， 理论上来说给予wsgi的python程序都可以管理，不仅限于flask 1.安装flask action pip install Flask-Actions 生成一个项目 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://danielscai.github.com/blog/2013/04/25/python-flask-web-framework-intro">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Daniels Cai's Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.useso.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.useso.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.useso.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-36496703-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Daniels Cai's Blog</a></h1>
+  
+    <h2>proficient in Linux, proficient in Thinking.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:danielscai.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">博客</a></li>
+  <li><a href="/blog/archives">归档</a></li>
+  <li><a href="/course">公开课程</a></li>
+  <li><a href="/slides">演示</a></li>
+  <li><a href="/about">本人</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Python 框架flask介绍 (Python Flask Web Framework Intro)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-25T12:45:00-07:00" pubdate data-updated="true">Apr 25<span>th</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img class="right" src="/images/main/python-logo.gif" width="250" height="150" title="openstack" alt="openstack"></p>
+
+<p>flask action是python轻量级框架flask的一个管理器，</p>
+
+<p>可以帮助我们自动生成代码框架，实现一些管理功能，</p>
+
+<p>理论上来说给予wsgi的python程序都可以管理，不仅限于flask</p>
+
+<!-- more -->
+
+
+<p>1.安装flask action</p>
+
+<pre><code> pip install Flask-Actions
+</code></pre>
+
+<ol>
+<li><p>生成一个项目</p>
+
+<p>  flask_admin.py startproject helloproject</p></li>
+</ol>
+
+
+<p>3.运行该项目</p>
+
+<pre><code> ./manager runserver 
+</code></pre>
+
+<h2>4.部署到nginx </h2>
+
+<h2>4.1 启用 <code>default_server_actions</code></h2>
+
+<pre><code>manager = Manager(app,default_server_actions=True)
+</code></pre>
+
+<h2>4.4 运行daemon</h2>
+
+<pre><code>python manage.py runfcgi --protocol=fcgi --daemonize --pidfile=/var/run/flaskapp.pid --host=0.0.0.0 --port=8056
+</code></pre>
+
+<h2>4.5 配置nginx </h2>
+
+<pre><code>upstream flaskapp {
+   server 0.0.0.0:8056;
+   }
+
+server {
+listen 8055;
+server_name  0.0.0.0;
+
+
+location / {
+  fastcgi_pass  flaskapp;
+  fastcgi_param REQUEST_METHOD    $request_method;
+  fastcgi_param QUERY_STRING      $query_string;
+  fastcgi_param CONTENT_TYPE      $content_type;
+  fastcgi_param CONTENT_LENGTH    $content_length;
+  fastcgi_param SERVER_ADDR       $server_addr;
+  fastcgi_param SERVER_PORT       $server_port;
+  fastcgi_param SERVER_NAME       $server_name;
+  fastcgi_param SERVER_PROTOCOL   $server_protocol;
+  fastcgi_param PATH_INFO         $fastcgi_script_name;
+  fastcgi_param REMOTE_ADDR       $remote_addr;
+  fastcgi_param REMOTE_PORT       $remote_port;
+  fastcgi_pass_header Authorization;
+  fastcgi_intercept_errors off;
+}
+}
+</code></pre>
+
+<h2>5. 编写init.d脚本</h2>
+
+<p>参考django fastcgi init.d脚本，编写一个启动脚本,将脚本copy到/etc/init.d/flask
+运行update-rc.d flask defaults 添加到开机启动服务</p>
+
+<pre><code>#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          FastCGI servers for Django
+# Required-Start:    networking
+# Required-Stop:     networking
+# Default-Start:     2 3 4 5
+# Default-Stop:      S 0 1 6
+# Short-Description: Start FastCGI servers with Django.
+# Description:       Django, in order to operate with FastCGI, must be started
+#                    in a very specific way with manage.py. This must be done
+#                    for each DJango web server that has to run.
+### END INIT INFO
+#
+# Author:  Guillermo Fernandez Castellanos
+#          &lt;guillermo.fernandez.castellanos AT gmail.com&gt;.
+#
+# Version: @(#)fastcgi 0.1 11-Jan-2007 guillermo.fernandez.castellanos AT gmail.com
+#
+
+#### SERVER SPECIFIC CONFIGURATION
+DJANGO_SITES="zeusapi"
+SITES_PATH=/opt
+RUNFILES_PATH="/var/run"
+HOST=127.0.0.1
+PORT_START=8056
+RUN_AS=www-data
+FCGI_METHOD=threaded
+#### DO NOT CHANGE ANYTHING AFTER THIS LINE!
+
+set -e
+
+#PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DESC="Python Flask FastCGI servers"
+NAME=$0
+SCRIPTNAME=/etc/init.d/$NAME
+
+#
+#       Function that starts the daemon/service.
+#
+d_start()
+{
+    # Starting all Django FastCGI processes
+    PORT=$PORT_START
+    for SITE in $DJANGO_SITES
+    do
+        echo -n " $SITE"
+        if [ -f $RUNFILES_PATH/$SITE.pid ]; then
+            echo -n " already running"
+        else
+            start-stop-daemon --start --quiet \
+                       --pidfile $RUNFILES_PATH/$SITE.pid \
+                       --exec /usr/bin/env -- python \
+                       $SITES_PATH/$SITE/manage.py runfcgi \
+                       --daemonize \
+                       --host=$HOST --port=$PORT --pidfile=$RUNFILES_PATH/$SITE.pid
+            chmod 400 $RUNFILES_PATH/$SITE.pid
+        fi
+        #let "PORT = $PORT + 1"
+    done
+}
+
+#
+#       Function that stops the daemon/service.
+#
+d_stop() {
+    # Killing all Django FastCGI processes running
+    for SITE in $DJANGO_SITES
+    do
+        echo -n " $SITE"
+        start-stop-daemon --stop --quiet --pidfile $RUNFILES_PATH/$SITE.pid \
+                          || echo -n " not running"
+        if [ -f $RUNFILES_PATH/$SITE.pid ]; then
+           rm -f $RUNFILES_PATH/$SITE.pid
+        fi
+    done
+}
+
+d_status() {
+    # Killing all Django FastCGI processes running
+    for SITE in $DJANGO_SITES
+    do
+        echo -n " $SITE"
+        start-stop-daemon --status --quiet --pidfile $RUNFILES_PATH/$SITE.pid \
+                          &amp;&amp; echo -n " is running" \
+                          || echo -n " not running"
+    done
+}
+
+ACTION="$1"
+case "$ACTION" in
+    start)
+        echo -n "Starting $DESC: "
+        echo
+        d_start
+        echo "."
+        ;;
+
+    stop)
+        echo -n "Stopping $DESC: "
+        echo
+        d_stop
+        echo "."
+        ;;
+
+    status)
+        echo -n "status $DESC: "
+        echo
+        d_status
+        echo "."
+        ;;
+
+
+    restart|force-reload)
+        echo -n "Restarting $DESC: "
+        echo
+        d_stop
+        sleep 1
+        d_start
+        echo "."
+        ;;
+
+    *)
+        echo "Usage: $NAME {start|stop|restart|force-reload}" &gt;&amp;2
+        exit 3
+        ;;
+esac
+
+exit 0
+</code></pre>
+
+<h2>6.启用flask action调试模式</h2>
+
+<p>flask action中并没有直接提供调试模式，使用起来非常不方便，
+开启debug模式需要在<code>settings.py</code> 中设置 <code>DEBUG=True</code></p>
+
+<p>参考
+<a href="https://code.djangoproject.com/wiki/InitdScriptForLinux">https://code.djangoproject.com/wiki/InitdScriptForLinux</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Daniels Cai</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-25T12:45:00-07:00" pubdate data-updated="true">Apr 25<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/coding/'>coding</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/04/25/openstack-boot-with-subnet-port/" title="Previous Post: openstack 启动时指定使用子网 (openstack boot with subnet port)">&laquo; openstack 启动时指定使用子网 (openstack boot with subnet port)</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/04/25/python-singleton/" title="Next Post: python 设计模式之单例 singleton">python 设计模式之单例 singleton &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+<h1>加微信<abbr title="The word 'QR Code' is a registered trademark of DENSO WAVE INCORPORATED. It applies only for the word 'QR Code', not for image."></abbr></h1>
+<a href="http://danielscai.github.com/blog/2013/04/25/python-flask-web-framework-intro/"><img src="/images/weixin_qr_code.jpeg" alt="post-qrcode"></a></section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/31/openstack-migrate-to-new-enviroment-pemission-denided-error/">openstack迁移环境引起的permission denied 错误</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/31/quantum-exceeded-maximim-amount-of-fixed-ips-per-port-error/">quantum Exceeded maximim amount of fixed ips per port 错误 </a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/31/openstack-database-chinese-character-encoding/">openstack 数据库中文乱码问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/18/clear-all-quantum-network-subnet-router-etc/">清空 quantum 网络 子网 路由 floatingip </a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/18/quantum-create-network-guide/">quantum 网络创建使用指南(quantum create network guide)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>分类</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/coding/'>coding (7)</a></li>
+<li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
+<li class='category'><a href='/blog/categories/octopress/'>octopress (1)</a></li>
+<li class='category'><a href='/blog/categories/openstack/'>openstack (14)</a></li>
+<li class='category'><a href='/blog/categories/statup/'>statup (1)</a></li>
+<li class='category'><a href='/blog/categories/virtualization/'>virtualization (1)</a></li>
+
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Daniels Cai -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'danielscai';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://danielscai.github.com/blog/2013/04/25/python-flask-web-framework-intro/';
+        var disqus_url = 'http://danielscai.github.com/blog/2013/04/25/python-flask-web-framework-intro/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

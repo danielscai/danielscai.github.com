@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: coding | Daniels Cai's Blog]]></title>
+  <link href="http://danielscai.github.com/blog/categories/coding/atom.xml" rel="self"/>
+  <link href="http://danielscai.github.com/"/>
+  <updated>2014-11-01T20:47:48-07:00</updated>
+  <id>http://danielscai.github.com/</id>
+  <author>
+    <name><![CDATA[Daniels Cai]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[python 设计模式之 策略模式 ]]></title>
+    <link href="http://danielscai.github.com/blog/2013/05/08/python-pattern-strategy/"/>
+    <updated>2013-05-08T23:27:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/05/08/python-pattern-strategy</id>
+    <content type="html"><![CDATA[<p><img class="right" src="/images/main/python-logo.gif" width="250" height="150" title="python" alt="python"></p>
+
+<p>策略模式的主体思想是将变与不变的部分分离。</p>
+
+<p>概括的说，不变的部分我们可以写成类生成的一个实例，或者模块。将变的部分写成一个类，然后每次根据条件的不同生成多个实例，再将这个变的实例通过参数的方式传入到不变的实例或者模块中。</p>
+
+<!--more-->
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[python 元编程之 自动生成类]]></title>
+    <link href="http://danielscai.github.com/blog/2013/05/08/python-meta-programming-auto-create-class/"/>
+    <updated>2013-05-08T23:06:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/05/08/python-meta-programming-auto-create-class</id>
+    <content type="html"><![CDATA[<p><img class="right" src="/images/main/python-logo.gif" width="250" height="150" title="python" alt="python"></p>
+
+<p>元编程是动态语言最大的特点，却是一个经常被程序员忽略的技巧。</p>
+
+<p>元编程对初学者来讲，稍显复杂。那么元编程到底可以给我们带来什么特异功能呢？</p>
+
+<p>下面试用项目中用到的自动生成类的例子讲解元编程</p>
+
+<!--more-->
+
+
+<p><strong>需求</strong></p>
+
+<p>这段代码主要是生成项目中的http错误类，用来返回对应的http code和一段封装成json的错误提示信息</p>
+
+<p><strong>代码</strong></p>
+
+<p>先来看下代码</p>
+
+<h2>1. 将错误类的类名和对应的错误码记录到一个字典中</h2>
+
+<p>下面字典的值，都是我已经定义好的，比如<code>BAD_REQUEST</code>就是400
+```
+except_dict={</p>
+
+<pre><code>'ActionNotSupportedError': ACTION_NOT_SUPPORTED,
+'BadRequestError':BAD_REQUEST,
+'NotFoundError':NOT_FOUND,
+'UnauthorizedError':UNAUTHORIZED,
+'ConflictError':CONFLICT,
+'ParamsMissingError': PARAMS_MISSING,
+'OverlimitError': OVERLIMIT,
+'OSApiError': OSAPI_ERROR,
+'MethodNotAllowedError': METHOD_NOT_ALLOWED,
+'InternalServerError': INTERNAL_SERVER_ERROR,
+</code></pre>
+
+<p>}</p>
+
+<p>```</p>
+
+<h2>2. 定义类的函数</h2>
+
+<p>这里定义了两个函数,一个是<code>__init__</code>和<code>__str__</code> ，然后将其写入属性字典<code>attr</code></p>
+
+<p>```
+def <strong>init</strong>(self,errmsg):</p>
+
+<pre><code>''' make returned error message'''
+self.value='{"error_message":"%s"}' % errmsg
+zlog.logger("Exception: "+self.value)
+</code></pre>
+
+<p>def <strong>str</strong>(self):</p>
+
+<pre><code>return repr(self.value)
+</code></pre>
+
+<p>exceptions_list=[]
+bases=(Exception,)
+attrs={</p>
+
+<pre><code>'__init__':__init__,
+'__str__':__str__,
+</code></pre>
+
+<p>}</p>
+
+<p>```</p>
+
+<h2>3. 生成类</h2>
+
+<p>最后一步，也是最重要的一步，遍历第1步中生成的字典<code>except_dict</code>,属性code 设置为字典对应key的值
+使用<code>type</code>生成一个类，使用globals()将类注册到当前模块空间
+```
+for (eklass_name,code) in except_dict.items():</p>
+
+<pre><code>attrs['code']=code
+eklass=type(eklass_name,bases,attrs)
+exceptions_list.append(eklass)
+globals().update( {eklass_name: eklass } )
+</code></pre>
+
+<p>```</p>
+
+<p>这样一段扩展性非常高的错误处理代码就完成了，新添加一个错误码，只需要添加一行<code>except_dict</code>字典值，剩下的代码会帮你搞定。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[python 设计模式之 装饰器 ]]></title>
+    <link href="http://danielscai.github.com/blog/2013/05/08/python-decorator-sample/"/>
+    <updated>2013-05-08T22:40:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/05/08/python-decorator-sample</id>
+    <content type="html"><![CDATA[<p><img class="right" src="/images/main/python-logo.gif" width="250" height="150" title="python" alt="python"></p>
+
+<p>之前介绍过 python 的<a href="http://dnscai.com/blog/2013/04/25/python-singleton/">单例</a></p>
+
+<p>其实python 不需要单例 (为什么？ 想一想，模块不就是最好的单例么？)</p>
+
+<p>本文主要讨论的是python 的装饰器，flask 的路由就是使用装饰器实现的，flask介绍可以参考 <a href="http://dnscai.com/blog/2013/04/25/python-flask-web-framework-intro/">http://dnscai.com/blog/2013/04/25/python-flask-web-framework-intro/</a></p>
+
+<!--more-->
+
+
+<p>下面是一段简单的flask路由规则</p>
+
+<p>```
+@vm.route("/<management_zone>/<availability_zone>/&lt;string:x_id>",</p>
+
+<pre><code>methods=[ 'GET','POST','PUT','DELETE'])
+</code></pre>
+
+<p>def vm(management_zone,availability_zone,x_id):</p>
+
+<pre><code>return ''
+</code></pre>
+
+<p>```</p>
+
+<p><strong>复用函数问题</strong></p>
+
+<p>有些函数可能是需要在调用没一个url的时候都需要执行，比如说认证模块。
+传统的解决方案就是写一个认证函数，在每一个url函数下调用这个函数。</p>
+
+<p>这的确可以解决问题，但是代码不能优雅一点么，不能更pythonic一点么？</p>
+
+<p><strong>简单装饰器</strong></p>
+
+<p>装饰器的作用很简单，就是在运行某个函数之前，运行一些其他代码，作用如下</p>
+
+<p><code>
+foo=bar(foo)
+</code></p>
+
+<p>就像foo函数被bar装饰过了一样，python中提供了一个装饰器的语法糖，'@'</p>
+
+<p>让我们来看看如何使用装饰器写一个认证函数</p>
+
+<p><strong>认证函数 装饰器</strong></p>
+
+<p>下面代码生成一个<code>auth_deco</code>的函数，这个函数特别之处在于他会返回一个传入的函数，在返回之前，做了认证的工作</p>
+
+<p>```
+def auth_deco(func):</p>
+
+<pre><code>'''
+ladp auth decorator
+'''
+@functools.wraps(func)
+def wrapper(*argv,**kwgs):
+    username=request.headers.get('username')
+    password=request.headers.get('password')
+    if password != None:
+        password=base64.decodestring(password)
+    _ldap_auth(username,password)
+    return func(*argv,**kwgs)
+return wrapper
+</code></pre>
+
+<p>```</p>
+
+<p><strong>使用这个装饰器</strong></p>
+
+<p>在<code>@vm.route</code>的下面添加<code>@auth_deco</code>就大共告成，而且非常pythonic</p>
+
+<p>```
+@vm.route("/<management_zone>/<availability_zone>/&lt;string:x_id>",</p>
+
+<pre><code>methods=[ 'GET','POST','PUT','DELETE'])
+</code></pre>
+
+<p>@auth_deco
+def vm(management_zone,availability_zone,x_id):</p>
+
+<pre><code>return ''
+</code></pre>
+
+<p>```</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[python http connection pool urllib3]]></title>
+    <link href="http://danielscai.github.com/blog/2013/05/08/python-http-connection-pool-urllib3/"/>
+    <updated>2013-05-08T19:39:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/05/08/python-http-connection-pool-urllib3</id>
+    <content type="html"><![CDATA[<p><img class="right" src="/images/main/python-logo.gif" width="250" height="150" title="python" alt="python">
+随着项目越来越庞大，直接http请求成为不可忽略的一个问题，需要有一种机制来管理和复用http链接，http连接池就是设计来解决这个问题的.</p>
+
+<p>连接池是创建和管理一个连接的缓冲池的技术，这些连接准备好被任何需要它们的线程使用</p>
+
+<p>使用连接池有如下好处</p>
+
+<!--more-->
+
+
+<p><strong>减少连接创建时间</strong></p>
+
+<p>http连接需要完成3次握手，建立一个连接，如果这类连接是“循环”使用的，使用该方式这些花销就可避免。</p>
+
+<p><strong>简化的编程模式</strong></p>
+
+<p>当使用连接池时，每一个单独的线程能够像创建了一个自己的http连接一样操作，允许用户直接使用从池中得到的连接编程。</p>
+
+<p><strong>控制资源使用</strong></p>
+
+<p>如果用户不使用连接池，而是每当线程需要时创建一个新的连接，那么用户的应用程序的资源使用会产生非常大的浪费并且可能会导致高负载下的异常发生。
+连接池能够使性能最大化，同时还能将资源利用控制在一定的水平之下，如果超过该水平，应用程序将崩溃而不仅仅是变慢。</p>
+
+<p>python 中可以使用<code>urllib3</code>来使用http 连接池</p>
+
+<h2>1. 安装</h2>
+
+<p>使用 pip</p>
+
+<pre><code>pip install urllib3
+</code></pre>
+
+<p>或者clone最新的代码 <a href="github.com/shazow/urllib3.">github.com/shazow/urllib3.</a></p>
+
+<h2>2. 使用</h2>
+
+<p>```</p>
+
+<blockquote><blockquote><blockquote><p>import urllib3
+http = urllib3.PoolManager()
+r = http.request('GET', 'http://google.com/')
+r.status
+200
+r.headers['server']
+'gws'
+r.data
+...
+```</p></blockquote></blockquote></blockquote>
+
+<h2>3. 使用 connection from url</h2>
+
+<p>处理hostname有时候是一件非常恼人的事情，去除http头，得到端口等等。
+好在urllib3帮我们都处理了这些累活，使用connection from url 即可</p>
+
+<p>```</p>
+
+<blockquote><blockquote><blockquote><p>conn = urllib3.connection_from_url('http://google.com')
+r1 = conn.request('GET', 'http://google.com/')
+r2 = conn.request('GET', '/mail')
+r3 = conn.request('GET', 'http://yahoo.com/')
+Traceback (most recent call last)
+  ...
+HostChangedError: Connection pool with host 'http://google.com' tried to
+open a foreign host: http://yahoo.com/
+```</p></blockquote></blockquote></blockquote>
+
+<p><strong>注意</strong>
+如果代码是从httplib转过来的，httplib中的request函数和urllib3中的request函数是不一样的，需要使用 urllib3中的urlopen来替换以前的request函数</p>
+
+<p>这个比较坑爹，我花了很长时间在这个pitfall上面</p>
+
+<p>```</p>
+
+<blockquote><blockquote><blockquote><p>conn = urllib3.connection_from_url('http://google.com')
+r1 = conn.urlopen('GET', 'http://google.com/')
+```</p></blockquote></blockquote></blockquote>
+
+<p>参考 <a href="http://urllib3.readthedocs.org/en/latest/">http://urllib3.readthedocs.org/en/latest/</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[python 设计模式之单例 singleton]]></title>
+    <link href="http://danielscai.github.com/blog/2013/04/25/python-singleton/"/>
+    <updated>2013-04-25T12:52:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/04/25/python-singleton</id>
+    <content type="html"><![CDATA[<p><img class="right" src="/images/main/python-logo.gif" width="250" height="150" title="openstack" alt="openstack">
+python单例实现大概有3种，各有优缺点</p>
+
+<ul>
+<li>装饰器</li>
+</ul>
+
+
+<p>优点：直接添加在类定义代码上面，比多重继承更加直观
+缺点： 类调用的时候 myclass()是一个单例对象，但是myclass本身变成了一个方法，而不是一个类，因此不能调用这个类的类方法</p>
+
+<!-- more -->
+
+
+<ul>
+<li>基类</li>
+</ul>
+
+
+<p>优点：相比装饰器，这是一个真正的类
+缺点： 需要使用多重继承， <code>__new__</code>方法可能会被重写，单例实现可能会被覆盖</p>
+
+<ul>
+<li>元类</li>
+</ul>
+
+
+<p>优点：是一个真正的类，达到了多重继承的效果，而不会被重写
+缺点：相对来说没有其他两个清晰，但是还是比较清晰的</p>
+
+<p>使用metaclass实现单例，
+示例代码</p>
+
+<pre><code>class Singleton(type):
+    _instances = {}
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
+
+class MyClass(BaseClass):
+    __metaclass__ = Singleton
+</code></pre>
+
+<p><strong>代码分析</strong></p>
+
+<p>定义了一个Singleton类，
+使用类变量_instances字典记录类是否存在，
+该类实现了一个 <code>__call__</code>方法查询类是否在类变量<code>_instances中</code>，如果存在，直接返回改类，如果不存在，使用super生成一个该类，并记录到类变量<code>_instances</code>中</p>
+
+<p>参考
+<a href="http://stackoverflow.com/questions/6760685/creating-a-singleton-in-python">http://stackoverflow.com/questions/6760685/creating-a-singleton-in-python</a></p>
+]]></content>
+  </entry>
+  
+</feed>

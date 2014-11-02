@@ -1,0 +1,704 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: openstack | Daniels Cai's Blog]]></title>
+  <link href="http://danielscai.github.com/blog/categories/openstack/atom.xml" rel="self"/>
+  <link href="http://danielscai.github.com/"/>
+  <updated>2014-11-01T20:47:48-07:00</updated>
+  <id>http://danielscai.github.com/</id>
+  <author>
+    <name><![CDATA[Daniels Cai]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[openstack迁移环境引起的permission denied 错误]]></title>
+    <link href="http://danielscai.github.com/blog/2013/05/31/openstack-migrate-to-new-enviroment-pemission-denided-error/"/>
+    <updated>2013-05-31T21:49:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/05/31/openstack-migrate-to-new-enviroment-pemission-denided-error</id>
+    <content type="html"><![CDATA[<p><img class="right" src="/images/main/OpenStack.jpeg" width="200" height="100" title="openstack" alt="openstack"></p>
+
+<p>openstack 迁移错误</p>
+
+<p>openstack 迁移到新的环境。</p>
+
+<p>在新的环境中启动一台虚拟机，发现一直是error状态</p>
+
+<p>查看虚拟机状态提示<code>ComputeHostNotFound_Remote</code>和<code>Compute host 1 could not be found.</code></p>
+
+<p>但是其实并没有compute 1 节点。</p>
+
+<!--more-->
+
+
+<p>如下</p>
+
+<p>```
+root@controller2:~# nova show d4e4059c-7306-4773-8e01-360a236fd44b
++-----------------------------+--------------------------------------------------------------------------------------------------------------+
+| Property                    | Value                                                                                                        |
++-----------------------------+--------------------------------------------------------------------------------------------------------------+
+| status                      | ERROR                                                                                                        |
+| updated                     | 2013-05-29T12:21:36Z                                                                                         |
+| OS-EXT-STS:task_state       | None                                                                                                         |
+| key_name                    | None                                                                                                         |
+| image                       | precise (6b01928b-056f-4d2e-bb33-988a4853d7f9)                                                               |
+| hostId                      | fc6914630cd8a0c64cfaf744b2e85aff0b7c58d16565ff9d5a48ff12                                                     |
+| OS-EXT-STS:vm_state         | error                                                                                                        |
+| flavor                      | m1.tiny (1)                                                                                                  |
+| id                          | d4e4059c-7306-4773-8e01-360a236fd44b                                                                         |
+| security_groups             | [{u'name': u'default'}]                                                                                      |
+| user_id                     | 05e8636f0cb94171bba93f5a1a73c927                                                                             |
+| name                        | api_test                                                                                                     |
+| created                     | 2013-05-29T12:20:57Z                                                                                         |
+| fault                       | {u'message': u'ComputeHostNotFound_Remote', u'code': 404, u'details': u'Compute host 1 could not be found.   |
+|                             | Traceback (most recent call last):                                                                           |
+|                             |                                                                                                              |
+|                             |   File "/usr/lib/python2.7/dist-packages/nova/openstack/common/rpc/amqp.py", line 430, in <em>process_data      |
+|                             |     rval = self.proxy.dispatch(ctxt, version, method, <strong>args)                                                |
+|                             |                                                                                                              |
+|                             |   File "/usr/lib/python2.7/dist-packages/nova/openstack/common/rpc/dispatcher.py", line 133, in dispatch     |
+|                             |     return getattr(proxyobj, method)(ctxt, </strong>kwargs)                                                         |
+|                             |                                                                                                              |
+|                             |   File "/usr/lib/python2.7/dist-packages/nova/conductor/manager.py", line 352, in compute_node_update        |
+|                             |     prune_stats)                                                                                             |
+|                             |                                                                                                              |
+|                             |   File "/usr/lib/python2.7/dist-packages/nova/db/api.py", line 200, in compute_node_update                   |
+|                             |     return IMPL.compute_node_update(context, compute_id, values, prune_stats)                                |
+|                             |                                                                                                              |
+|                             |   File "/usr/lib/python2.7/dist-packages/nova/db/sqlalchemy/api.py", line 96, in wrapper                     |
+|                             |     return f(*args, **kwargs)                                                                                |
+|                             |                                                                                                              |
+|                             |   File "/usr/lib/python2.7/dist-packages/nova/db/sqlalchemy/api.py", line 545, in compute_node_update        |
+|                             |     compute_ref = </em>compute_node_get(context, compute_id, session=session)                                    |
+|                             |                                                                                                              |
+|                             |   File "/usr/lib/python2.7/dist-packages/nova/db/sqlalchemy/api.py", line 455, in _compute_node_get          |
+|                             |     raise exception.ComputeHostNotFound(host=compute_id)                                                     |
+|                             |                                                                                                              |
+|                             | ComputeHostNotFound: Compute host 1 could not be found.                                                      |
+|                             | ', u'created': u'2013-05-29T12:21:36Z'}                                                                      |
+| OS-DCF:diskConfig           | MANUAL                                                                                                       |
+| metadata                    | {u'image_id': u'6b01928b-056f-4d2e-bb33-988a4853d7f9', u'os_name': u'ubuntu', u'My Server Name': u'Apache1'} |
+| accessIPv4                  |                                                                                                              |
+| accessIPv6                  |                                                                                                              |
+| tenant_id                   | a32328ccd3f641c882910a32cdff91fc                                                                             |
+| OS-EXT-STS:power_state      | 0                                                                                                            |
+| OS-EXT-AZ:availability_zone | nova                                                                                                         |
+| config_drive                |                                                                                                              |
++-----------------------------+--------------------------------------------------------------------------------------------------------------+</p>
+
+<p>```</p>
+
+<p>查看 <code>nova scheduler</code> 错误</p>
+
+<p>```</p>
+
+<p>2013-05-29 20:21:34.481 ERROR nova.scheduler.filter_scheduler [req-3b009407-bcbb-46a3-8ae9-173574cf7854 05e8636f0cb94171bba93f5a1a73c927 a32328ccd3f641c882910a32cdff91fc] [instance: d4e4059c-7306-4773-8e01-360a236fd44b] Error from last host: compute3 (node compute3): [u'Traceback (most recent call last):\n', u'  File "/usr/lib/python2.7/dist-packages/nova/compute/manager.py", line 834, in <em>run_instance\n    set_access_ip=set_access_ip)\n', u'  File "/usr/lib/python2.7/dist-packages/nova/compute/manager.py", line 1093, in </em>spawn\n    LOG.exception(<em>(\'Instance failed to spawn\'), instance=instance)\n', u'  File "/usr/lib/python2.7/contextlib.py", line 24, in <strong>exit</strong>\n    self.gen.next()\n', u'  File "/usr/lib/python2.7/dist-packages/nova/compute/manager.py", line 1089, in </em>spawn\n    block_device_info)\n', u'  File "/usr/lib/python2.7/dist-packages/nova/virt/libvirt/driver.py", line 1520, in spawn\n    block_device_info)\n', u'  File "/usr/lib/python2.7/dist-packages/nova/virt/libvirt/driver.py", line 2433, in <em>create_domain_and_network\n    self.firewall_driver.setup_basic_filtering(instance, network_info)\n', u'  File "/usr/lib/python2.7/dist-packages/nova/virt/libvirt/firewall.py", line 288, in setup_basic_filtering\n    self.refresh_provider_fw_rules()\n', u'  File "/usr/lib/python2.7/dist-packages/nova/virt/firewall.py", line 476, in refresh_provider_fw_rules\n    self.</em>do_refresh_provider_fw_rules()\n', u'  File "/usr/lib/python2.7/dist-packages/nova/openstack/common/lockutils.py", line 221, in inner\n    with lock:\n', u'  File "/usr/lib/python2.7/dist-packages/nova/openstack/common/lockutils.py", line 75, in <strong>enter</strong>\n    self.lockfile = open(self.fname, \'w\')\n', u"IOError: [Errno 13] Permission denied: '/run/lock/nova/nova-iptables'\n"]
+```</p>
+
+<p>解决方案</p>
+
+<p>/var/lock/nova 的权限是 nova:root , 应该是nova:nova</p>
+
+<p><code>
+chown -R nova:nova /var/lock/nova
+</code></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[quantum Exceeded maximim amount of fixed ips per port 错误 ]]></title>
+    <link href="http://danielscai.github.com/blog/2013/05/31/quantum-exceeded-maximim-amount-of-fixed-ips-per-port-error/"/>
+    <updated>2013-05-31T21:39:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/05/31/quantum-exceeded-maximim-amount-of-fixed-ips-per-port-error</id>
+    <content type="html"><![CDATA[<p><img class="right" src="/images/main/OpenStack.jpeg" width="200" height="100" title="openstack" alt="openstack"></p>
+
+<p>openstack 运行过程中突然出现这个错误</p>
+
+<p>在 network节点上<code>/var/log/quantum/dhcp-agent.log</code></p>
+
+<p>出现如下错误日志</p>
+
+<p>提示<code>Exceeded maximim amount of fixed ips per port.</code></p>
+
+<p>应该是跟quota有关的。</p>
+
+<!--more-->
+
+
+<p>```
+2013-05-22 16:31:10    ERROR [quantum.agent.dhcp_agent] Unable to enable dhcp.
+Traceback (most recent call last):
+  File "/usr/lib/python2.7/dist-packages/quantum/agent/dhcp_agent.py", line 129, in call_driver</p>
+
+<pre><code>getattr(driver, action)()
+</code></pre>
+
+<p>  File "/usr/lib/python2.7/dist-packages/quantum/agent/linux/dhcp.py", line 117, in enable</p>
+
+<pre><code>reuse_existing=True)
+</code></pre>
+
+<p>  File "/usr/lib/python2.7/dist-packages/quantum/agent/dhcp_agent.py", line 528, in setup</p>
+
+<pre><code>port = self.plugin.get_dhcp_port(network.id, device_id)
+</code></pre>
+
+<p>  File "/usr/lib/python2.7/dist-packages/quantum/agent/dhcp_agent.py", line 377, in get_dhcp_port</p>
+
+<pre><code>topic=self.topic))
+</code></pre>
+
+<p>  File "/usr/lib/python2.7/dist-packages/quantum/openstack/common/rpc/proxy.py", line 80, in call</p>
+
+<pre><code>return rpc.call(context, self._get_topic(topic), msg, timeout)
+</code></pre>
+
+<p>  File "/usr/lib/python2.7/dist-packages/quantum/openstack/common/rpc/<strong>init</strong>.py", line 140, in call</p>
+
+<pre><code>return _get_impl().call(CONF, context, topic, msg, timeout)
+</code></pre>
+
+<p>  File "/usr/lib/python2.7/dist-packages/quantum/openstack/common/rpc/impl_kombu.py", line 798, in call</p>
+
+<pre><code>rpc_amqp.get_connection_pool(conf, Connection))
+</code></pre>
+
+<p>  File "/usr/lib/python2.7/dist-packages/quantum/openstack/common/rpc/amqp.py", line 613, in call</p>
+
+<pre><code>rv = list(rv)
+</code></pre>
+
+<p>  File "/usr/lib/python2.7/dist-packages/quantum/openstack/common/rpc/amqp.py", line 562, in <strong>iter</strong></p>
+
+<pre><code>raise result
+</code></pre>
+
+<p>RemoteError: Remote error: InvalidInput Invalid input for operation: Exceeded maximim amount of fixed ips per port.
+[u'Traceback (most recent call last):\n', u'  File "/usr/lib/python2.7/dist-packages/quantum/openstack/common/rpc/amqp.py", line 430, in <em>process_data\n    rval = self.proxy.dispatch(ctxt, version, method, <strong>args)\n', u'  File "/usr/lib/python2.7/dist-packages/quantum/common/rpc.py", line 43, in dispatch\n    quantum_ctxt, version, method, </strong>kwargs)\n', u'  File "/usr/lib/python2.7/dist-packages/quantum/openstack/common/rpc/dispatcher.py", line 133, in dispatch\n    return getattr(proxyobj, method)(ctxt, **kwargs)\n', u'  File "/usr/lib/python2.7/dist-packages/quantum/db/dhcp_rpc_base.py", line 104, in get_dhcp_port\n    dict(port=port))\n', u'  File "/usr/lib/python2.7/dist-packages/quantum/plugins/openvswitch/ovs_quantum_plugin.py", line 612, in update_port\n    context, id, port)\n', u'  File "/usr/lib/python2.7/dist-packages/quantum/db/db_base_plugin_v2.py", line 1341, in update_port\n    p[\'fixed_ips\'])\n', u'  File "/usr/lib/python2.7/dist-packages/quantum/db/db_base_plugin_v2.py", line 657, in </em>update_ips_for_port\n    raise q_exc.InvalidInput(error_message=msg)\n', u'InvalidInput: Invalid input for operation: Exceeded maximim amount of fixed ips per port.\n'].
+```</p>
+
+<p>解决方法</p>
+
+<p>在quantum server上设置 <code>/etc/quantum/quantum.conf</code></p>
+
+<p>```</p>
+
+<h1>Maximum number of fixed ips per port</h1>
+
+<p>max_fixed_ips_per_port = 1000
+```</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[openstack 数据库中文乱码问题]]></title>
+    <link href="http://danielscai.github.com/blog/2013/05/31/openstack-database-chinese-character-encoding/"/>
+    <updated>2013-05-31T21:33:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/05/31/openstack-database-chinese-character-encoding</id>
+    <content type="html"><![CDATA[<p><img class="right" src="/images/main/OpenStack.jpeg" width="200" height="100" title="openstack" alt="openstack"></p>
+
+<p>openstack的sql connection 需要配置成utf-8才不会中文乱码</p>
+
+<p><code>
+sql_connection = mysql://nova:xxx@qa-mysql1:3306/nova?charset='utf-8'
+</code></p>
+
+<p>但是如果之前就没有设置utf-8，数据库又不能随便清空，想要更新openstack数据库某个字段，就不能直接采用utf-8的数据库连接，否则会出现插入到数据库中的是中文，但是openstack中显示的是乱码。更坏的是如果插入的是全角中文字符，openstack就会出错。</p>
+
+<!--more-->
+
+
+<p>那么如何更新这种情况下的数据库呢？</p>
+
+<p>答案很简单，就是采用和openstack一样的数据库连接方式，openstack使用的是 sqlalchemy
+我写一个一个简单的数据库连接如下</p>
+
+<p>```</p>
+
+<h1>!/usr/bin/python</h1>
+
+<h1>coding=utf-8</h1>
+
+<p>from sqlalchemy import create_engine
+from sqlalchemy import MetaData
+from sqlalchemy.sql import select
+from sqlalchemy.sql import update</p>
+
+<p>engine = create_engine('mysql://nova:password@qa-mysql1:3306/nova',convert_unicode=True)</p>
+
+<p>metadata=MetaData()
+meta=metadata
+meta.reflect(bind=engine)
+conn=engine.connect()
+secgroup=meta.tables['security_groups']</p>
+
+<p>u=update(secgroup).where(secgroup.c.id==60).values(name='中文')
+result=conn.execute(u)
+```</p>
+
+<p>这里需要注意的是在<code>create_engine</code>的时候，需要添加<code>convert_unicode=True</code>,如果不添加，会出如下解码错误的错误</p>
+
+<p>```</p>
+
+<pre><code>query = query % db.literal(args)
+</code></pre>
+
+<p>  File "/usr/share/pyshared/MySQLdb/connections.py", line 264, in literal</p>
+
+<pre><code>return self.escape(o, self.encoders)
+</code></pre>
+
+<p>  File "/usr/share/pyshared/MySQLdb/connections.py", line 202, in unicode_literal</p>
+
+<pre><code>return db.literal(u.encode(unicode_literal.charset))
+</code></pre>
+
+<p>UnicodeEncodeError: 'latin-1' codec can't encode characters in position 0-1: ordinal not in range(256)
+```</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[清空 quantum 网络 子网 路由 floatingip ]]></title>
+    <link href="http://danielscai.github.com/blog/2013/05/18/clear-all-quantum-network-subnet-router-etc/"/>
+    <updated>2013-05-18T12:45:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/05/18/clear-all-quantum-network-subnet-router-etc</id>
+    <content type="html"><![CDATA[<p><img class="right" src="/images/main/OpenStack.jpeg" width="200" height="100" title="openstack" alt="openstack"></p>
+
+<p>清空 quantum 数据</p>
+
+<p><em>作者: Daniels Cai
+</em>主页: http://dnscai.com</p>
+
+<h2>1.清空floatingip </h2>
+
+<!--more-->
+
+
+<pre><code>for i in `quantum floatingip-list  | grep -v "\---"  | grep -v "^| id" | awk '{print $2}' `; do quantum floatingip-delete $i ; done
+</code></pre>
+
+<h2>2.清空路由gateway </h2>
+
+<pre><code>for i in `quantum router-list  | grep -v "\---"  | grep -v "^| id" | awk '{print $2}' `; do quantum router-gateway-clear $i ; done
+</code></pre>
+
+<p>查看路由下的 port</p>
+
+<pre><code>quantum port-list -- --device_id 64ffbf96-5cba-4043-bef2-b3a846d1ab42 --device_owner network:router_gateway
+</code></pre>
+
+<p>查看路由本身的port</p>
+
+<pre><code>quantum port-list -- --device_id 64ffbf96-5cba-4043-bef2-b3a846d1ab42 
+</code></pre>
+
+<h2>3. 清空路由所有的interface</h2>
+
+<pre><code>for i in `quantum router-list  | grep -v "\---"  | grep -v "^| id" | awk '{print $2}' `; do quantum router-interface-delete $i  `quantum port-list -- --device_id  $i  | grep subnet_id | sed 's/.*subnet_id": "\([^"]*\).*/\1/g'` ; done 
+</code></pre>
+
+<h2>4.删除路由</h2>
+
+<pre><code>for i in `quantum router-list  | grep -v "\---"  | grep -v "^| id" | awk '{print $2}' `; do quantum router-delete $i  `quantum port-list -- --device_id  $i  | grep subnet_id | sed 's/.*subnet_id": "\([^"]*\).*/\1/g'` ; done 
+</code></pre>
+
+<h2>5.清空port</h2>
+
+<pre><code>for i in `quantum port-list  | grep -v "\---"  | grep -v "^| id" | awk '{print $2}' `;do quantum port-delete $i ; done 
+</code></pre>
+
+<h2>6. 删除subnet </h2>
+
+<pre><code>for i in `quantum  subnet-list | grep -v "\---"  | grep -v "^| id" | awk '{print $2}' `;do  quantum subnet-delete $i ; done
+</code></pre>
+
+<h2>7. 删除网络</h2>
+
+<pre><code>for i in `quantum  net-list | grep -v "\---"  | grep -v "^| id" | awk '{print $2}' `;do  quantum net-delete $i ; done
+</code></pre>
+
+<h2>8. 清空所有agent </h2>
+
+<p>清空所有agent后，重启相关service ，agent 可以自动重新注册</p>
+
+<pre><code>for i in ` quantum agent-list | grep -v "\---"  | grep -v "^\ id" | awk '{print $2}' `;do quantum agent-delete $i ; done
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[quantum 网络创建使用指南(quantum create network guide)]]></title>
+    <link href="http://danielscai.github.com/blog/2013/05/18/quantum-create-network-guide/"/>
+    <updated>2013-05-18T12:24:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/05/18/quantum-create-network-guide</id>
+    <content type="html"><![CDATA[<p><img class="right" src="/images/main/OpenStack.jpeg" width="200" height="100" title="openstack" alt="openstack"></p>
+
+<p>quantum 网络创建使用指南</p>
+
+<h2>1. 创建网络</h2>
+
+<pre><code>quantum net-create network1
+</code></pre>
+
+<!--more-->
+
+
+<h2>2. 创建子网</h2>
+
+<p><code>
+quantum subnet-create network1 192.168.12.0/24
+Created a new subnet:
++------------------+----------------------------------------------------+
+| Field            | Value                                              |
++------------------+----------------------------------------------------+
+| allocation_pools | {"start": "192.168.12.2", "end": "192.168.12.254"} |
+| cidr             | 192.168.12.0/24                                    |
+| dns_nameservers  |                                                    |
+| enable_dhcp      | True                                               |
+| gateway_ip       | 192.168.12.1                                       |
+| host_routes      |                                                    |
+| id               | 32fe8d37-5c35-453e-b7d4-a1c98ac7bf97               |
+| ip_version       | 4                                                  |
+| name             |                                                    |
+| network_id       | 54f37003-7f4e-47f4-a865-c928de1ae9e3               |
+| tenant_id        | 180deec2c933457cb149ef5cf38322f8                   |
++------------------+----------------------------------------------------+
+</code></p>
+
+<h2>3. 创建外部网络</h2>
+
+<h2>3.1 创建外部网络目的</h2>
+
+<p>作为floating ip 池</p>
+
+<h2>3.2 创建外部网络注意点</h2>
+
+<p>创建外部网络子网的时候，注意network 节点上的br-ex网桥一定是要存在的</p>
+
+<p><code>eth2</code>接口的配置在<code>ubuntu</code>里可以参考如下的配置</p>
+
+<pre><code>auto eth2
+iface eth2 inet manual
+up ifconfig $IFACE 0.0.0.0 up
+up ip link set $IFACE promisc on
+down ip link set $IFACE promisc off
+down ifconfig $IFACE down
+</code></pre>
+
+<p>这个子网能工作的前提条件必须满足,不然即使分配了<code>floating ip</code>也是无法工作的</p>
+
+<ul>
+<li>这个子网一定一个是物理上和你<code>network</code>节点连接的,这里是用的eth2接口</li>
+<li><code>allocation-pool</code>中的ip都是可用的</li>
+<li>不需要dhcp</li>
+<li><code>network</code>节点上<code>openvswitch</code>网桥<code>br-ex</code>必须存在</li>
+<li><code>br-ex</code>上添加<code>eth2</code>接口，命令为<code>ovs-vsctl add-port br-ex eth2</code></li>
+</ul>
+
+
+<p>下面是建好的ovs网桥</p>
+
+<p>```
+bridge name bridge id  STP enabled interfaces
+br-ex  0000.180373d2869d no  eth2
+br-int  0000.823fbdfff741 no  qr-520f18b3-85</p>
+
+<pre><code>  tap7415fb87-d7
+  tape9e5dc79-c8
+  tapfec2a3b4-4c
+</code></pre>
+
+<p>br-tun  0000.5ef67744584e no
+virbr0  8000.000000000000 yes</p>
+
+<p>```</p>
+
+<p>3.3 创建外部网络</p>
+
+<p>```</p>
+
+<h1>quantum net-create ext_net --router:external=True</h1>
+
+<p>Created a new network:
++---------------------------+--------------------------------------+
+| Field                     | Value                                |
++---------------------------+--------------------------------------+
+| admin_state_up            | True                                 |
+| id                        | 45217501-16c6-49a9-946d-6d44ef2b0256 |
+| name                      | ext_net                              |
+| provider:network_type     | gre                                  |
+| provider:physical_network |                                      |
+| provider:segmentation_id  | 2                                    |
+| router:external           | True                                 |
+| shared                    | False                                |
+| status                    | ACTIVE                               |
+| subnets                   |                                      |
+| tenant_id                 | 180deec2c933457cb149ef5cf38322f8     |
++---------------------------+--------------------------------------+</p>
+
+<p>```</p>
+
+<h2>3.3. 创建外部网络子网</h2>
+
+<p>这里我们创建一个<code>10.1.3.0/24</code>的子网，假设你的的<code>eth2</code>接口是接在<code>10.1.3.0/24</code>网段的，
+分配地址从140到160,就是在参数中指定<code>--allocation-pool start=10.1.3.10,end=10.1.3.70</code>, 这里的dhcp是需要关闭的</p>
+
+<p>```</p>
+
+<h1>quantum subnet-create --allocation-pool start=10.1.3.10,end=10.1.3.70 --gateway 10.1.3.1 ext_net 10.1.3.0/24 --enable_dhcp=False</h1>
+
+<p>Created a new subnet:
++------------------+--------------------------------------------+
+| Field            | Value                                      |
++------------------+--------------------------------------------+
+| allocation_pools | {"start": "10.1.3.10", "end": "10.1.3.70"} |
+| cidr             | 10.1.3.0/24                                |
+| dns_nameservers  |                                            |
+| enable_dhcp      | False                                      |
+| gateway_ip       | 10.1.3.1                                   |
+| host_routes      |                                            |
+| id               | e51a2803-64cf-4d8d-9637-9ae38ad4d76c       |
+| ip_version       | 4                                          |
+| name             |                                            |
+| network_id       | 45217501-16c6-49a9-946d-6d44ef2b0256       |
+| tenant_id        | 180deec2c933457cb149ef5cf38322f8           |
++------------------+--------------------------------------------+
+```</p>
+
+<h2>3.4 查看创建好的网络</h2>
+
+<p>```</p>
+
+<h1>quantum net-list</h1>
+
+<p>+--------------------------------------+----------+------------------------------------------------------+
+| id                                   | name     | subnets                                              |
++--------------------------------------+----------+------------------------------------------------------+
+| 45217501-16c6-49a9-946d-6d44ef2b0256 | ext_net  | e51a2803-64cf-4d8d-9637-9ae38ad4d76c 10.1.3.0/24     |
+| 54f37003-7f4e-47f4-a865-c928de1ae9e3 | network1 | 32fe8d37-5c35-453e-b7d4-a1c98ac7bf97 192.168.12.0/24 |
++--------------------------------------+----------+------------------------------------------------------+
+```</p>
+
+<h2>4. 创建路由</h2>
+
+<p><strong>4.1 创建路由</strong></p>
+
+<p>```</p>
+
+<h1>quantum router-create default-router</h1>
+
+<p>Created a new router:
++-----------------------+--------------------------------------+
+| Field                 | Value                                |
++-----------------------+--------------------------------------+
+| admin_state_up        | True                                 |
+| external_gateway_info |                                      |
+| id                    | 93a70ed7-ac17-41d3-9d92-4d8bfb0ee56a |
+| name                  | default-router                       |
+| status                | ACTIVE                               |
+| tenant_id             | 180deec2c933457cb149ef5cf38322f8     |
++-----------------------+--------------------------------------+
+```</p>
+
+<p><strong>4.2 将路由添加到一个l3 agent上</strong></p>
+
+<p>查看有哪些l3 agent</p>
+
+<p>```</p>
+
+<h1>quantum agent-list</h1>
+
+<p>+--------------------------------------+--------------------+----------+-------+----------------+
+| id                                   | agent_type         | host     | alive | admin_state_up |
++--------------------------------------+--------------------+----------+-------+----------------+
+| 20fe37a3-9146-4744-9f4a-67db973b70e2 | Open vSwitch agent | network2 | :-)   | True           |
+| 40dabe35-dfc1-4723-9ab7-5b4dfb51108b | L3 agent           | network2 | :-)   | True           |
+| 6452b796-e7f6-4057-96df-4d320a0ceb84 | DHCP agent         | network1 | :-)   | True           |
+| 6dcd47a8-f56e-46db-aec1-5c2c18f0c321 | Open vSwitch agent | network1 | :-)   | True           |
+| 715ce6bc-7cb5-4e0b-9de9-3b6a8750cf59 | Open vSwitch agent | compute1 | :-)   | True           |
+| a39da87a-16ea-4924-8aff-d9e468e68f13 | DHCP agent         | network2 | :-)   | True           |
+| ccf26580-ba40-4148-9a73-c0cf67713a73 | L3 agent           | network1 | :-)   | True           |
++--------------------------------------+--------------------+----------+-------+----------------+
+```</p>
+
+<p><strong>4.3 将路由添加到network1的l3 agent上</strong></p>
+
+<p>命令如下</p>
+
+<pre><code>quantum l3-agent-router-add $l3_agent_ID router_id
+</code></pre>
+
+<p>```</p>
+
+<h1>quantum l3-agent-router-add  ccf26580-ba40-4148-9a73-c0cf67713a73 93a70ed7-ac17-41d3-9d92-4d8bfb0ee56a</h1>
+
+<p>Added router 93a70ed7-ac17-41d3-9d92-4d8bfb0ee56a to L3 agent
+```</p>
+
+<p><strong>4.4 设置路由网关</strong></p>
+
+<p>命令如下<code>quantum router-gateway-set $router_id $ext_net_id</code></p>
+
+<p>```</p>
+
+<h1>quantum router-gateway-set 93a70ed7-ac17-41d3-9d92-4d8bfb0ee56a  45217501-16c6-49a9-946d-6d44ef2b0256</h1>
+
+<p>Set gateway for router 93a70ed7-ac17-41d3-9d92-4d8bfb0ee56a
+```</p>
+
+<p>查看路由
+```</p>
+
+<h1>quantum router-list</h1>
+
+<p>+--------------------------------------+----------------+--------------------------------------------------------+
+| id                                   | name           | external_gateway_info                                  |
++--------------------------------------+----------------+--------------------------------------------------------+
+| 93a70ed7-ac17-41d3-9d92-4d8bfb0ee56a | default-router | {"network_id": "45217501-16c6-49a9-946d-6d44ef2b0256"} |
++--------------------------------------+----------------+--------------------------------------------------------+
+```</p>
+
+<p><strong>4.5 将路由添加到子网 </strong></p>
+
+<p>或者说将子网添加到路由，主要目的就是让某个子网的路由设置成我们的router,这个router 的网关已经被设置为外部网络，这样我们的子网就可以上网了
+命令如下<code>quantum router-interface-add $router_id $subnet_id</code></p>
+
+<p>```</p>
+
+<h1>quantum router-interface-add 93a70ed7-ac17-41d3-9d92-4d8bfb0ee56a  32fe8d37-5c35-453e-b7d4-a1c98ac7bf97</h1>
+
+<p>Added interface to router 93a70ed7-ac17-41d3-9d92-4d8bfb0ee56a
+```</p>
+
+<p>network节点上应该会出现一个qrouter的namespace,如果启用了namespace的话（默认启动）</p>
+
+<p>```</p>
+
+<h1>ip netns</h1>
+
+<p>qrouter-93a70ed7-ac17-41d3-9d92-4d8bfb0ee56a
+```</p>
+
+<p><strong>4.6 创建一个floating ip </strong></p>
+
+<p>```</p>
+
+<h1>quantum floatingip-create ext_net</h1>
+
+<p>Created a new floatingip:
++---------------------+--------------------------------------+
+| Field               | Value                                |
++---------------------+--------------------------------------+
+| fixed_ip_address    |                                      |
+| floating_ip_address | 10.1.3.11                            |
+| floating_network_id | 45217501-16c6-49a9-946d-6d44ef2b0256 |
+| id                  | 9461b279-c5c7-4db0-a332-a3466c616861 |
+| port_id             |                                      |
+| router_id           |                                      |
+| tenant_id           | 180deec2c933457cb149ef5cf38322f8     |
++---------------------+--------------------------------------+
+```</p>
+
+<p>至此，网络相关资源全部创建完成</p>
+
+<p>下面我们来验证网络是否工作正常</p>
+
+<h2>5. 启动虚拟机，分配floating ip </h2>
+
+<p><strong> 创建port </strong></p>
+
+<p>```</p>
+
+<h1>quantum port-create --fixed-ip subnet_id=32fe8d37-5c35-453e-b7d4-a1c98ac7bf97 54f37003-7f4e-47f4-a865-c928de1ae9e3</h1>
+
+<p>Created a new port:
++----------------------+-------------------------------------------------------------------------------------+
+| Field                | Value                                                                               |
++----------------------+-------------------------------------------------------------------------------------+
+| admin_state_up       | True                                                                                |
+| binding:capabilities | {"port_filter": false}                                                              |
+| binding:vif_type     | ovs                                                                                 |
+| device_id            |                                                                                     |
+| device_owner         |                                                                                     |
+| fixed_ips            | {"subnet_id": "32fe8d37-5c35-453e-b7d4-a1c98ac7bf97", "ip_address": "192.168.12.2"} |
+| id                   | 69802c75-20a9-4533-9b26-8975a39f9a5d                                                |
+| mac_address          | fa:16:3e:af:35:30                                                                   |
+| name                 |                                                                                     |
+| network_id           | 54f37003-7f4e-47f4-a865-c928de1ae9e3                                                |
+| status               | DOWN                                                                                |
+| tenant_id            | 180deec2c933457cb149ef5cf38322f8                                                    |
++----------------------+-------------------------------------------------------------------------------------+
+```</p>
+
+<p><strong>创建 volume</strong>
+```</p>
+
+<h1>cinder create --image-id 6b01928b-056f-4d2e-bb33-988a4853d7f9 --display-name dcai-precise 10</h1>
+
+<p>+---------------------+--------------------------------------+
+|       Property      |                Value                 |
++---------------------+--------------------------------------+
+|     attachments     |                  []                  |
+|  availability_zone  |                 nova                 |
+|       bootable      |                false                 |
+|      created_at     |      2013-05-17T08:32:55.108870      |
+| display_description |                 None                 |
+|     display_name    |             dcai-precise             |
+|          id         | 949077a3-67d9-478c-82b1-a57ad6780e97 |
+|       image_id      | 6b01928b-056f-4d2e-bb33-988a4853d7f9 |
+|       metadata      |                  {}                  |
+|         size        |                  10                  |
+|     snapshot_id     |                 None                 |
+|     source_volid    |                 None                 |
+|        status       |               creating               |
+|     volume_type     |                 None                 |
++---------------------+--------------------------------------+
+```</p>
+
+<p><strong>启动虚拟机</strong></p>
+
+<p>```</p>
+
+<h1>nova boot --flavor 1 --image 6b01928b-056f-4d2e-bb33-988a4853d7f9 --block_device_mapping vda=949077a3-67d9-478c-82b1-a57ad6780e97:::0 --nic port-id=69802c75-20a9-4533-9b26-8975a39f9a5d dcai-m1</h1>
+
+<p>+-------------------------------------+--------------------------------------+
+| Property                            | Value                                |
++-------------------------------------+--------------------------------------+
+| OS-EXT-STS:task_state               | scheduling                           |
+| image                               | precise                              |
+| OS-EXT-STS:vm_state                 | building                             |
+| OS-EXT-SRV-ATTR:instance_name       | instance-0000007b                    |
+| flavor                              | m1.tiny                              |
+| id                                  | 9e6c3ed0-7e7a-4fdf-ae66-9b9eb99163b7 |
+| security_groups                     | [{u'name': u'default'}]              |
+| user_id                             | d61a9823e00f417b90b842dd8b5f7a94     |
+| OS-DCF:diskConfig                   | MANUAL                               |
+| accessIPv4                          |                                      |
+| accessIPv6                          |                                      |
+| progress                            | 0                                    |
+| OS-EXT-STS:power_state              | 0                                    |
+| OS-EXT-AZ:availability_zone         | None                                 |
+| config_drive                        |                                      |
+| status                              | BUILD                                |
+| updated                             | 2013-05-17T08:35:01Z                 |
+| hostId                              |                                      |
+| OS-EXT-SRV-ATTR:host                | None                                 |
+| key_name                            | None                                 |
+| OS-EXT-SRV-ATTR:hypervisor_hostname | None                                 |
+| name                                | dcai-m1                              |
+| adminPass                           | XH2o4LJda7CE                         |
+| tenant_id                           | 180deec2c933457cb149ef5cf38322f8     |
+| created                             | 2013-05-17T08:35:01Z                 |
+| metadata                            | {}                                   |
++-------------------------------------+--------------------------------------+
+```</p>
+
+<p>进入虚拟机，查看一切是否正常</p>
+]]></content>
+  </entry>
+  
+</feed>

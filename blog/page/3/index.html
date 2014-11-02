@@ -9,7 +9,8 @@
   <meta name="author" content="Daniels Cai">
 
   
-  <meta name="description" content="openstack 迁移错误 openstack 迁移到新的环境。 在新的环境中启动一台虚拟机，发现一直是error状态 查看虚拟机状态提示ComputeHostNotFound_Remote和Compute host 1 could not be found. 但是其实并没有compute 1 &hellip;">
+  <meta name="description" content="
+随着项目越来越庞大，直接http请求成为不可忽略的一个问题，需要有一种机制来管理和复用http链接，http连接池就是设计来解决这个问题的. 连接池是创建和管理一个连接的缓冲池的技术，这些连接准备好被任何需要它们的线程使用 使用连接池有如下好处 ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://danielscai.github.com">
+  <link rel="canonical" href="http://danielscai.github.com/blog/page/3">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Daniels Cai's Blog" type="application/atom+xml">
@@ -86,7 +87,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/05/31/openstack-migrate-to-new-enviroment-pemission-denided-error/">Openstack迁移环境引起的permission Denied 错误</a></h1>
+      <h1 class="entry-title"><a href="/blog/2013/05/08/python-http-connection-pool-urllib3/">Python Http Connection Pool Urllib3</a></h1>
     
     
       <p class="meta">
@@ -102,32 +103,27 @@
   
 
 
-<time datetime="2013-05-31T21:49:00-07:00" pubdate data-updated="true">May 31<span>st</span>, 2013</time>
+<time datetime="2013-05-08T19:39:00-07:00" pubdate data-updated="true">May 8<span>th</span>, 2013</time>
         
-         | <a href="/blog/2013/05/31/openstack-migrate-to-new-enviroment-pemission-denided-error/#disqus_thread">Comments</a>
+         | <a href="/blog/2013/05/08/python-http-connection-pool-urllib3/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p><img class="right" src="/images/main/OpenStack.jpeg" width="200" height="100" title="openstack" alt="openstack"></p>
+  <div class="entry-content"><p><img class="right" src="/images/main/python-logo.gif" width="250" height="150" title="python" alt="python">
+随着项目越来越庞大，直接http请求成为不可忽略的一个问题，需要有一种机制来管理和复用http链接，http连接池就是设计来解决这个问题的.</p>
 
-<p>openstack 迁移错误</p>
+<p>连接池是创建和管理一个连接的缓冲池的技术，这些连接准备好被任何需要它们的线程使用</p>
 
-<p>openstack 迁移到新的环境。</p>
-
-<p>在新的环境中启动一台虚拟机，发现一直是error状态</p>
-
-<p>查看虚拟机状态提示<code>ComputeHostNotFound_Remote</code>和<code>Compute host 1 could not be found.</code></p>
-
-<p>但是其实并没有compute 1 节点。</p>
+<p>使用连接池有如下好处</p>
 
 </div>
   
   
     <footer>
-      <a rel="full-article" href="/blog/2013/05/31/openstack-migrate-to-new-enviroment-pemission-denided-error/">Read on &rarr;</a>
+      <a rel="full-article" href="/blog/2013/05/08/python-http-connection-pool-urllib3/">Read on &rarr;</a>
     </footer>
   
 
@@ -139,7 +135,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/05/31/quantum-exceeded-maximim-amount-of-fixed-ips-per-port-error/">Quantum Exceeded Maximim Amount of Fixed Ips Per Port 错误</a></h1>
+      <h1 class="entry-title"><a href="/blog/2013/04/30/cheng-hui-and-his-united-stack/">程辉和他的UnitedStack</a></h1>
     
     
       <p class="meta">
@@ -155,32 +151,26 @@
   
 
 
-<time datetime="2013-05-31T21:39:00-07:00" pubdate data-updated="true">May 31<span>st</span>, 2013</time>
+<time datetime="2013-04-30T15:55:00-07:00" pubdate data-updated="true">Apr 30<span>th</span>, 2013</time>
         
-         | <a href="/blog/2013/05/31/quantum-exceeded-maximim-amount-of-fixed-ips-per-port-error/#disqus_thread">Comments</a>
+         | <a href="/blog/2013/04/30/cheng-hui-and-his-united-stack/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p><img class="right" src="/images/main/OpenStack.jpeg" width="200" height="100" title="openstack" alt="openstack"></p>
+  <div class="entry-content"><p><img class="right" src="http://articles.csdn.net/uploads/allimg/120810/120_120810111432_1.jpg" width="300" height="450"></p>
 
-<p>openstack 运行过程中突然出现这个错误</p>
+<p>程辉在我印象中一直都是新浪SAE技术经理，openstack董事会成员，说白了，逃不过技术宅这三个字。</p>
 
-<p>在 network节点上<code>/var/log/quantum/dhcp-agent.log</code></p>
-
-<p>出现如下错误日志</p>
-
-<p>提示<code>Exceeded maximim amount of fixed ips per port.</code></p>
-
-<p>应该是跟quota有关的。</p>
+<p>直到看到他昨天发的  <a href="http://www.ustack.com/unitedstack-first-recruiment/">UnitedStack第一次公开招聘</a></p>
 
 </div>
   
   
     <footer>
-      <a rel="full-article" href="/blog/2013/05/31/quantum-exceeded-maximim-amount-of-fixed-ips-per-port-error/">Read on &rarr;</a>
+      <a rel="full-article" href="/blog/2013/04/30/cheng-hui-and-his-united-stack/">Read on &rarr;</a>
     </footer>
   
 
@@ -192,7 +182,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/05/31/openstack-database-chinese-character-encoding/">Openstack 数据库中文乱码问题</a></h1>
+      <h1 class="entry-title"><a href="/blog/2013/04/30/the-secret-history-of-openstack/">OpenStack身世揭秘</a></h1>
     
     
       <p class="meta">
@@ -208,30 +198,23 @@
   
 
 
-<time datetime="2013-05-31T21:33:00-07:00" pubdate data-updated="true">May 31<span>st</span>, 2013</time>
+<time datetime="2013-04-30T14:23:00-07:00" pubdate data-updated="true">Apr 30<span>th</span>, 2013</time>
         
-         | <a href="/blog/2013/05/31/openstack-database-chinese-character-encoding/#disqus_thread">Comments</a>
+         | <a href="/blog/2013/04/30/the-secret-history-of-openstack/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p><img class="right" src="/images/main/OpenStack.jpeg" width="200" height="100" title="openstack" alt="openstack"></p>
-
-<p>openstack的sql connection 需要配置成utf-8才不会中文乱码</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>sql_connection = mysql://nova:xxx@qa-mysql1:3306/nova?charset='utf-8'</span></code></pre></td></tr></table></div></figure>
-
-
-<p>但是如果之前就没有设置utf-8，数据库又不能随便清空，想要更新openstack数据库某个字段，就不能直接采用utf-8的数据库连接，否则会出现插入到数据库中的是中文，但是openstack中显示的是乱码。更坏的是如果插入的是全角中文字符，openstack就会出错。</p>
+  <div class="entry-content"><p><img class="right" src="http://cms.csdnimg.cn/articlev1/uploads/allimg/120827/145_120827170216_1.jpg">
+彩虹馆（Rainbow Mansion）是栋位于美国西岸的迷你皇宫，座落在一个可以俯瞰矽谷的山丘上，并且有着西班牙式的屋瓦与门厅的豪华吊灯。这座占地超过140坪豪宅的前任主人，曾靠着销售电脑显示卡晶片和光碟机晶片赚进大把钞票。不过事到如今，这里只是一个矽谷式公社，一个科技界的年轻激进份子生活并分享工作的场所。</p>
 
 </div>
   
   
     <footer>
-      <a rel="full-article" href="/blog/2013/05/31/openstack-database-chinese-character-encoding/">Read on &rarr;</a>
+      <a rel="full-article" href="/blog/2013/04/30/the-secret-history-of-openstack/">Read on &rarr;</a>
     </footer>
   
 
@@ -243,7 +226,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/05/18/clear-all-quantum-network-subnet-router-etc/">清空 Quantum 网络 子网 路由 Floatingip</a></h1>
+      <h1 class="entry-title"><a href="/blog/2013/04/25/python-singleton/">Python 设计模式之单例 Singleton</a></h1>
     
     
       <p class="meta">
@@ -259,29 +242,31 @@
   
 
 
-<time datetime="2013-05-18T12:45:00-07:00" pubdate data-updated="true">May 18<span>th</span>, 2013</time>
+<time datetime="2013-04-25T12:52:00-07:00" pubdate data-updated="true">Apr 25<span>th</span>, 2013</time>
         
-         | <a href="/blog/2013/05/18/clear-all-quantum-network-subnet-router-etc/#disqus_thread">Comments</a>
+         | <a href="/blog/2013/04/25/python-singleton/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p><img class="right" src="/images/main/OpenStack.jpeg" width="200" height="100" title="openstack" alt="openstack"></p>
+  <div class="entry-content"><p><img class="right" src="/images/main/python-logo.gif" width="250" height="150" title="openstack" alt="openstack">
+python单例实现大概有3种，各有优缺点</p>
 
-<p>清空 quantum 数据</p>
+<ul>
+<li>装饰器</li>
+</ul>
 
-<p><em>作者: Daniels Cai
-</em>主页: http://dnscai.com</p>
 
-<h2>1.清空floatingip </h2>
+<p>优点：直接添加在类定义代码上面，比多重继承更加直观
+缺点： 类调用的时候 myclass()是一个单例对象，但是myclass本身变成了一个方法，而不是一个类，因此不能调用这个类的类方法</p>
 
 </div>
   
   
     <footer>
-      <a rel="full-article" href="/blog/2013/05/18/clear-all-quantum-network-subnet-router-etc/">Read on &rarr;</a>
+      <a rel="full-article" href="/blog/2013/04/25/python-singleton/">Read on &rarr;</a>
     </footer>
   
 
@@ -293,7 +278,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/05/18/quantum-create-network-guide/">Quantum 网络创建使用指南(quantum Create Network Guide)</a></h1>
+      <h1 class="entry-title"><a href="/blog/2013/04/25/python-flask-web-framework-intro/">Python 框架flask介绍 (Python Flask Web Framework Intro)</a></h1>
     
     
       <p class="meta">
@@ -309,29 +294,28 @@
   
 
 
-<time datetime="2013-05-18T12:24:00-07:00" pubdate data-updated="true">May 18<span>th</span>, 2013</time>
+<time datetime="2013-04-25T12:45:00-07:00" pubdate data-updated="true">Apr 25<span>th</span>, 2013</time>
         
-         | <a href="/blog/2013/05/18/quantum-create-network-guide/#disqus_thread">Comments</a>
+         | <a href="/blog/2013/04/25/python-flask-web-framework-intro/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p><img class="right" src="/images/main/OpenStack.jpeg" width="200" height="100" title="openstack" alt="openstack"></p>
+  <div class="entry-content"><p><img class="right" src="/images/main/python-logo.gif" width="250" height="150" title="openstack" alt="openstack"></p>
 
-<p>quantum 网络创建使用指南</p>
+<p>flask action是python轻量级框架flask的一个管理器，</p>
 
-<h2>1. 创建网络</h2>
+<p>可以帮助我们自动生成代码框架，实现一些管理功能，</p>
 
-<pre><code>quantum net-create network1
-</code></pre>
+<p>理论上来说给予wsgi的python程序都可以管理，不仅限于flask</p>
 
 </div>
   
   
     <footer>
-      <a rel="full-article" href="/blog/2013/05/18/quantum-create-network-guide/">Read on &rarr;</a>
+      <a rel="full-article" href="/blog/2013/04/25/python-flask-web-framework-intro/">Read on &rarr;</a>
     </footer>
   
 
@@ -343,7 +327,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/05/18/quantum-muliple-l3-agent-issue/">Quantum L3 Agent 多外部网问题(quantum Muliple L3 Agent Issue)</a></h1>
+      <h1 class="entry-title"><a href="/blog/2013/04/25/openstack-boot-with-subnet-port/">Openstack 启动时指定使用子网 (Openstack Boot With Subnet Port)</a></h1>
     
     
       <p class="meta">
@@ -359,27 +343,30 @@
   
 
 
-<time datetime="2013-05-18T12:19:00-07:00" pubdate data-updated="true">May 18<span>th</span>, 2013</time>
+<time datetime="2013-04-25T12:36:00-07:00" pubdate data-updated="true">Apr 25<span>th</span>, 2013</time>
         
-         | <a href="/blog/2013/05/18/quantum-muliple-l3-agent-issue/#disqus_thread">Comments</a>
+         | <a href="/blog/2013/04/25/openstack-boot-with-subnet-port/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p><img class="right" src="/images/main/OpenStack.jpeg" width="200" height="100" title="openstack" alt="openstack">
-quantum l3 agent 多外部网问题</p>
+  <div class="entry-content"><p><img class="right" src="/images/main/OpenStack.jpeg" width="250" height="150" title="openstack" alt="openstack"></p>
 
-<p>问题描述</p>
+<p>openstack 启动时指定使用子网</p>
 
-<p>在 network 节点上<code>/var/log/quantum/l3-agent.log</code> 查看到如下log，</p>
+<p>在调用<code>nova boot</code>命令时，默认是创建所有网络的所有接口</p>
+
+<p>那么有没有办法指定使用某个网络，或者使用某个子网呢</p>
+
+<p>答案是肯定的</p>
 
 </div>
   
   
     <footer>
-      <a rel="full-article" href="/blog/2013/05/18/quantum-muliple-l3-agent-issue/">Read on &rarr;</a>
+      <a rel="full-article" href="/blog/2013/04/25/openstack-boot-with-subnet-port/">Read on &rarr;</a>
     </footer>
   
 
@@ -388,9 +375,11 @@ quantum l3 agent 多外部网问题</p>
   
   <div class="pagination">
     
-      <a class="prev" href="/blog/page/2/">&larr; Older</a>
+      <a class="prev" href="/blog/page/4/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/2/">Newer &rarr;</a>
     
   </div>
 </div>
@@ -398,7 +387,7 @@ quantum l3 agent 多外部网问题</p>
   
     <section>
 <h1>加微信<abbr title="The word 'QR Code' is a registered trademark of DENSO WAVE INCORPORATED. It applies only for the word 'QR Code', not for image."></abbr></h1>
-<a href="http://danielscai.github.com/index.html"><img src="/images/weixin_qr_code.jpeg" alt="post-qrcode"></a></section>
+<a href="http://danielscai.github.com/blog/page/3/index.html"><img src="/images/weixin_qr_code.jpeg" alt="post-qrcode"></a></section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">

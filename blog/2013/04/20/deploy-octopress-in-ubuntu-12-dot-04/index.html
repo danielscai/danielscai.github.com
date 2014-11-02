@@ -1,0 +1,351 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>ubuntu 12.04 部署octopress - Daniels Cai's Blog</title>
+  <meta name="author" content="Daniels Cai">
+
+  
+  <meta name="description" content="ubuntu 12.04 需要安装ruby 1.9.3 ，但是由于使用rvm安装ruby 1.9.3非常缓慢，部署就显得十分困难 使用淘宝的源可以加快安装速度,但有些时候taobao的源依旧无法工作 本文介绍如何不使用rvm在ubuntu下安装ruby 1.9.3 并部署octopress 1. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://danielscai.github.com/blog/2013/04/20/deploy-octopress-in-ubuntu-12-dot-04">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Daniels Cai's Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.useso.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.useso.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.useso.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-36496703-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Daniels Cai's Blog</a></h1>
+  
+    <h2>proficient in Linux, proficient in Thinking.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:danielscai.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">博客</a></li>
+  <li><a href="/blog/archives">归档</a></li>
+  <li><a href="/course">公开课程</a></li>
+  <li><a href="/slides">演示</a></li>
+  <li><a href="/about">本人</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Ubuntu 12.04 部署octopress</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-20T13:01:00-07:00" pubdate data-updated="true">Apr 20<span>th</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img class="right" src="/images/main/clone-your-octopress-001.png" width="250" height="150" title="octopress" alt="octopress">
+ubuntu 12.04 需要安装<code>ruby 1.9.3</code> ，但是由于使用<code>rvm</code>安装<code>ruby 1.9.3</code>非常缓慢，部署就显得十分困难</p>
+
+<p>使用淘宝的源可以加快安装速度,但有些时候taobao的源依旧无法工作</p>
+
+<p>本文介绍如何不使用rvm在ubuntu下安装<code>ruby 1.9.3</code> 并部署octopress</p>
+
+<!-- more -->
+
+
+<h2>1.安装ruby</h2>
+
+<h2>1.1安装1.9.3</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>apt-get -y install ruby1.9.3</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>1.2.更新ruby </h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo update-alternatives --install /usr/bin/ruby ruby /usr/bin/ruby1.9.3 400 \
+</span><span class='line'>         --slave   /usr/share/man/man1/ruby.1.gz ruby.1.gz \
+</span><span class='line'>                        /usr/share/man/man1/ruby1.9.3.1.gz \
+</span><span class='line'>        --slave   /usr/bin/ri ri /usr/bin/ri1.9.3 \
+</span><span class='line'>        --slave   /usr/bin/irb irb /usr/bin/irb1.9.3 \
+</span><span class='line'>        --slave   /usr/bin/rdoc rdoc /usr/bin/rdoc1.9.3</span></code></pre></td></tr></table></div></figure>
+
+
+<p>更改ruby使用1.9.3版本</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo update-alternatives --config ruby
+</span><span class='line'>sudo update-alternatives --config gem</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>2.部署octopress 环境</h2>
+
+<h2>2.1.clone octopress</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git clone https://github.com/imathis/octopress.git</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>2.2 修改Gemfile的source，使用淘宝的gem源</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>source "http://ruby.taobao.org"</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>2.3 安装gem包</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem install bundler
+</span><span class='line'>bundle install 
+</span><span class='line'>rake install </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>3.部署到github pages</h2>
+
+<h2>3.1 建立github 仓库</h2>
+
+<p>新建一个以username.github.com  格式的github仓库，username是你的用户名</p>
+
+<h2>3.2 部署</h2>
+
+<p>部署到github pages ,按提示填写github仓库</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>rake setup_github_pages</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>rake generate
+</span><span class='line'>rake deploy</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>3.3 自定义</h2>
+
+<p>自定义设定可以在 <code>_config.yaml</code>中设置，包括 <code>github</code>,<code>google analytics</code>,<code>google plus</code> 等</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Daniels Cai</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-20T13:01:00-07:00" pubdate data-updated="true">Apr 20<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/octopress/'>octopress</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/04/15/puppet-multi-environment/" title="Previous Post: git版本控制下，配置puppet多环境">&laquo; git版本控制下，配置puppet多环境</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/04/23/git-multi-developer/" title="Next Post: git 多开发者协作模式">git 多开发者协作模式 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+<h1>加微信<abbr title="The word 'QR Code' is a registered trademark of DENSO WAVE INCORPORATED. It applies only for the word 'QR Code', not for image."></abbr></h1>
+<a href="http://danielscai.github.com/blog/2013/04/20/deploy-octopress-in-ubuntu-12-dot-04/"><img src="/images/weixin_qr_code.jpeg" alt="post-qrcode"></a></section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/31/openstack-migrate-to-new-enviroment-pemission-denided-error/">openstack迁移环境引起的permission denied 错误</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/31/quantum-exceeded-maximim-amount-of-fixed-ips-per-port-error/">quantum Exceeded maximim amount of fixed ips per port 错误 </a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/31/openstack-database-chinese-character-encoding/">openstack 数据库中文乱码问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/18/clear-all-quantum-network-subnet-router-etc/">清空 quantum 网络 子网 路由 floatingip </a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/18/quantum-create-network-guide/">quantum 网络创建使用指南(quantum create network guide)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>分类</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/coding/'>coding (7)</a></li>
+<li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
+<li class='category'><a href='/blog/categories/octopress/'>octopress (1)</a></li>
+<li class='category'><a href='/blog/categories/openstack/'>openstack (14)</a></li>
+<li class='category'><a href='/blog/categories/statup/'>statup (1)</a></li>
+<li class='category'><a href='/blog/categories/virtualization/'>virtualization (1)</a></li>
+
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Daniels Cai -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'danielscai';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://danielscai.github.com/blog/2013/04/20/deploy-octopress-in-ubuntu-12-dot-04/';
+        var disqus_url = 'http://danielscai.github.com/blog/2013/04/20/deploy-octopress-in-ubuntu-12-dot-04/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

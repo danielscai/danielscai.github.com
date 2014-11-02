@@ -1,0 +1,2775 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Daniels Cai's Blog]]></title>
+  <link href="http://danielscai.github.com/atom.xml" rel="self"/>
+  <link href="http://danielscai.github.com/"/>
+  <updated>2014-11-01T20:47:48-07:00</updated>
+  <id>http://danielscai.github.com/</id>
+  <author>
+    <name><![CDATA[Daniels Cai]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[openstack迁移环境引起的permission denied 错误]]></title>
+    <link href="http://danielscai.github.com/blog/2013/05/31/openstack-migrate-to-new-enviroment-pemission-denided-error/"/>
+    <updated>2013-05-31T21:49:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/05/31/openstack-migrate-to-new-enviroment-pemission-denided-error</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://danielscai.github.com/images/main/OpenStack.jpeg" width="200" height="100" title="openstack" alt="openstack"></p>
+
+<p>openstack 迁移错误</p>
+
+<p>openstack 迁移到新的环境。</p>
+
+<p>在新的环境中启动一台虚拟机，发现一直是error状态</p>
+
+<p>查看虚拟机状态提示<code>ComputeHostNotFound_Remote</code>和<code>Compute host 1 could not be found.</code></p>
+
+<p>但是其实并没有compute 1 节点。</p>
+
+<!--more-->
+
+
+<p>如下</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@controller2:~# nova show d4e4059c-7306-4773-8e01-360a236fd44b
+</span><span class='line'>+-----------------------------+--------------------------------------------------------------------------------------------------------------+
+</span><span class='line'>| Property                    | Value                                                                                                        |
+</span><span class='line'>+-----------------------------+--------------------------------------------------------------------------------------------------------------+
+</span><span class='line'>| status                      | ERROR                                                                                                        |
+</span><span class='line'>| updated                     | 2013-05-29T12:21:36Z                                                                                         |
+</span><span class='line'>| OS-EXT-STS:task_state       | None                                                                                                         |
+</span><span class='line'>| key_name                    | None                                                                                                         |
+</span><span class='line'>| image                       | precise (6b01928b-056f-4d2e-bb33-988a4853d7f9)                                                               |
+</span><span class='line'>| hostId                      | fc6914630cd8a0c64cfaf744b2e85aff0b7c58d16565ff9d5a48ff12                                                     |
+</span><span class='line'>| OS-EXT-STS:vm_state         | error                                                                                                        |
+</span><span class='line'>| flavor                      | m1.tiny (1)                                                                                                  |
+</span><span class='line'>| id                          | d4e4059c-7306-4773-8e01-360a236fd44b                                                                         |
+</span><span class='line'>| security_groups             | [{u'name': u'default'}]                                                                                      |
+</span><span class='line'>| user_id                     | 05e8636f0cb94171bba93f5a1a73c927                                                                             |
+</span><span class='line'>| name                        | api_test                                                                                                     |
+</span><span class='line'>| created                     | 2013-05-29T12:20:57Z                                                                                         |
+</span><span class='line'>| fault                       | {u'message': u'ComputeHostNotFound_Remote', u'code': 404, u'details': u'Compute host 1 could not be found.   |
+</span><span class='line'>|                             | Traceback (most recent call last):                                                                           |
+</span><span class='line'>|                             |                                                                                                              |
+</span><span class='line'>|                             |   File "/usr/lib/python2.7/dist-packages/nova/openstack/common/rpc/amqp.py", line 430, in _process_data      |
+</span><span class='line'>|                             |     rval = self.proxy.dispatch(ctxt, version, method, **args)                                                |
+</span><span class='line'>|                             |                                                                                                              |
+</span><span class='line'>|                             |   File "/usr/lib/python2.7/dist-packages/nova/openstack/common/rpc/dispatcher.py", line 133, in dispatch     |
+</span><span class='line'>|                             |     return getattr(proxyobj, method)(ctxt, **kwargs)                                                         |
+</span><span class='line'>|                             |                                                                                                              |
+</span><span class='line'>|                             |   File "/usr/lib/python2.7/dist-packages/nova/conductor/manager.py", line 352, in compute_node_update        |
+</span><span class='line'>|                             |     prune_stats)                                                                                             |
+</span><span class='line'>|                             |                                                                                                              |
+</span><span class='line'>|                             |   File "/usr/lib/python2.7/dist-packages/nova/db/api.py", line 200, in compute_node_update                   |
+</span><span class='line'>|                             |     return IMPL.compute_node_update(context, compute_id, values, prune_stats)                                |
+</span><span class='line'>|                             |                                                                                                              |
+</span><span class='line'>|                             |   File "/usr/lib/python2.7/dist-packages/nova/db/sqlalchemy/api.py", line 96, in wrapper                     |
+</span><span class='line'>|                             |     return f(*args, **kwargs)                                                                                |
+</span><span class='line'>|                             |                                                                                                              |
+</span><span class='line'>|                             |   File "/usr/lib/python2.7/dist-packages/nova/db/sqlalchemy/api.py", line 545, in compute_node_update        |
+</span><span class='line'>|                             |     compute_ref = _compute_node_get(context, compute_id, session=session)                                    |
+</span><span class='line'>|                             |                                                                                                              |
+</span><span class='line'>|                             |   File "/usr/lib/python2.7/dist-packages/nova/db/sqlalchemy/api.py", line 455, in _compute_node_get          |
+</span><span class='line'>|                             |     raise exception.ComputeHostNotFound(host=compute_id)                                                     |
+</span><span class='line'>|                             |                                                                                                              |
+</span><span class='line'>|                             | ComputeHostNotFound: Compute host 1 could not be found.                                                      |
+</span><span class='line'>|                             | ', u'created': u'2013-05-29T12:21:36Z'}                                                                      |
+</span><span class='line'>| OS-DCF:diskConfig           | MANUAL                                                                                                       |
+</span><span class='line'>| metadata                    | {u'image_id': u'6b01928b-056f-4d2e-bb33-988a4853d7f9', u'os_name': u'ubuntu', u'My Server Name': u'Apache1'} |
+</span><span class='line'>| accessIPv4                  |                                                                                                              |
+</span><span class='line'>| accessIPv6                  |                                                                                                              |
+</span><span class='line'>| tenant_id                   | a32328ccd3f641c882910a32cdff91fc                                                                             |
+</span><span class='line'>| OS-EXT-STS:power_state      | 0                                                                                                            |
+</span><span class='line'>| OS-EXT-AZ:availability_zone | nova                                                                                                         |
+</span><span class='line'>| config_drive                |                                                                                                              |
+</span><span class='line'>+-----------------------------+--------------------------------------------------------------------------------------------------------------+
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>查看 <code>nova scheduler</code> 错误</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+</span><span class='line'>2013-05-29 20:21:34.481 ERROR nova.scheduler.filter_scheduler [req-3b009407-bcbb-46a3-8ae9-173574cf7854 05e8636f0cb94171bba93f5a1a73c927 a32328ccd3f641c882910a32cdff91fc] [instance: d4e4059c-7306-4773-8e01-360a236fd44b] Error from last host: compute3 (node compute3): [u'Traceback (most recent call last):\n', u'  File "/usr/lib/python2.7/dist-packages/nova/compute/manager.py", line 834, in _run_instance\n    set_access_ip=set_access_ip)\n', u'  File "/usr/lib/python2.7/dist-packages/nova/compute/manager.py", line 1093, in _spawn\n    LOG.exception(_(\'Instance failed to spawn\'), instance=instance)\n', u'  File "/usr/lib/python2.7/contextlib.py", line 24, in __exit__\n    self.gen.next()\n', u'  File "/usr/lib/python2.7/dist-packages/nova/compute/manager.py", line 1089, in _spawn\n    block_device_info)\n', u'  File "/usr/lib/python2.7/dist-packages/nova/virt/libvirt/driver.py", line 1520, in spawn\n    block_device_info)\n', u'  File "/usr/lib/python2.7/dist-packages/nova/virt/libvirt/driver.py", line 2433, in _create_domain_and_network\n    self.firewall_driver.setup_basic_filtering(instance, network_info)\n', u'  File "/usr/lib/python2.7/dist-packages/nova/virt/libvirt/firewall.py", line 288, in setup_basic_filtering\n    self.refresh_provider_fw_rules()\n', u'  File "/usr/lib/python2.7/dist-packages/nova/virt/firewall.py", line 476, in refresh_provider_fw_rules\n    self._do_refresh_provider_fw_rules()\n', u'  File "/usr/lib/python2.7/dist-packages/nova/openstack/common/lockutils.py", line 221, in inner\n    with lock:\n', u'  File "/usr/lib/python2.7/dist-packages/nova/openstack/common/lockutils.py", line 75, in __enter__\n    self.lockfile = open(self.fname, \'w\')\n', u"IOError: [Errno 13] Permission denied: '/run/lock/nova/nova-iptables'\n"]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>解决方案</p>
+
+<p>/var/lock/nova 的权限是 nova:root , 应该是nova:nova</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>chown -R nova:nova /var/lock/nova</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[quantum Exceeded maximim amount of fixed ips per port 错误 ]]></title>
+    <link href="http://danielscai.github.com/blog/2013/05/31/quantum-exceeded-maximim-amount-of-fixed-ips-per-port-error/"/>
+    <updated>2013-05-31T21:39:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/05/31/quantum-exceeded-maximim-amount-of-fixed-ips-per-port-error</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://danielscai.github.com/images/main/OpenStack.jpeg" width="200" height="100" title="openstack" alt="openstack"></p>
+
+<p>openstack 运行过程中突然出现这个错误</p>
+
+<p>在 network节点上<code>/var/log/quantum/dhcp-agent.log</code></p>
+
+<p>出现如下错误日志</p>
+
+<p>提示<code>Exceeded maximim amount of fixed ips per port.</code></p>
+
+<p>应该是跟quota有关的。</p>
+
+<!--more-->
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>2013-05-22 16:31:10    ERROR [quantum.agent.dhcp_agent] Unable to enable dhcp.
+</span><span class='line'>Traceback (most recent call last):
+</span><span class='line'>  File "/usr/lib/python2.7/dist-packages/quantum/agent/dhcp_agent.py", line 129, in call_driver
+</span><span class='line'>    getattr(driver, action)()
+</span><span class='line'>  File "/usr/lib/python2.7/dist-packages/quantum/agent/linux/dhcp.py", line 117, in enable
+</span><span class='line'>    reuse_existing=True)
+</span><span class='line'>  File "/usr/lib/python2.7/dist-packages/quantum/agent/dhcp_agent.py", line 528, in setup
+</span><span class='line'>    port = self.plugin.get_dhcp_port(network.id, device_id)
+</span><span class='line'>  File "/usr/lib/python2.7/dist-packages/quantum/agent/dhcp_agent.py", line 377, in get_dhcp_port
+</span><span class='line'>    topic=self.topic))
+</span><span class='line'>  File "/usr/lib/python2.7/dist-packages/quantum/openstack/common/rpc/proxy.py", line 80, in call
+</span><span class='line'>    return rpc.call(context, self._get_topic(topic), msg, timeout)
+</span><span class='line'>  File "/usr/lib/python2.7/dist-packages/quantum/openstack/common/rpc/__init__.py", line 140, in call
+</span><span class='line'>    return _get_impl().call(CONF, context, topic, msg, timeout)
+</span><span class='line'>  File "/usr/lib/python2.7/dist-packages/quantum/openstack/common/rpc/impl_kombu.py", line 798, in call
+</span><span class='line'>    rpc_amqp.get_connection_pool(conf, Connection))
+</span><span class='line'>  File "/usr/lib/python2.7/dist-packages/quantum/openstack/common/rpc/amqp.py", line 613, in call
+</span><span class='line'>    rv = list(rv)
+</span><span class='line'>  File "/usr/lib/python2.7/dist-packages/quantum/openstack/common/rpc/amqp.py", line 562, in __iter__
+</span><span class='line'>    raise result
+</span><span class='line'>RemoteError: Remote error: InvalidInput Invalid input for operation: Exceeded maximim amount of fixed ips per port.
+</span><span class='line'>[u'Traceback (most recent call last):\n', u'  File "/usr/lib/python2.7/dist-packages/quantum/openstack/common/rpc/amqp.py", line 430, in _process_data\n    rval = self.proxy.dispatch(ctxt, version, method, **args)\n', u'  File "/usr/lib/python2.7/dist-packages/quantum/common/rpc.py", line 43, in dispatch\n    quantum_ctxt, version, method, **kwargs)\n', u'  File "/usr/lib/python2.7/dist-packages/quantum/openstack/common/rpc/dispatcher.py", line 133, in dispatch\n    return getattr(proxyobj, method)(ctxt, **kwargs)\n', u'  File "/usr/lib/python2.7/dist-packages/quantum/db/dhcp_rpc_base.py", line 104, in get_dhcp_port\n    dict(port=port))\n', u'  File "/usr/lib/python2.7/dist-packages/quantum/plugins/openvswitch/ovs_quantum_plugin.py", line 612, in update_port\n    context, id, port)\n', u'  File "/usr/lib/python2.7/dist-packages/quantum/db/db_base_plugin_v2.py", line 1341, in update_port\n    p[\'fixed_ips\'])\n', u'  File "/usr/lib/python2.7/dist-packages/quantum/db/db_base_plugin_v2.py", line 657, in _update_ips_for_port\n    raise q_exc.InvalidInput(error_message=msg)\n', u'InvalidInput: Invalid input for operation: Exceeded maximim amount of fixed ips per port.\n'].</span></code></pre></td></tr></table></div></figure>
+
+
+<p>解决方法</p>
+
+<p>在quantum server上设置 <code>/etc/quantum/quantum.conf</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># Maximum number of fixed ips per port
+</span><span class='line'>max_fixed_ips_per_port = 1000</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[openstack 数据库中文乱码问题]]></title>
+    <link href="http://danielscai.github.com/blog/2013/05/31/openstack-database-chinese-character-encoding/"/>
+    <updated>2013-05-31T21:33:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/05/31/openstack-database-chinese-character-encoding</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://danielscai.github.com/images/main/OpenStack.jpeg" width="200" height="100" title="openstack" alt="openstack"></p>
+
+<p>openstack的sql connection 需要配置成utf-8才不会中文乱码</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sql_connection = mysql://nova:xxx@qa-mysql1:3306/nova?charset='utf-8'</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但是如果之前就没有设置utf-8，数据库又不能随便清空，想要更新openstack数据库某个字段，就不能直接采用utf-8的数据库连接，否则会出现插入到数据库中的是中文，但是openstack中显示的是乱码。更坏的是如果插入的是全角中文字符，openstack就会出错。</p>
+
+<!--more-->
+
+
+<p>那么如何更新这种情况下的数据库呢？</p>
+
+<p>答案很简单，就是采用和openstack一样的数据库连接方式，openstack使用的是 sqlalchemy
+我写一个一个简单的数据库连接如下</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#!/usr/bin/python 
+</span><span class='line'># coding=utf-8
+</span><span class='line'>
+</span><span class='line'>from sqlalchemy import create_engine
+</span><span class='line'>from sqlalchemy import MetaData
+</span><span class='line'>from sqlalchemy.sql import select
+</span><span class='line'>from sqlalchemy.sql import update
+</span><span class='line'>
+</span><span class='line'>engine = create_engine('mysql://nova:password@qa-mysql1:3306/nova',convert_unicode=True)
+</span><span class='line'>
+</span><span class='line'>metadata=MetaData()
+</span><span class='line'>meta=metadata
+</span><span class='line'>meta.reflect(bind=engine)
+</span><span class='line'>conn=engine.connect()
+</span><span class='line'>secgroup=meta.tables['security_groups']
+</span><span class='line'>
+</span><span class='line'>u=update(secgroup).where(secgroup.c.id==60).values(name='中文')
+</span><span class='line'>result=conn.execute(u)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里需要注意的是在<code>create_engine</code>的时候，需要添加<code>convert_unicode=True</code>,如果不添加，会出如下解码错误的错误</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>query = query % db.literal(args)
+</span><span class='line'>  File "/usr/share/pyshared/MySQLdb/connections.py", line 264, in literal
+</span><span class='line'>return self.escape(o, self.encoders)
+</span><span class='line'>  File "/usr/share/pyshared/MySQLdb/connections.py", line 202, in unicode_literal
+</span><span class='line'>return db.literal(u.encode(unicode_literal.charset))
+</span><span class='line'>UnicodeEncodeError: 'latin-1' codec can't encode characters in position 0-1: ordinal not in range(256)</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[清空 quantum 网络 子网 路由 floatingip ]]></title>
+    <link href="http://danielscai.github.com/blog/2013/05/18/clear-all-quantum-network-subnet-router-etc/"/>
+    <updated>2013-05-18T12:45:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/05/18/clear-all-quantum-network-subnet-router-etc</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://danielscai.github.com/images/main/OpenStack.jpeg" width="200" height="100" title="openstack" alt="openstack"></p>
+
+<p>清空 quantum 数据</p>
+
+<p><em>作者: Daniels Cai
+</em>主页: http://dnscai.com</p>
+
+<h2>1.清空floatingip </h2>
+
+<!--more-->
+
+
+<pre><code>for i in `quantum floatingip-list  | grep -v "\---"  | grep -v "^| id" | awk '{print $2}' `; do quantum floatingip-delete $i ; done
+</code></pre>
+
+<h2>2.清空路由gateway </h2>
+
+<pre><code>for i in `quantum router-list  | grep -v "\---"  | grep -v "^| id" | awk '{print $2}' `; do quantum router-gateway-clear $i ; done
+</code></pre>
+
+<p>查看路由下的 port</p>
+
+<pre><code>quantum port-list -- --device_id 64ffbf96-5cba-4043-bef2-b3a846d1ab42 --device_owner network:router_gateway
+</code></pre>
+
+<p>查看路由本身的port</p>
+
+<pre><code>quantum port-list -- --device_id 64ffbf96-5cba-4043-bef2-b3a846d1ab42 
+</code></pre>
+
+<h2>3. 清空路由所有的interface</h2>
+
+<pre><code>for i in `quantum router-list  | grep -v "\---"  | grep -v "^| id" | awk '{print $2}' `; do quantum router-interface-delete $i  `quantum port-list -- --device_id  $i  | grep subnet_id | sed 's/.*subnet_id": "\([^"]*\).*/\1/g'` ; done 
+</code></pre>
+
+<h2>4.删除路由</h2>
+
+<pre><code>for i in `quantum router-list  | grep -v "\---"  | grep -v "^| id" | awk '{print $2}' `; do quantum router-delete $i  `quantum port-list -- --device_id  $i  | grep subnet_id | sed 's/.*subnet_id": "\([^"]*\).*/\1/g'` ; done 
+</code></pre>
+
+<h2>5.清空port</h2>
+
+<pre><code>for i in `quantum port-list  | grep -v "\---"  | grep -v "^| id" | awk '{print $2}' `;do quantum port-delete $i ; done 
+</code></pre>
+
+<h2>6. 删除subnet </h2>
+
+<pre><code>for i in `quantum  subnet-list | grep -v "\---"  | grep -v "^| id" | awk '{print $2}' `;do  quantum subnet-delete $i ; done
+</code></pre>
+
+<h2>7. 删除网络</h2>
+
+<pre><code>for i in `quantum  net-list | grep -v "\---"  | grep -v "^| id" | awk '{print $2}' `;do  quantum net-delete $i ; done
+</code></pre>
+
+<h2>8. 清空所有agent </h2>
+
+<p>清空所有agent后，重启相关service ，agent 可以自动重新注册</p>
+
+<pre><code>for i in ` quantum agent-list | grep -v "\---"  | grep -v "^\ id" | awk '{print $2}' `;do quantum agent-delete $i ; done
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[quantum 网络创建使用指南(quantum create network guide)]]></title>
+    <link href="http://danielscai.github.com/blog/2013/05/18/quantum-create-network-guide/"/>
+    <updated>2013-05-18T12:24:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/05/18/quantum-create-network-guide</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://danielscai.github.com/images/main/OpenStack.jpeg" width="200" height="100" title="openstack" alt="openstack"></p>
+
+<p>quantum 网络创建使用指南</p>
+
+<h2>1. 创建网络</h2>
+
+<pre><code>quantum net-create network1
+</code></pre>
+
+<!--more-->
+
+
+<h2>2. 创建子网</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>quantum subnet-create network1 192.168.12.0/24
+</span><span class='line'>Created a new subnet:
+</span><span class='line'>+------------------+----------------------------------------------------+
+</span><span class='line'>| Field            | Value                                              |
+</span><span class='line'>+------------------+----------------------------------------------------+
+</span><span class='line'>| allocation_pools | {"start": "192.168.12.2", "end": "192.168.12.254"} |
+</span><span class='line'>| cidr             | 192.168.12.0/24                                    |
+</span><span class='line'>| dns_nameservers  |                                                    |
+</span><span class='line'>| enable_dhcp      | True                                               |
+</span><span class='line'>| gateway_ip       | 192.168.12.1                                       |
+</span><span class='line'>| host_routes      |                                                    |
+</span><span class='line'>| id               | 32fe8d37-5c35-453e-b7d4-a1c98ac7bf97               |
+</span><span class='line'>| ip_version       | 4                                                  |
+</span><span class='line'>| name             |                                                    |
+</span><span class='line'>| network_id       | 54f37003-7f4e-47f4-a865-c928de1ae9e3               |
+</span><span class='line'>| tenant_id        | 180deec2c933457cb149ef5cf38322f8                   |
+</span><span class='line'>+------------------+----------------------------------------------------+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>3. 创建外部网络</h2>
+
+<h2>3.1 创建外部网络目的</h2>
+
+<p>作为floating ip 池</p>
+
+<h2>3.2 创建外部网络注意点</h2>
+
+<p>创建外部网络子网的时候，注意network 节点上的br-ex网桥一定是要存在的</p>
+
+<p><code>eth2</code>接口的配置在<code>ubuntu</code>里可以参考如下的配置</p>
+
+<pre><code>auto eth2
+iface eth2 inet manual
+up ifconfig $IFACE 0.0.0.0 up
+up ip link set $IFACE promisc on
+down ip link set $IFACE promisc off
+down ifconfig $IFACE down
+</code></pre>
+
+<p>这个子网能工作的前提条件必须满足,不然即使分配了<code>floating ip</code>也是无法工作的</p>
+
+<ul>
+<li>这个子网一定一个是物理上和你<code>network</code>节点连接的,这里是用的eth2接口</li>
+<li><code>allocation-pool</code>中的ip都是可用的</li>
+<li>不需要dhcp</li>
+<li><code>network</code>节点上<code>openvswitch</code>网桥<code>br-ex</code>必须存在</li>
+<li><code>br-ex</code>上添加<code>eth2</code>接口，命令为<code>ovs-vsctl add-port br-ex eth2</code></li>
+</ul>
+
+
+<p>下面是建好的ovs网桥</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>bridge name bridge id  STP enabled interfaces
+</span><span class='line'>br-ex  0000.180373d2869d no  eth2
+</span><span class='line'>br-int  0000.823fbdfff741 no  qr-520f18b3-85
+</span><span class='line'>      tap7415fb87-d7
+</span><span class='line'>      tape9e5dc79-c8
+</span><span class='line'>      tapfec2a3b4-4c
+</span><span class='line'>br-tun  0000.5ef67744584e no
+</span><span class='line'>virbr0  8000.000000000000 yes
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>3.3 创建外部网络</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># quantum net-create ext_net --router:external=True
+</span><span class='line'>Created a new network:
+</span><span class='line'>+---------------------------+--------------------------------------+
+</span><span class='line'>| Field                     | Value                                |
+</span><span class='line'>+---------------------------+--------------------------------------+
+</span><span class='line'>| admin_state_up            | True                                 |
+</span><span class='line'>| id                        | 45217501-16c6-49a9-946d-6d44ef2b0256 |
+</span><span class='line'>| name                      | ext_net                              |
+</span><span class='line'>| provider:network_type     | gre                                  |
+</span><span class='line'>| provider:physical_network |                                      |
+</span><span class='line'>| provider:segmentation_id  | 2                                    |
+</span><span class='line'>| router:external           | True                                 |
+</span><span class='line'>| shared                    | False                                |
+</span><span class='line'>| status                    | ACTIVE                               |
+</span><span class='line'>| subnets                   |                                      |
+</span><span class='line'>| tenant_id                 | 180deec2c933457cb149ef5cf38322f8     |
+</span><span class='line'>+---------------------------+--------------------------------------+
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>3.3. 创建外部网络子网</h2>
+
+<p>这里我们创建一个<code>10.1.3.0/24</code>的子网，假设你的的<code>eth2</code>接口是接在<code>10.1.3.0/24</code>网段的，
+分配地址从140到160,就是在参数中指定<code>--allocation-pool start=10.1.3.10,end=10.1.3.70</code>, 这里的dhcp是需要关闭的</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># quantum subnet-create --allocation-pool start=10.1.3.10,end=10.1.3.70 --gateway 10.1.3.1 ext_net 10.1.3.0/24 --enable_dhcp=False
+</span><span class='line'>Created a new subnet:
+</span><span class='line'>+------------------+--------------------------------------------+
+</span><span class='line'>| Field            | Value                                      |
+</span><span class='line'>+------------------+--------------------------------------------+
+</span><span class='line'>| allocation_pools | {"start": "10.1.3.10", "end": "10.1.3.70"} |
+</span><span class='line'>| cidr             | 10.1.3.0/24                                |
+</span><span class='line'>| dns_nameservers  |                                            |
+</span><span class='line'>| enable_dhcp      | False                                      |
+</span><span class='line'>| gateway_ip       | 10.1.3.1                                   |
+</span><span class='line'>| host_routes      |                                            |
+</span><span class='line'>| id               | e51a2803-64cf-4d8d-9637-9ae38ad4d76c       |
+</span><span class='line'>| ip_version       | 4                                          |
+</span><span class='line'>| name             |                                            |
+</span><span class='line'>| network_id       | 45217501-16c6-49a9-946d-6d44ef2b0256       |
+</span><span class='line'>| tenant_id        | 180deec2c933457cb149ef5cf38322f8           |
+</span><span class='line'>+------------------+--------------------------------------------+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>3.4 查看创建好的网络</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># quantum net-list 
+</span><span class='line'>+--------------------------------------+----------+------------------------------------------------------+
+</span><span class='line'>| id                                   | name     | subnets                                              |
+</span><span class='line'>+--------------------------------------+----------+------------------------------------------------------+
+</span><span class='line'>| 45217501-16c6-49a9-946d-6d44ef2b0256 | ext_net  | e51a2803-64cf-4d8d-9637-9ae38ad4d76c 10.1.3.0/24     |
+</span><span class='line'>| 54f37003-7f4e-47f4-a865-c928de1ae9e3 | network1 | 32fe8d37-5c35-453e-b7d4-a1c98ac7bf97 192.168.12.0/24 |
+</span><span class='line'>+--------------------------------------+----------+------------------------------------------------------+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>4. 创建路由</h2>
+
+<p><strong>4.1 创建路由</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># quantum router-create default-router
+</span><span class='line'>Created a new router:
+</span><span class='line'>+-----------------------+--------------------------------------+
+</span><span class='line'>| Field                 | Value                                |
+</span><span class='line'>+-----------------------+--------------------------------------+
+</span><span class='line'>| admin_state_up        | True                                 |
+</span><span class='line'>| external_gateway_info |                                      |
+</span><span class='line'>| id                    | 93a70ed7-ac17-41d3-9d92-4d8bfb0ee56a |
+</span><span class='line'>| name                  | default-router                       |
+</span><span class='line'>| status                | ACTIVE                               |
+</span><span class='line'>| tenant_id             | 180deec2c933457cb149ef5cf38322f8     |
+</span><span class='line'>+-----------------------+--------------------------------------+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>4.2 将路由添加到一个l3 agent上</strong></p>
+
+<p>查看有哪些l3 agent</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># quantum agent-list 
+</span><span class='line'>+--------------------------------------+--------------------+----------+-------+----------------+
+</span><span class='line'>| id                                   | agent_type         | host     | alive | admin_state_up |
+</span><span class='line'>+--------------------------------------+--------------------+----------+-------+----------------+
+</span><span class='line'>| 20fe37a3-9146-4744-9f4a-67db973b70e2 | Open vSwitch agent | network2 | :-)   | True           |
+</span><span class='line'>| 40dabe35-dfc1-4723-9ab7-5b4dfb51108b | L3 agent           | network2 | :-)   | True           |
+</span><span class='line'>| 6452b796-e7f6-4057-96df-4d320a0ceb84 | DHCP agent         | network1 | :-)   | True           |
+</span><span class='line'>| 6dcd47a8-f56e-46db-aec1-5c2c18f0c321 | Open vSwitch agent | network1 | :-)   | True           |
+</span><span class='line'>| 715ce6bc-7cb5-4e0b-9de9-3b6a8750cf59 | Open vSwitch agent | compute1 | :-)   | True           |
+</span><span class='line'>| a39da87a-16ea-4924-8aff-d9e468e68f13 | DHCP agent         | network2 | :-)   | True           |
+</span><span class='line'>| ccf26580-ba40-4148-9a73-c0cf67713a73 | L3 agent           | network1 | :-)   | True           |
+</span><span class='line'>+--------------------------------------+--------------------+----------+-------+----------------+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>4.3 将路由添加到network1的l3 agent上</strong></p>
+
+<p>命令如下</p>
+
+<pre><code>quantum l3-agent-router-add $l3_agent_ID router_id
+</code></pre>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># quantum l3-agent-router-add  ccf26580-ba40-4148-9a73-c0cf67713a73 93a70ed7-ac17-41d3-9d92-4d8bfb0ee56a 
+</span><span class='line'>Added router 93a70ed7-ac17-41d3-9d92-4d8bfb0ee56a to L3 agent</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>4.4 设置路由网关</strong></p>
+
+<p>命令如下<code>quantum router-gateway-set $router_id $ext_net_id</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># quantum router-gateway-set 93a70ed7-ac17-41d3-9d92-4d8bfb0ee56a  45217501-16c6-49a9-946d-6d44ef2b0256 
+</span><span class='line'>Set gateway for router 93a70ed7-ac17-41d3-9d92-4d8bfb0ee56a</span></code></pre></td></tr></table></div></figure>
+
+
+<p>查看路由</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># quantum router-list 
+</span><span class='line'>+--------------------------------------+----------------+--------------------------------------------------------+
+</span><span class='line'>| id                                   | name           | external_gateway_info                                  |
+</span><span class='line'>+--------------------------------------+----------------+--------------------------------------------------------+
+</span><span class='line'>| 93a70ed7-ac17-41d3-9d92-4d8bfb0ee56a | default-router | {"network_id": "45217501-16c6-49a9-946d-6d44ef2b0256"} |
+</span><span class='line'>+--------------------------------------+----------------+--------------------------------------------------------+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>4.5 将路由添加到子网 </strong></p>
+
+<p>或者说将子网添加到路由，主要目的就是让某个子网的路由设置成我们的router,这个router 的网关已经被设置为外部网络，这样我们的子网就可以上网了
+命令如下<code>quantum router-interface-add $router_id $subnet_id</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># quantum router-interface-add 93a70ed7-ac17-41d3-9d92-4d8bfb0ee56a  32fe8d37-5c35-453e-b7d4-a1c98ac7bf97
+</span><span class='line'>Added interface to router 93a70ed7-ac17-41d3-9d92-4d8bfb0ee56a</span></code></pre></td></tr></table></div></figure>
+
+
+<p>network节点上应该会出现一个qrouter的namespace,如果启用了namespace的话（默认启动）</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># ip netns
+</span><span class='line'>qrouter-93a70ed7-ac17-41d3-9d92-4d8bfb0ee56a</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>4.6 创建一个floating ip </strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># quantum floatingip-create ext_net 
+</span><span class='line'>Created a new floatingip:
+</span><span class='line'>+---------------------+--------------------------------------+
+</span><span class='line'>| Field               | Value                                |
+</span><span class='line'>+---------------------+--------------------------------------+
+</span><span class='line'>| fixed_ip_address    |                                      |
+</span><span class='line'>| floating_ip_address | 10.1.3.11                            |
+</span><span class='line'>| floating_network_id | 45217501-16c6-49a9-946d-6d44ef2b0256 |
+</span><span class='line'>| id                  | 9461b279-c5c7-4db0-a332-a3466c616861 |
+</span><span class='line'>| port_id             |                                      |
+</span><span class='line'>| router_id           |                                      |
+</span><span class='line'>| tenant_id           | 180deec2c933457cb149ef5cf38322f8     |
+</span><span class='line'>+---------------------+--------------------------------------+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>至此，网络相关资源全部创建完成</p>
+
+<p>下面我们来验证网络是否工作正常</p>
+
+<h2>5. 启动虚拟机，分配floating ip </h2>
+
+<p><strong> 创建port </strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># quantum port-create --fixed-ip subnet_id=32fe8d37-5c35-453e-b7d4-a1c98ac7bf97 54f37003-7f4e-47f4-a865-c928de1ae9e3 
+</span><span class='line'>Created a new port:
+</span><span class='line'>+----------------------+-------------------------------------------------------------------------------------+
+</span><span class='line'>| Field                | Value                                                                               |
+</span><span class='line'>+----------------------+-------------------------------------------------------------------------------------+
+</span><span class='line'>| admin_state_up       | True                                                                                |
+</span><span class='line'>| binding:capabilities | {"port_filter": false}                                                              |
+</span><span class='line'>| binding:vif_type     | ovs                                                                                 |
+</span><span class='line'>| device_id            |                                                                                     |
+</span><span class='line'>| device_owner         |                                                                                     |
+</span><span class='line'>| fixed_ips            | {"subnet_id": "32fe8d37-5c35-453e-b7d4-a1c98ac7bf97", "ip_address": "192.168.12.2"} |
+</span><span class='line'>| id                   | 69802c75-20a9-4533-9b26-8975a39f9a5d                                                |
+</span><span class='line'>| mac_address          | fa:16:3e:af:35:30                                                                   |
+</span><span class='line'>| name                 |                                                                                     |
+</span><span class='line'>| network_id           | 54f37003-7f4e-47f4-a865-c928de1ae9e3                                                |
+</span><span class='line'>| status               | DOWN                                                                                |
+</span><span class='line'>| tenant_id            | 180deec2c933457cb149ef5cf38322f8                                                    |
+</span><span class='line'>+----------------------+-------------------------------------------------------------------------------------+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>创建 volume</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># cinder create --image-id 6b01928b-056f-4d2e-bb33-988a4853d7f9 --display-name dcai-precise 10 
+</span><span class='line'>+---------------------+--------------------------------------+
+</span><span class='line'>|       Property      |                Value                 |
+</span><span class='line'>+---------------------+--------------------------------------+
+</span><span class='line'>|     attachments     |                  []                  |
+</span><span class='line'>|  availability_zone  |                 nova                 |
+</span><span class='line'>|       bootable      |                false                 |
+</span><span class='line'>|      created_at     |      2013-05-17T08:32:55.108870      |
+</span><span class='line'>| display_description |                 None                 |
+</span><span class='line'>|     display_name    |             dcai-precise             |
+</span><span class='line'>|          id         | 949077a3-67d9-478c-82b1-a57ad6780e97 |
+</span><span class='line'>|       image_id      | 6b01928b-056f-4d2e-bb33-988a4853d7f9 |
+</span><span class='line'>|       metadata      |                  {}                  |
+</span><span class='line'>|         size        |                  10                  |
+</span><span class='line'>|     snapshot_id     |                 None                 |
+</span><span class='line'>|     source_volid    |                 None                 |
+</span><span class='line'>|        status       |               creating               |
+</span><span class='line'>|     volume_type     |                 None                 |
+</span><span class='line'>+---------------------+--------------------------------------+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>启动虚拟机</strong></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># nova boot --flavor 1 --image 6b01928b-056f-4d2e-bb33-988a4853d7f9 --block_device_mapping vda=949077a3-67d9-478c-82b1-a57ad6780e97:::0 --nic port-id=69802c75-20a9-4533-9b26-8975a39f9a5d dcai-m1
+</span><span class='line'>+-------------------------------------+--------------------------------------+
+</span><span class='line'>| Property                            | Value                                |
+</span><span class='line'>+-------------------------------------+--------------------------------------+
+</span><span class='line'>| OS-EXT-STS:task_state               | scheduling                           |
+</span><span class='line'>| image                               | precise                              |
+</span><span class='line'>| OS-EXT-STS:vm_state                 | building                             |
+</span><span class='line'>| OS-EXT-SRV-ATTR:instance_name       | instance-0000007b                    |
+</span><span class='line'>| flavor                              | m1.tiny                              |
+</span><span class='line'>| id                                  | 9e6c3ed0-7e7a-4fdf-ae66-9b9eb99163b7 |
+</span><span class='line'>| security_groups                     | [{u'name': u'default'}]              |
+</span><span class='line'>| user_id                             | d61a9823e00f417b90b842dd8b5f7a94     |
+</span><span class='line'>| OS-DCF:diskConfig                   | MANUAL                               |
+</span><span class='line'>| accessIPv4                          |                                      |
+</span><span class='line'>| accessIPv6                          |                                      |
+</span><span class='line'>| progress                            | 0                                    |
+</span><span class='line'>| OS-EXT-STS:power_state              | 0                                    |
+</span><span class='line'>| OS-EXT-AZ:availability_zone         | None                                 |
+</span><span class='line'>| config_drive                        |                                      |
+</span><span class='line'>| status                              | BUILD                                |
+</span><span class='line'>| updated                             | 2013-05-17T08:35:01Z                 |
+</span><span class='line'>| hostId                              |                                      |
+</span><span class='line'>| OS-EXT-SRV-ATTR:host                | None                                 |
+</span><span class='line'>| key_name                            | None                                 |
+</span><span class='line'>| OS-EXT-SRV-ATTR:hypervisor_hostname | None                                 |
+</span><span class='line'>| name                                | dcai-m1                              |
+</span><span class='line'>| adminPass                           | XH2o4LJda7CE                         |
+</span><span class='line'>| tenant_id                           | 180deec2c933457cb149ef5cf38322f8     |
+</span><span class='line'>| created                             | 2013-05-17T08:35:01Z                 |
+</span><span class='line'>| metadata                            | {}                                   |
+</span><span class='line'>+-------------------------------------+--------------------------------------+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>进入虚拟机，查看一切是否正常</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[quantum l3 agent 多外部网问题(quantum muliple l3 agent issue)]]></title>
+    <link href="http://danielscai.github.com/blog/2013/05/18/quantum-muliple-l3-agent-issue/"/>
+    <updated>2013-05-18T12:19:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/05/18/quantum-muliple-l3-agent-issue</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://danielscai.github.com/images/main/OpenStack.jpeg" width="200" height="100" title="openstack" alt="openstack">
+quantum l3 agent 多外部网问题</p>
+
+<p>问题描述</p>
+
+<p>在 network 节点上<code>/var/log/quantum/l3-agent.log</code> 查看到如下log，</p>
+
+<!--more-->
+
+
+<p>主要是<code>The 'gateway_external_network_id' must be configured if Quantum has more than one external network.</code>这句.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Stdout: '8: br-ex: &lt;BROADCAST,MULTICAST&gt; mtu 1500 qdisc noop state DOWN \\    link/ether fe:4d:08:7b:3d:4a brd ff:ff:ff:ff:ff:ff\n'
+</span><span class='line'>Stderr: ''
+</span><span class='line'>2013-05-17 14:43:30    DEBUG [quantum.openstack.common.rpc.amqp] Making synchronous call on q-plugin ...
+</span><span class='line'>2013-05-17 14:43:30    DEBUG [quantum.openstack.common.rpc.amqp] MSG_ID is 642c0e87c8f44f179d45485039d5d879
+</span><span class='line'>2013-05-17 14:43:30    DEBUG [quantum.openstack.common.rpc.amqp] UNIQUE_ID is d9ae832d62134946ac39a3537088e8a4.
+</span><span class='line'>2013-05-17 14:43:30    ERROR [quantum.agent.l3_agent] Failed synchronizing routers
+</span><span class='line'>Traceback (most recent call last):
+</span><span class='line'>  File "/usr/lib/python2.7/dist-packages/quantum/agent/l3_agent.py", line 639, in _sync_routers_task
+</span><span class='line'>    self._process_routers(routers, all_routers=True)
+</span><span class='line'>  File "/usr/lib/python2.7/dist-packages/quantum/agent/l3_agent.py", line 589, in _process_routers
+</span><span class='line'>    target_ex_net_id = self._fetch_external_net_id()
+</span><span class='line'>  File "/usr/lib/python2.7/dist-packages/quantum/agent/l3_agent.py", line 223, in _fetch_external_net_id
+</span><span class='line'>    raise Exception(msg)
+</span><span class='line'>Exception: The 'gateway_external_network_id' must be configured if Quantum has more than one external network.
+</span><span class='line'>2013-05-17 14:43:32    DEBUG [quantum.openstack.common.rpc.amqp] Making synchronous call on q-plugin ...
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在folsom中，这个参数是一定要配置的，否则无法工作，但是在grizzly版中， 这个是可以不配置的，如果只有一个外部网络，默认使用这个网络。</p>
+
+<p><strong>查看有哪些外部网络</strong></p>
+
+<p>使用<code>quantum net-list</code>无法直接查看到哪些是外部网络，需要加上过滤器</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># quantum net-list  -- --router:external=True
+</span><span class='line'>+--------------------------------------+------------+-------------------------------------------------------+
+</span><span class='line'>| id                                   | name       | subnets                                               |
+</span><span class='line'>+--------------------------------------+------------+-------------------------------------------------------+
+</span><span class='line'>| 2465e4cd-cd02-4a52-bafa-6bf060bee6ae | net_extral |                                                       |
+</span><span class='line'>| c30aa6ff-3169-442d-8da1-baf54272b4c8 | public_net | 03828046-9965-4659-88f3-9380114268fc 192.168.0.0/24   |
+</span><span class='line'>|                                      |            | 3d255d61-561c-42aa-b0cf-e90b05f895ec 192.168.22.0/24  |
+</span><span class='line'>|                                      |            | 7c363a4d-4ce8-4160-a92b-80753ef0d25b 192.168.100.0/24 |
+</span><span class='line'>+--------------------------------------+------------+-------------------------------------------------------+
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在network节点上查看这个qrouter的namespace 会报如下错误</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># ip netns exec qrouter-8afc5f1e-ee99-4af5-a7f8-ec2edefebddd ip a
+</span><span class='line'>seting the network namespace failed: Invalid argument</span></code></pre></td></tr></table></div></figure>
+
+
+<p>解决方法</p>
+
+<p>删除多个外部网路，只留一个外部网络，
+或者在network 节点配置l3 agent 加上<code>gateway_external_network_id</code>配置</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[openstack不能删除虚拟机一例]]></title>
+    <link href="http://danielscai.github.com/blog/2013/05/18/openstack-can-not-delete-vm-a-sample/"/>
+    <updated>2013-05-18T11:59:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/05/18/openstack-can-not-delete-vm-a-sample</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://danielscai.github.com/images/main/OpenStack.jpeg" width="200" height="100" title="openstack" alt="openstack"></p>
+
+<p>运行<code>nova delete ceph01</code>删除虚拟机ceph01,发现无法删除虚拟机，</p>
+
+<h1>1. controller节点</h1>
+
+<ul>
+<li>查看虚拟机状态</li>
+</ul>
+
+
+<p>如下</p>
+
+<!-- more -->
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># nova show ceph01
+</span><span class='line'>+-------------------------------------+----------------------------------------------------------+
+</span><span class='line'>| Property                            | Value                                                    |
+</span><span class='line'>+-------------------------------------+----------------------------------------------------------+
+</span><span class='line'>| OS-DCF:diskConfig                   | MANUAL                                                   |
+</span><span class='line'>| OS-EXT-SRV-ATTR:host                | compute2                                                 |
+</span><span class='line'>| OS-EXT-SRV-ATTR:hypervisor_hostname | compute2                                                 |
+</span><span class='line'>| OS-EXT-SRV-ATTR:instance_name       | instance-00000114                                        |
+</span><span class='line'>| OS-EXT-STS:power_state              | 1                                                        |
+</span><span class='line'>| OS-EXT-STS:task_state               | deleting                                                 |
+</span><span class='line'>| OS-EXT-STS:vm_state                 | active                                                   |
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>查看日志发现无任何报错</li>
+</ul>
+
+
+<h1>2. compute节点</h1>
+
+<ul>
+<li>虚拟机所在的物理机上<code>/var/log/nova/nova-compute.log</code>有如下错误</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp     return self.api.client.post(url, body=body)
+</span><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp   File "/usr/lib/python2.7/dist-packages/cinderclient/client.py", line 141, in post
+</span><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp     return self._cs_request(url, 'POST', **kwargs)
+</span><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp   File "/usr/lib/python2.7/dist-packages/cinderclient/client.py", line 126, in _cs_request
+</span><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp     **kwargs)
+</span><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp   File "/usr/lib/python2.7/dist-packages/cinderclient/client.py", line 109, in request
+</span><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp     raise exceptions.from_response(resp, body)
+</span><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp ClientException: The server has either erred or is incapable of performing the requested operation. (HTTP 500) (Request-ID: req-a9122ed1-9198-4464-8da9-7458fb581379)
+</span><span class='line'>2013-04-03 13:04:17 45732 TRACE nova.openstack.common.rpc.amqp
+</span><span class='line'>2013-04-03 13:04:17 DEBUG nova.utils [req-195b0553-4ff9-4cd5-9e06-63324e8865da 77e43059b67e4c139cb6a9cbb08ef20d f7de462059fb419f90f37006dd4e27e9] Got semaphore "92e08fe5-89a3-494c-85b9-96072bcb051b" for method "do_terminate_instance"... inner /usr/lib/python2.7/dist-packages/nova/utils.py:765
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>使用 <code>virsh list --all</code> 发现虚拟机应经不存在了</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># virsh list
+</span><span class='line'> Id    Name                           State
+</span><span class='line'>----------------------------------------------------
+</span><span class='line'> 108   instance-000000f4              running
+</span><span class='line'> 110   instance-000000f5              running
+</span><span class='line'> 122   instance-0000010c              running
+</span><span class='line'> 123   instance-0000010d              running
+</span><span class='line'> 124   instance-00000110              running
+</span><span class='line'> 128   instance-0000011b              running
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ol>
+<li>解决方法
+之前部署过多controller节点，然后将其关闭了，可能导致删除的时候，compute节点消息没有传递回来，具体机制还不明朗。
+目前先清空数据库中相应的条目</li>
+</ol>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@controller3:/var/log/cinder# mysql -uroot -p
+</span><span class='line'>Enter password:
+</span><span class='line'>mysql&gt; use nova;
+</span><span class='line'>
+</span><span class='line'>mysql&gt; update  instances set deleted=1 where display_name='ceph01';
+</span><span class='line'>Query OK, 1 row affected (0.03 sec)
+</span><span class='line'>Rows matched: 1  Changed: 1  Warnings: 0
+</span><span class='line'>
+</span><span class='line'>mysql&gt; quit
+</span><span class='line'>Bye
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[quantum agent 名称为 localhost 问题(quantum agent with name localhost issue)]]></title>
+    <link href="http://danielscai.github.com/blog/2013/05/18/quantum-agent-with-name-localhost-issue/"/>
+    <updated>2013-05-18T11:24:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/05/18/quantum-agent-with-name-localhost-issue</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://danielscai.github.com/images/main/OpenStack.jpeg" width="200" height="100" title="openstack" alt="openstack">
+quantum agent 名称为 localhost 问题</p>
+
+<p>两个环境中发现其中一个环境中quantum的agent 名称变成了ip6-localhost</p>
+
+<p>运行<code>quantum agent-list</code>发现agent 名称都是localhost 或者是ip6-localhost</p>
+
+<p>如下</p>
+
+<!--more-->
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># quantum agent-list
+</span><span class='line'>+--------------------------------------+--------------------+---------------+-------+----------------+
+</span><span class='line'>| id                                   | agent_type         | host          | alive | admin_state_up |
+</span><span class='line'>+--------------------------------------+--------------------+---------------+-------+----------------+
+</span><span class='line'>| 468a79a0-0135-4e0e-9594-b19c7e5a7b2a | L3 agent           | ip6-localhost | :-)   | True           |
+</span><span class='line'>| 8c484bb0-15e3-4ed0-b74f-b0a9d3916a32 | Open vSwitch agent | localhost     | :-)   | True           |
+</span><span class='line'>| a758b8ce-6d59-4e5e-b3a9-9f1d1079be6b | Open vSwitch agent | ip6-localhost | :-)   | True           |
+</span><span class='line'>| b334115b-a2fd-49a1-891c-dd492dda084e | DHCP agent         | ip6-localhost | :-)   | True           |</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>问题原因</strong></p>
+
+<p>agent所在节点的<code>/etc/hosts</code>文件中配置了 <code>127.0.0.1 localhost compute1</code>这样的记录，导致agent 所在host反解自身名称的时候识别为localhost</p>
+
+<p><strong>修复问题</strong></p>
+
+<h2>1.将所有agent服务停止</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd /etc/init.d/
+</span><span class='line'>for i in quantum-* ; do service $i stop; done</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>2.清空所有agent </h2>
+
+<pre><code>for i in ` quantum agent-list | grep -v "\---"  | grep -v "^\ id" | awk '{print $2}' `;do quantum agent-delete $i ; done
+</code></pre>
+
+<h2>3. 重新启动agent </h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd /etc/init.d/
+</span><span class='line'>for i in quantum-* ; do service $i restart; done</span></code></pre></td></tr></table></div></figure>
+
+
+<p>检查</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># quantum agent-list
+</span><span class='line'>+--------------------------------------+--------------------+----------+-------+----------------+
+</span><span class='line'>| id                                   | agent_type         | host     | alive | admin_state_up |
+</span><span class='line'>+--------------------------------------+--------------------+----------+-------+----------------+
+</span><span class='line'>| 20fe37a3-9146-4744-9f4a-67db973b70e2 | Open vSwitch agent | network2 | :-)   | True           |
+</span><span class='line'>| 40dabe35-dfc1-4723-9ab7-5b4dfb51108b | L3 agent           | network2 | :-)   | True           |
+</span><span class='line'>| 6452b796-e7f6-4057-96df-4d320a0ceb84 | DHCP agent         | network1 | :-)   | True           |
+</span><span class='line'>| 6dcd47a8-f56e-46db-aec1-5c2c18f0c321 | Open vSwitch agent | network1 | :-)   | True           |
+</span><span class='line'>| 715ce6bc-7cb5-4e0b-9de9-3b6a8750cf59 | Open vSwitch agent | compute1 | :-)   | True           |
+</span><span class='line'>| a39da87a-16ea-4924-8aff-d9e468e68f13 | DHCP agent         | network2 | :-)   | True           |
+</span><span class='line'>| ccf26580-ba40-4148-9a73-c0cf67713a73 | L3 agent           | network1 | :-)   | True           |
+</span><span class='line'>+--------------------------------------+--------------------+----------+-------+----------------+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[virt相关命令总结]]></title>
+    <link href="http://danielscai.github.com/blog/2013/05/13/virt-command-summary/"/>
+    <updated>2013-05-13T20:29:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/05/13/virt-command-summary</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://danielscai.github.com/images/main/libvirt.png" width="250" height="150" title="libvirt" alt="libvirt">
+在CentOS下面多部分命令都是有包<code>libguestfs-tools-c</code>提供,所以,首先需要安装它</p>
+
+<h2>virt-ls</h2>
+
+<p>virt-ls可以列出虚拟机中目录下的文件或目录,用法如下</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>virt-ls [--options] -d domname dir [dir ...]
+</span><span class='line'>virt-ls [--options] -a disk.img [-a disk.img ...] dir [dir ...]</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!--more-->
+
+
+<p>如</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>virt-ls -d centos2 /etc/</span></code></pre></td></tr></table></div></figure>
+
+
+<p>可以像使用<code>ls</code>一样加一些参数,如<code>-l</code>等,具体请看<code>virt-ls --help</code></p>
+
+<h2>virt-what</h2>
+
+<p>virt-what可以用来检测当前系统是不是一个虚拟机,如果不是虚拟机,执行virt-what将不会有任何输出,如果是虚拟机,它会打印一系列关于虚拟机的&#8217;facts&#8217;(如kvm)</p>
+
+<p>virt-what命令由同名包提供,要命令需要先安装(yum -y install virt-what)</p>
+
+<h2>virt-host-validate</h2>
+
+<p>这个命令可以用来检测本机是否正确配置以运行虚拟化,如果没有加参数,它会检查它所知道的所有的虚拟化驱动,可选的可以加<code>qemu</code>或<code>lxc</code>做限制</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>virt-host-validate</span></code></pre></td></tr></table></div></figure>
+
+
+<p>输出类似这样</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>  QEMU: Checking for hardware virtualization                       : PASS
+</span><span class='line'>  QEMU: Checking for device /dev/kvm                               : PASS
+</span><span class='line'>  QEMU: Checking for device /dev/vhost-net                         : PASS
+</span><span class='line'>  QEMU: Checking for device /dev/net/tun                           : PASS
+</span><span class='line'>   LXC: Checking for Linux &gt;= 2.6.26                               : PASS</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>virt-top</h2>
+
+<p>virt-top命令由同名软件包提供,和top命令相似,只是进程换成了虚拟机</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>yum -y install virt-top
+</span><span class='line'>virt-top</span></code></pre></td></tr></table></div></figure>
+
+
+<p>输出</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>virt-top 16:58:01 - x86_64 8/8CPU 2127MHz 7854MB 12.2% 12.0% 12.8% 12.0% 12.1% 12.0% 12.0% 12.0%
+</span><span class='line'>4 domains, 3 active, 3 running, 0 sleeping, 0 paused, 1 inactive D:0 O:0 X:0
+</span><span class='line'>CPU: 12.7% Mem: 2048 MB (2048 MB by guests)
+</span><span class='line'>
+</span><span class='line'>  ID S RDRQ WRRQ RXBY TXBY %CPU %MEM    TIME   NAME
+</span><span class='line'>  40 R    0    0   52    0 12.5  6.0  66:38.82 centos2
+</span><span class='line'>  32 R    0    3   22  38K 13.5 16.0  26:28.82 win2003
+</span><span class='line'>  40 R    2    0   52    0 12.5  8.0  36:18.82 test
+</span><span class='line'>   -                                           (centos3)</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>virt-cat</h2>
+
+<p>virt-cat可以虚拟机中文件的内容,用法如下</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>virt-cat [--options] -d domname file [file ...]
+</span><span class='line'>virt-cat [--options] -a disk.img [-a disk.img ...] file [file ...]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>如</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>virt-cat -d centos2 /etc/passwd</span></code></pre></td></tr></table></div></figure>
+
+
+<p>domname可以通过<code>virsh list</code>得到</p>
+
+<p>也可以对虚拟机的磁盘文件操作</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>virt-cat  -a /opt/images/centos2.img /etc/passwd</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>virt-edit</h2>
+
+<p>这个命令可以修改</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>virt-edit [--options] -d domname file [file ...]
+</span><span class='line'>virt-edit [--options] -a disk.img [-a disk.img ...] file [file ...]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>例如</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>virt-edit -d centos2 /etc/passwd</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在我的系统中它会用<code>vim</code>打开文件,编辑完保存即可修改虚拟机内的文件内容</p>
+
+<p>也可以直接对虚拟机的磁盘文件进行操作</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>virt-edit -a /opt/images/centos2.img /etc/passwd</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Note: 如果虚拟机正在运行,使用第一种文件修改它的文件会有下面的报错</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Libguestfs: error: error: domain is a live virtual machine.
+</span><span class='line'>Writing to the disks of a running virtual machine ca cause disk corruption.
+</span><span class='line'>Either use read-only access, or if the guest is running the guestfsd daemon
+</span><span class='line'>specify live access. In most libguestfs tools these options are --ro or
+</span><span class='line'>--live respectively. Consult the documentation for further information.</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但直接对虚拟机磁盘镜像文件操作不会有这个提示,并且可以修改成功,会不会出问题我就不知道了</p>
+
+<h2>virt-copy-out</h2>
+
+<p>virt-copy-out这个命令可以把虚拟机里的文件复制出来, 用法如下</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>virt-copy-out -d domname file|dir [file|dir ...] localdir
+</span><span class='line'>virt-copy-out -a disk.img file|dir [file|dir ...] localdir</span></code></pre></td></tr></table></div></figure>
+
+
+<p>例子</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>virt-copy-out -d centos2 /etc/passwd .</span></code></pre></td></tr></table></div></figure>
+
+
+<p>可以是多个文件或目录</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>mkdir tmp
+</span><span class='line'>virt-copy-out -d centos2 /etc /home /root/.bashrc tmp</span></code></pre></td></tr></table></div></figure>
+
+
+<p>也可以直接对虚拟机磁盘文件操作,只需要将<code>-d domname</code>换成<code>-a path_of_disk_file</code></p>
+
+<h2>virt-copy-in</h2>
+
+<p>virt-copy-in是将文件复制到虚拟机里面,用法和virt-copy-out基本相同,这里只举一个例子</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>virt-copy-in -d centos2 test.txt /opt/</span></code></pre></td></tr></table></div></figure>
+
+
+<p>不出你的所料,如果虚拟机正在运行,上面的命令也会报错</p>
+
+<h2>virt-df</h2>
+
+<p>这个命令是比较简单了,就是将在虚拟机中执行<code>df</code>命令的结果输出</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>virt-df -d centos2
+</span><span class='line'>virt-df -a /opt/images/centos2.img</span></code></pre></td></tr></table></div></figure>
+
+
+<p>可以加<code>-h</code>参数以<code>human-readable</code>显示</p>
+
+<h2>virt-alignment-scan</h2>
+
+<p>旧的操作系统安装时会使用不对齐的分区,这会引起一些不必要的I/O,这个命令的作用是检查是否正在不对齐的问题,如果存在,只是警告(Warns)你,当前这个工具不会帮你解决这个问题</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>virt-alignment-scan -d centos2</span></code></pre></td></tr></table></div></figure>
+
+
+<p>输出类似这样</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>/dev/sda1    1048576     1024K   ok</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>virt-inspector2</h2>
+
+<p>这个命令可以显示虚拟机的操作系统版本和其它一些信息,包含的信息非常多,用法非常简单</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>virt-inspector2 -d centos2</span></code></pre></td></tr></table></div></figure>
+
+
+<p>输出类似这样</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?xml version="1.0"?&gt;
+</span><span class='line'>&lt;operatingsystems&gt;
+</span><span class='line'>  &lt;operatingssystem&gt;
+</span><span class='line'>    &lt;root&gt;/dev/sda1&lt;/root&gt;
+</span><span class='line'>    &lt;name&gt;linux&lt;/name&gt;
+</span><span class='line'>    &lt;arch&gt;x86_64&lt;/arch&gt;
+</span><span class='line'>    ...
+</span><span class='line'>    there are too many
+</span><span class='line'>    ...</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>virt-resize</h2>
+
+<ul>
+<li>virt-resize可以调整虚拟机磁盘的大小,调整或删除任何分区</li>
+<li>virt-resize不可以就地调整磁盘,不应该对正在运行的虚拟机进行磁盘调整,为了确保一致性,调整先需要关闭虚拟机</li>
+<li>virt-resize调整的过程非常慢,从35G的磁盘进行扩展需要差不多10分钟</li>
+<li>virt-resize调整所花的时候只和开始磁盘的大小有关,从35G扩展到40G和扩展到135G所花的时间差不多</li>
+<li>如果你使用qcow2磁盘格式,个人建议先转成raw,调整完后再转回去,因为直接对qcow2做调整,比较35G的qcow2磁盘镜像文件可能只有1G大小(ls查看),通过virt-resize调整后就会变成35G大小了(ls查看)(也可能是我的方法不对),先转成raw调整完大小后再转回去可以避免这个问题</li>
+</ul>
+
+
+<p>概要</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>virt-resize [--resize /dev/sdaN=[+/-]&lt;size&gt;[%]]
+</span><span class='line'>  [--expand /dev/sdaN] [--shrink /dev/sdaN]
+</span><span class='line'>  [--ignore /dev/sdaN] [--delete /dev/sdaN] [...] indisk outdisk</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>示例1.给一个分区增加5G</li>
+</ul>
+
+
+<p>首先关闭虚拟机</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>virsh destroy centos2</span></code></pre></td></tr></table></div></figure>
+
+
+<p>查看分区情况</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>virt-filesystems --long -h --all -a /opt/images/centos2.img</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Name      Type        VFS       Label     MBR     Size    Parent
+</span><span class='line'>/dev/sda1 filesystems ext4      -         -       35G     -
+</span><span class='line'>/dev/sda1 partition   -         -         83      35G     /dev/sda
+</span><span class='line'>/dev/sda  device      -         -         -       35G     -</span></code></pre></td></tr></table></div></figure>
+
+
+<p>把qcow2格式的磁盘镜像转成raw</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd /opt/images
+</span><span class='line'>cp centos2.img centos2.img.orig
+</span><span class='line'>qemu-img convert -f qcow2 -O raw centos2.img centos2.raw</span></code></pre></td></tr></table></div></figure>
+
+
+<p>利用truncate创建一个新的文件,大小比centos2.raw大5G</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>truncate -r centos2.raw newdisk
+</span><span class='line'>truncate -s +5G newdisk</span></code></pre></td></tr></table></div></figure>
+
+
+<p>开始调整</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>virt-resize --expand /dev/sda1 centos2.raw newdisk</span></code></pre></td></tr></table></div></figure>
+
+
+<p>你应该看到类似这样的信息</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Examining centos2.img.raw ...
+</span><span class='line'>
+</span><span class='line'>Summary of changes:
+</span><span class='line'>
+</span><span class='line'>/dev/sda1: This partition will be resized from 35.0G to 40.0G. The
+</span><span class='line'>    filesystem ext4 on /dev/sda1 will be expanded using the 'resize2fs'
+</span><span class='line'>    method.
+</span><span class='line'>
+</span><span class='line'>**********
+</span><span class='line'>Setting up initial partition table on newdisk ...
+</span><span class='line'>Copying /dev/sda1 ...</span></code></pre></td></tr></table></div></figure>
+
+
+<p>然后是持续好久的刷屏信息,好在有倒计时</p>
+
+<p>最后应该看到类似下面的信息</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Expanding /dev/sda1 using the 'resize2fs' method ...
+</span><span class='line'>
+</span><span class='line'>Resize operation completed with no errors. Before deleting the old
+</span><span class='line'>disk, carefully check that the resized disk boots and works correctly.</span></code></pre></td></tr></table></div></figure>
+
+
+<p>调整完后转回qcow2格式</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>qemu-img convert -f raw -O qcow2 centos2.raw centos2.qcow2</span></code></pre></td></tr></table></div></figure>
+
+
+<p>虚拟机里面不用再做操作,现在使用新的磁盘镜像文件启动虚拟机应该可以看到/dev/sda1已经从35G变为40G了</p>
+
+<p>分区的缩减我们一般用不到,没有做测试,lvm的调整可以参考<a href="http://askaralikhan.blogspot.tw/2011/07/expanding-kvm-guest-disk-image-using.html">这里</a></p>
+
+<h2>virt-install</h2>
+
+<p>virt-install命令由<code>python-virtinst</code>提供,需要安装python-virtinst才可以使用virt-install</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>yum -y install python-virtinst</span></code></pre></td></tr></table></div></figure>
+
+
+<p>安装例子</p>
+
+<pre><code>virt-install \
+    --name kvm-test-centos-6.2-x64 \
+    --ram 1024 \
+    --vcpus 4 \
+    --cdrom /opt/isos/CentOS-6.2-x86_64-bin-DVD1.iso \
+    --network bridge:virbr0 \
+    --vnc --vncport=5910 --vnclisten=localhost \
+    --disk /opt/images/kvm-test-centos-6.2-64bit.img,size=20
+</code></pre>
+
+<p>如果磁盘文件不存在,会自动创建(需要size参数),默认创建是raw磁盘镜像,可以用qemu-img手动创建磁盘文件</p>
+
+<pre><code>qemu-img create -f raw kvm-test-centos-6.2-64bit.img 20G
+</code></pre>
+
+<p>这里磁盘格式常见的有两种,raw和qcow2(还有qed正在开发中,据说性能更好)
+raw的读写性能要比qcow2好,但如果你需要快照等高级特性,可以选择qcow2
+如果使用qcow2,加上preallocation性能会有所提升</p>
+
+<pre><code>qemu-img create -f qcow2 -o preallocation=metadata kvm-test-centos-6.2-64bit.img 20G
+</code></pre>
+
+<p>不同的bus类型,cache类型和aio选择都会有性能有影响,所以你可希望把这些也加进去,格式类似这样</p>
+
+<pre><code>...
+    --disk path=/opt/images/kvm-test-centos-6.2-64bit.img,size=20,bus=virtio,cache=none,aio=threads,format=qcow2 \
+...
+</code></pre>
+
+<p>这里可供选择的参数有</p>
+
+<pre><code>bus: virtio, ide
+cache: unsafe, none, writeback, writethrough, directsync
+aio: threads, native
+
+不同的网卡驱动类型会影响到虚拟机的网络性能,可以这样指定
+
+...
+    --network bridge:virbr0,model=e1000 \
+...
+</code></pre>
+
+<p>可供选择的参数有</p>
+
+<pre><code># 可以通过qemu-system-x86_64 -net nic,model=?查到支持的参数
+model:  ne2k_pci,i82551,i82557b,i82559er,rtl8139,e1000,pcnet,virtio
+</code></pre>
+
+<p>virbr0是系统自动创建的桥,可以手动创建桥接设备然后指定虚拟机使用
+如果你的虚拟机是windows并且想使用virtio做为硬盘驱动和网卡驱动,你需要下载两个驱动文件
+这两个文件可以从这里下载</p>
+
+<p><a href="http://ishare.iask.sina.com.cn/f/24109437.html">磁盘驱动</a></p>
+
+<p><a href="http://alt.fedoraproject.org/pub/alt/virtio-win/latest/images/bin/">网卡驱动</a></p>
+
+<pre><code>virt-install \
+    --name kvm-test-win2003 \
+    --ram 1024 \
+    --vcpus 1 \
+    --cdrom /opt/isos/cn_win_srv_2003_r2_enterprise_x64_with_sp2_vl_cd1_X13-47314.iso \
+    --network bridge:virbr0,model=virtio \
+    --vnc \
+    --disk path=/opt/images/kvm-test-win2003.img,bus=virtio,cache=none,format=qcow2,size=20 \
+    --disk path=/opt/drivers/virtio-win-1.1.16.vfd,device=floppy \
+    --disk path=/opt/drivers/virtio-win-0.1-12.iso,device=cdrom,perms=ro
+</code></pre>
+
+<p>如果不出问题,应该可以看到安装窗口了(需要安装virt-viewer)
+如果没有安装virt-viewer或者你在没有安装图形的服务器上操作
+你仍然可以通过以下方法访问到安装窗口</p>
+
+<pre><code>vncviewer vnclisten:vncport
+</code></pre>
+
+<p>前面的–vnclisten就不能写localhost了</p>
+
+<p>第二种方法是:</p>
+
+<pre><code>virt-viewer --connect qemu+ssh://user@ip_address:port/system name_of_instance
+</code></pre>
+
+<p>kickstart安装也可以用在virt-install中</p>
+
+<pre><code>yum -y install httpd
+mkdir /var/www/centos
+mount -o loop /opt/isos/CentOS-6.2-x86_64-bin-DVD1.iso /var/www/centos
+cp /root/ks.cfg /var/www/centos
+/etc/init.d/httpd restart
+
+virt-install \
+    --name kvm-test-centos-6.2-x64 \
+    --ram 1024 \
+    --vcpus 4 \
+    --location http://192.168.122.1/centos/
+    --network bridge:virbr0 \
+    --vnc --vncport=5910 --vnclisten=localhost \
+    --disk /opt/images/kvm-test-centos-6.2-64bit.img,size=20
+    --extra-args "ks=http://192.168.122.1/ks.cfg ip=192.168.122.10 ip=192.168.122.10 netmask=255.255.255.0 gateway=192.168.122.1 dns=8.8.8.8"
+</code></pre>
+
+<p>安装好之后,就可以使用virsh对虚拟做一些操作了
+virt-install的更多参数可以参考<a href="http://my.oschina.net/williamherrychina/blog/56463">这里</a></p>
+
+<p>转自 william herry 的blog <a href="http://williamherry.com/blog/2012/09/14/virt-releated-command/#comment-895686316">http://williamherry.com/blog/2012/09/14/virt-releated-command/#comment-895686316</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[python 设计模式之 策略模式 ]]></title>
+    <link href="http://danielscai.github.com/blog/2013/05/08/python-pattern-strategy/"/>
+    <updated>2013-05-08T23:27:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/05/08/python-pattern-strategy</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://danielscai.github.com/images/main/python-logo.gif" width="250" height="150" title="python" alt="python"></p>
+
+<p>策略模式的主体思想是将变与不变的部分分离。</p>
+
+<p>概括的说，不变的部分我们可以写成类生成的一个实例，或者模块。将变的部分写成一个类，然后每次根据条件的不同生成多个实例，再将这个变的实例通过参数的方式传入到不变的实例或者模块中。</p>
+
+<!--more-->
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[python 元编程之 自动生成类]]></title>
+    <link href="http://danielscai.github.com/blog/2013/05/08/python-meta-programming-auto-create-class/"/>
+    <updated>2013-05-08T23:06:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/05/08/python-meta-programming-auto-create-class</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://danielscai.github.com/images/main/python-logo.gif" width="250" height="150" title="python" alt="python"></p>
+
+<p>元编程是动态语言最大的特点，却是一个经常被程序员忽略的技巧。</p>
+
+<p>元编程对初学者来讲，稍显复杂。那么元编程到底可以给我们带来什么特异功能呢？</p>
+
+<p>下面试用项目中用到的自动生成类的例子讲解元编程</p>
+
+<!--more-->
+
+
+<p><strong>需求</strong></p>
+
+<p>这段代码主要是生成项目中的http错误类，用来返回对应的http code和一段封装成json的错误提示信息</p>
+
+<p><strong>代码</strong></p>
+
+<p>先来看下代码</p>
+
+<h2>1. 将错误类的类名和对应的错误码记录到一个字典中</h2>
+
+<p>下面字典的值，都是我已经定义好的，比如<code>BAD_REQUEST</code>就是400</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>except_dict={
+</span><span class='line'>    'ActionNotSupportedError': ACTION_NOT_SUPPORTED,
+</span><span class='line'>    'BadRequestError':BAD_REQUEST,
+</span><span class='line'>    'NotFoundError':NOT_FOUND,
+</span><span class='line'>    'UnauthorizedError':UNAUTHORIZED,
+</span><span class='line'>    'ConflictError':CONFLICT,
+</span><span class='line'>    'ParamsMissingError': PARAMS_MISSING,
+</span><span class='line'>    'OverlimitError': OVERLIMIT,
+</span><span class='line'>    'OSApiError': OSAPI_ERROR,
+</span><span class='line'>    'MethodNotAllowedError': METHOD_NOT_ALLOWED,
+</span><span class='line'>    'InternalServerError': INTERNAL_SERVER_ERROR,
+</span><span class='line'>}
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>2. 定义类的函数</h2>
+
+<p>这里定义了两个函数,一个是<code>__init__</code>和<code>__str__</code> ，然后将其写入属性字典<code>attr</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def __init__(self,errmsg):
+</span><span class='line'>    ''' make returned error message'''
+</span><span class='line'>    self.value='{"error_message":"%s"}' % errmsg
+</span><span class='line'>    zlog.logger("Exception: "+self.value)
+</span><span class='line'>
+</span><span class='line'>def __str__(self):
+</span><span class='line'>    return repr(self.value)
+</span><span class='line'>
+</span><span class='line'>exceptions_list=[]
+</span><span class='line'>bases=(Exception,)
+</span><span class='line'>attrs={
+</span><span class='line'>    '__init__':__init__,
+</span><span class='line'>    '__str__':__str__,
+</span><span class='line'>}
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>3. 生成类</h2>
+
+<p>最后一步，也是最重要的一步，遍历第1步中生成的字典<code>except_dict</code>,属性code 设置为字典对应key的值
+使用<code>type</code>生成一个类，使用globals()将类注册到当前模块空间</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>for (eklass_name,code) in except_dict.items():
+</span><span class='line'>    attrs['code']=code
+</span><span class='line'>    eklass=type(eklass_name,bases,attrs)
+</span><span class='line'>    exceptions_list.append(eklass)
+</span><span class='line'>    globals().update( {eklass_name: eklass } )
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这样一段扩展性非常高的错误处理代码就完成了，新添加一个错误码，只需要添加一行<code>except_dict</code>字典值，剩下的代码会帮你搞定。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[python 设计模式之 装饰器 ]]></title>
+    <link href="http://danielscai.github.com/blog/2013/05/08/python-decorator-sample/"/>
+    <updated>2013-05-08T22:40:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/05/08/python-decorator-sample</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://danielscai.github.com/images/main/python-logo.gif" width="250" height="150" title="python" alt="python"></p>
+
+<p>之前介绍过 python 的<a href="http://dnscai.com/blog/2013/04/25/python-singleton/">单例</a></p>
+
+<p>其实python 不需要单例 (为什么？ 想一想，模块不就是最好的单例么？)</p>
+
+<p>本文主要讨论的是python 的装饰器，flask 的路由就是使用装饰器实现的，flask介绍可以参考 <a href="http://dnscai.com/blog/2013/04/25/python-flask-web-framework-intro/">http://dnscai.com/blog/2013/04/25/python-flask-web-framework-intro/</a></p>
+
+<!--more-->
+
+
+<p>下面是一段简单的flask路由规则</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>@vm.route("/&lt;management_zone&gt;/&lt;availability_zone&gt;/&lt;string:x_id&gt;",
+</span><span class='line'>    methods=[ 'GET','POST','PUT','DELETE'])
+</span><span class='line'>def vm(management_zone,availability_zone,x_id):
+</span><span class='line'>    return ''
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>复用函数问题</strong></p>
+
+<p>有些函数可能是需要在调用没一个url的时候都需要执行，比如说认证模块。
+传统的解决方案就是写一个认证函数，在每一个url函数下调用这个函数。</p>
+
+<p>这的确可以解决问题，但是代码不能优雅一点么，不能更pythonic一点么？</p>
+
+<p><strong>简单装饰器</strong></p>
+
+<p>装饰器的作用很简单，就是在运行某个函数之前，运行一些其他代码，作用如下</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>foo=bar(foo)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>就像foo函数被bar装饰过了一样，python中提供了一个装饰器的语法糖，&#8217;@&#8217;</p>
+
+<p>让我们来看看如何使用装饰器写一个认证函数</p>
+
+<p><strong>认证函数 装饰器</strong></p>
+
+<p>下面代码生成一个<code>auth_deco</code>的函数，这个函数特别之处在于他会返回一个传入的函数，在返回之前，做了认证的工作</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>def auth_deco(func):
+</span><span class='line'>    '''
+</span><span class='line'>    ladp auth decorator
+</span><span class='line'>    '''
+</span><span class='line'>    @functools.wraps(func)
+</span><span class='line'>    def wrapper(*argv,**kwgs):
+</span><span class='line'>        username=request.headers.get('username')
+</span><span class='line'>        password=request.headers.get('password')
+</span><span class='line'>        if password != None:
+</span><span class='line'>            password=base64.decodestring(password)
+</span><span class='line'>        _ldap_auth(username,password)
+</span><span class='line'>        return func(*argv,**kwgs)
+</span><span class='line'>    return wrapper
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>使用这个装饰器</strong></p>
+
+<p>在<code>@vm.route</code>的下面添加<code>@auth_deco</code>就大共告成，而且非常pythonic</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>@vm.route("/&lt;management_zone&gt;/&lt;availability_zone&gt;/&lt;string:x_id&gt;",
+</span><span class='line'>    methods=[ 'GET','POST','PUT','DELETE'])
+</span><span class='line'>@auth_deco
+</span><span class='line'>def vm(management_zone,availability_zone,x_id):
+</span><span class='line'>    return ''</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[python http connection pool urllib3]]></title>
+    <link href="http://danielscai.github.com/blog/2013/05/08/python-http-connection-pool-urllib3/"/>
+    <updated>2013-05-08T19:39:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/05/08/python-http-connection-pool-urllib3</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://danielscai.github.com/images/main/python-logo.gif" width="250" height="150" title="python" alt="python">
+随着项目越来越庞大，直接http请求成为不可忽略的一个问题，需要有一种机制来管理和复用http链接，http连接池就是设计来解决这个问题的.</p>
+
+<p>连接池是创建和管理一个连接的缓冲池的技术，这些连接准备好被任何需要它们的线程使用</p>
+
+<p>使用连接池有如下好处</p>
+
+<!--more-->
+
+
+<p><strong>减少连接创建时间</strong></p>
+
+<p>http连接需要完成3次握手，建立一个连接，如果这类连接是“循环”使用的，使用该方式这些花销就可避免。</p>
+
+<p><strong>简化的编程模式</strong></p>
+
+<p>当使用连接池时，每一个单独的线程能够像创建了一个自己的http连接一样操作，允许用户直接使用从池中得到的连接编程。</p>
+
+<p><strong>控制资源使用</strong></p>
+
+<p>如果用户不使用连接池，而是每当线程需要时创建一个新的连接，那么用户的应用程序的资源使用会产生非常大的浪费并且可能会导致高负载下的异常发生。
+连接池能够使性能最大化，同时还能将资源利用控制在一定的水平之下，如果超过该水平，应用程序将崩溃而不仅仅是变慢。</p>
+
+<p>python 中可以使用<code>urllib3</code>来使用http 连接池</p>
+
+<h2>1. 安装</h2>
+
+<p>使用 pip</p>
+
+<pre><code>pip install urllib3
+</code></pre>
+
+<p>或者clone最新的代码 <a href="github.com/shazow/urllib3.">github.com/shazow/urllib3.</a></p>
+
+<h2>2. 使用</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt;&gt;&gt; import urllib3
+</span><span class='line'>&gt;&gt;&gt; http = urllib3.PoolManager()
+</span><span class='line'>&gt;&gt;&gt; r = http.request('GET', 'http://google.com/')
+</span><span class='line'>&gt;&gt;&gt; r.status
+</span><span class='line'>200
+</span><span class='line'>&gt;&gt;&gt; r.headers['server']
+</span><span class='line'>'gws'
+</span><span class='line'>&gt;&gt;&gt; r.data
+</span><span class='line'>...</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>3. 使用 connection from url</h2>
+
+<p>处理hostname有时候是一件非常恼人的事情，去除http头，得到端口等等。
+好在urllib3帮我们都处理了这些累活，使用connection from url 即可</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt;&gt;&gt; conn = urllib3.connection_from_url('http://google.com')
+</span><span class='line'>&gt;&gt;&gt; r1 = conn.request('GET', 'http://google.com/')
+</span><span class='line'>&gt;&gt;&gt; r2 = conn.request('GET', '/mail')
+</span><span class='line'>&gt;&gt;&gt; r3 = conn.request('GET', 'http://yahoo.com/')
+</span><span class='line'>Traceback (most recent call last)
+</span><span class='line'>  ...
+</span><span class='line'>HostChangedError: Connection pool with host 'http://google.com' tried to
+</span><span class='line'>open a foreign host: http://yahoo.com/</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>注意</strong>
+如果代码是从httplib转过来的，httplib中的request函数和urllib3中的request函数是不一样的，需要使用 urllib3中的urlopen来替换以前的request函数</p>
+
+<p>这个比较坑爹，我花了很长时间在这个pitfall上面</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt;&gt;&gt; conn = urllib3.connection_from_url('http://google.com')
+</span><span class='line'>&gt;&gt;&gt; r1 = conn.urlopen('GET', 'http://google.com/')</span></code></pre></td></tr></table></div></figure>
+
+
+<p>参考 <a href="http://urllib3.readthedocs.org/en/latest/">http://urllib3.readthedocs.org/en/latest/</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[程辉和他的UnitedStack]]></title>
+    <link href="http://danielscai.github.com/blog/2013/04/30/cheng-hui-and-his-united-stack/"/>
+    <updated>2013-04-30T15:55:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/04/30/cheng-hui-and-his-united-stack</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://articles.csdn.net/uploads/allimg/120810/120_120810111432_1.jpg" width="300" height="450"></p>
+
+<p>程辉在我印象中一直都是新浪SAE技术经理，openstack董事会成员，说白了，逃不过技术宅这三个字。</p>
+
+<p>直到看到他昨天发的  <a href="http://www.ustack.com/unitedstack-first-recruiment/">UnitedStack第一次公开招聘</a></p>
+
+<!-- more -->
+
+
+<p>他开始创业了！</p>
+
+<p>United Stack 从名称上来看，就是一个美国梦，程辉正在实现他的美国梦。
+技术宅大多都有一个美国梦，追求自由。能付出实践的，却少之又少。</p>
+
+<p>我心中的信念愈发的坚定，相信自己一定能有朝一日实现自己的美国梦。</p>
+
+<p>不妨让我们去了解一下他创业的心理历程。</p>
+
+<p>下文转自 程辉的<a href="http://www.ustack.com/why-choose-a-start-up/">united stack博客</a></p>
+
+<p>一年前，我对创业没有任何概念，总觉得离我太远，职业发展机会还很好，完全没有创业的冲动。</p>
+
+<p>2012年的这个时候，由于我在新浪的团队参与OpenStack社区提交过代码，收到了Rackspace的邀请，参加2012年4月份在旧金山举行的OpenStack峰会，这是我第一次出国，而在此之前，我最大的梦想就是能去趟美国，感受一下美国的生活和文化，没想到这么突然就实现了。出国之前，我能感受到这是一次改变命运的机会，因此精心做了一些准备，还申请到了一个演讲机会，讲OpenStack在新浪的应用，大会期间认识了很多朋友，见过一批美国的OpenStack创业公司，了解了他们都在做什么。</p>
+
+<p>到了旧金山之后，一方面很激动，能呼吸到美国清新的空气、看到湛蓝的天空、认识到许多朋友，使用没有限制的互联网，另一方面也感到失落，因为上一个目标已经实现了，下一个目标在哪里？一周之后就又要回到北京，下一次不知道什么时候能来。因此当时就做了一个决定，要在美国找份工作，之后再申请美国绿卡或移民，就可以长期留在这里了。</p>
+
+<p>回国后便迅速开始做一些准备，准备英语考试，了解签证政策等等。同时，觉得有必要在国内推广一下OpenStack，便参与筹备了OpenStack亚太地区大会、OpenStack中国行等活动，还受邀去参加了一些公司和论坛，深入地讨论OpenStack各个方面。后来总结，2012年我在半年多的时间里做了超过32场公开演讲和私下分享。正是这些交流，让我深入了解到了国内云计算和传统IT的现状，由于一些众所周知的中国特殊国情，导致这个行业出现逆淘汰，认真做事做产品的活不长，相反那些做关系的、做销售和渠道的能赚到钱，IT产品要么都是舶来品，尤其是稍微高端点的有技术含量的，要么是粗制滥造的国产货。大家都很浮躁，都希望赚快钱，很少有人静下心下思考产品、思考用户需求。</p>
+
+<p>我所关心的OpenStack这个行业（现在可以叫开放云领域）也是，国内很多公司和团队在做，但基本上没有看到一个技术和眼光都很到位的团队，大部分人把开源的OpenStack当做一个免费的午餐，仅仅知道如何用它，而不懂如何发展它。一种强烈的使命感涌上心头：如果我不做OpenStack，那中国的OpenStack发展进程将会慢许多，本土厂商基本无力，只有等待国外的OpenStack公司陆续进华占领市场。而国外公司也不一定就能做好，往往也会出现水土不服情况。</p>
+
+<p>这个时候，也就是去年底，开始有了创业的念头，此时，我的下一个目标已经不是在美国找一份工作，而是要做一家OpenStack公司。而那个时候，我还是一无所有，没有积蓄，也没有任何资本的联系，只有目标，做一家OpenStack公司，我所有的资本也只是我对于OpenStack项目、商业和生态的理解。</p>
+
+<p>想清楚了之后，2013年初，决定从新浪离职，先去硅谷再说。中间有很多朋友劝我不要离职，要好好利用新浪这样一个平台，离开了新浪你将一无所有。我只是觉得，不能再依靠所谓的平台，未来的路还是得靠自己，本来也就是一无所有，没有什么失去的东西，趁年轻，做自己想做的事情。</p>
+
+<p>来了硅谷发现，一切要比想像中的顺利多了，所有见到你的人都会伸手帮你。此时，我的目标又有了新的变化，不只是做一家中国的OpenStack公司，而应该是一家国际化公司，具体来讲，正如我微博中说的：『中国工程师携中国市场机会，借硅谷的创业精神和方法论，用美国的资本去实现你的梦想』下面发展的事好像波澜不惊、水到渠成，注册公司，拿融资，一些都在计划和掌控中。当然，中间也有一些故事，由于还处在保密期，也不细说了。</p>
+
+<p>至此，我想已经回答了我为什么要创业：心里有一颗自由的种子，在特定的环境下生根发芽了，为了让这个种子生长，我做了我应该做的事情：给予更自由的环境、更干净的空气和水。</p>
+
+<p>让我感到十分幸运的是，一路上，有许多朋友给予了我非常及时的帮助和指导，让我在短时间内连续达到多个目标。在此非常感谢那些帮助过我的朋友。</p>
+
+<p>非常值得一提的是，在这个过程中，我受到了很多诱惑，但最终这些诱惑没有影响到我的决策，当我为了一个重大决定犹豫不决，痛苦不堪时，最终救我出来的，是坚持一个信念—— Follow my heart，抛弃一些杂念和一切身外之物，回归原始，问我内心，你想要什么，而我是我内心最渴望的事情，那就是”Freedom”! 也就是做自己喜欢做的事情，还能坚持自由和独立！</p>
+
+<p>每到达一个台阶，我能看到的风景也更多了一些，同时下一个目标也应运而生，然后立马行动起来，我不敢有丝毫松懈，生怕机会稍纵即逝。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[OpenStack身世揭秘]]></title>
+    <link href="http://danielscai.github.com/blog/2013/04/30/the-secret-history-of-openstack/"/>
+    <updated>2013-04-30T14:23:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/04/30/the-secret-history-of-openstack</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://cms.csdnimg.cn/articlev1/uploads/allimg/120827/145_120827170216_1.jpg">
+彩虹馆（Rainbow Mansion）是栋位于美国西岸的迷你皇宫，座落在一个可以俯瞰矽谷的山丘上，并且有着西班牙式的屋瓦与门厅的豪华吊灯。这座占地超过140坪豪宅的前任主人，曾靠着销售电脑显示卡晶片和光碟机晶片赚进大把钞票。不过事到如今，这里只是一个矽谷式公社，一个科技界的年轻激进份子生活并分享工作的场所。</p>
+
+<!-- more -->
+
+
+<p>这里的房客有Google员工、NASA工程师、在Tesla打造电动车的员工，也有苹果的工程师。不过这些人选择彩虹馆作为栖身之所，并不只是为了应付工作上的需要而已。门厅之后的公共图书馆，正是平常举行沙龙（一种不拘形式的讨论）的地点。平常房客们讨论的题目无所不包：从国家主义的凋亡，到网路自由是否比个人隐私还要重要，都曾是题目之一。而车库里面有着凑合着用的硬体实验室，房客们于此打造模型潜水艇、卫星以及可以使用Android手机操作的无人飞行载具。在过去这几年来，不只一间新创公司从这些房间里面诞生。</p>
+
+<p>根据一名前房客所言，想要住在彩虹馆的先决条件是：你想要改变这个世界！改变世界似乎是件说比做更简单的事，不过彩虹馆的房客已经做到了。他们把集体社会性格（communal ethos）灌注到近十年来最重要的开放软件专案中：OpenStack，一个在Linux环境底下运作的云端运算程式。</p>
+
+<p>利用OpenStack这个程序，任何人都能打造属于自己的亚马逊弹性云端运算（Amazon&#8217;s Elastic Compute Cloud）。亚马逊弹性云端运算是目前极受欢迎的网路服务，该服务可以让研发人员和企业即时存取虚拟伺服器。大约四年前，OpenStack的前身还只是一个在NASA内部没人看好的专案，不过目前OpenStack已经大大颠覆整个私人与公用领域的现况。</p>
+
+<p>自从获得Vivek Kundra（美国第一个资讯长）的关注之后，除了NASA以外，其他的美国联邦政府业务部门也加入使用OpenStack的行列。而在NASA跟云端运算市场第二大品牌Rackspace结盟、合力推出OpenStack后，目前全世界已经有183家以上的公司宣布支持OpenStack。OpenStack正改变着HP、Cisco、Dell等科技龙头的未来，另外，如果流言属实的话，IBM也是其中加入改变的一员。</p>
+
+<p>“业界有很多人正严肃地看待这件事”，Zorawar “Biri” Singh表示。Zorawar “Biri” Singh是监督HP利用OpenStack打造云端服务的负责人。“除了已经宣布支持OpenStack的成员之外，我们还跟其他人讨论过这件事，像是一些对OpenStack有浓厚兴趣的一流网路架构师。虽然还有很多工作要做，不过一切都在我们的掌握之中”。</p>
+
+<p>OpenStack的创办人遍布在NASA、Rackspace和其他地方。不过其中最重要的几个创办人，曾是彩虹馆内的科技公社的活跃份子，例如现年34岁的Chris C. Kemp，就是在2006年加入NASA的艾姆斯研究中心（Ames Research Center）并创办公社的自由思想家之一。&#8221;我们当时只是想找个地方住&#8221;，Kemp表示，“不过这个地方后来变成一个招揽有趣?人士地方，这是一个让有趣的人一起吃饭、碰面与生活的地方，这些有趣的人具备扩大我们对这个世界认识的能力。”</p>
+
+<p>Kemp后来担任艾姆斯研究中心的资讯长，接着则是担任整个NASA的技术长。就是在NASA与其他彩虹馆相关人士共事的时候，Kemp开启了NASA Nebula专案，这项专案后来让Google的网路杰作能够散布到全世界。在经过两年的奋斗之后，专案的主要开放式平台Nova跟Rackspace的相容平台合并，造就了OpenStack的诞生。</p>
+
+<p>就像Linux一样，OpenStack的诞生可说是奇迹。在当时，命运女神并不是站在Kemp的这一边，即使想在NASA内部进行Nebula这个专案都不是件容易的事。除了因为Nebula专案跟NASA的使命不怎么相关之外，NASA内部的官僚系统，也不适合这种能够跟全世界开放共享的创作，这个专案能够这么快速地在列强环伺的科技世界中找到容身之处，的确是件困难的事。</p>
+
+<p>“这项专案打从一开始就遭遇了种种困难。事实上，从头到尾就是个不可能的任务”，Rick Clark表示。Rick Clark在OpenStack专案进行的初期任职于Rackspace，现在则在Cisco协助推动相关专案。“你必须同时讨好NASA、NASA法务团队、Rackspace法务团队、Rackspace董事会，以及其他研发人员。这个专案的诞生只能说是老天保佑！”</p>
+
+<p><img src="http://cms.csdnimg.cn/articlev1/uploads/allimg/120827/145_120827170727_1.jpg"></p>
+
+<p><strong>NASA 找到失散多年的双胞胎兄弟</strong></p>
+
+<p>NASA跟Rackspace的联手，始于某篇部落格的文章。这篇文章大约在2010年初夏时出现在网路上，当时几乎没有人注意到。Joshua McKenty在这篇部落格文中写着：“启动Nova”。Joshua McKenty不但是NASA的承包商，也是彩虹馆的常客之一，他在文章中提到：“这是个用Python程式语言写成云端运算软体，使用Apache许可证方式授权。这东西可以用、很多缺陷、是个试用版，赶快来试试看吧。”</p>
+
+<p>使用Python程式语言写就的Nova，基本上是亚马逊弹性云端运算的仿制品。亚马逊弹性云端运算能让使用者在不需设定个人实体机器的情况下，操作软体应用程式，只要使用者有需求，就可以获得更多的虚拟伺服器。它跟亚马逊弹性云端运算最大的不同点，在于Nova是开放式软体，由于Apache许可证的关系，所以想要使用Nova架构弹性云端运算的人，都可以任意使用这个平台。</p>
+
+<p>在Nova上线一个星期后，有人告诉Rick Clark这个消息。前一年九月，Clark从Canonical（Ubuntu Linux distro的供应商）跳槽到Rackspace，并接下建立一个能够打造基础设施云端（infrastructure clouds）开放式平台的任务。当时几个Rackspace的高阶主管正在推动同样的专案，其中包括企业发展部门的副总Jim Curry与策略长Lew Moorman。</p>
+
+<p>在Clark看过NASA的Nova程式码之后，对于Nova跟Rackspace本身正在进行的开放式平台间的高相似度感到相当震惊，久久无法自己。所以他很快地发送了一封电子邮件给Rackspace的巨头们，“NASA，差不多领先我们三个月的进度”，他在信中写着，“我们需要跟他们谈谈，看看有没有什么合作的方法，好让我们使用他们的程式来进行进一步的修改。”</p>
+
+<p>Clark从来没有想过NASA会真的跟Rackspace合作，不过显然这间公司跟NASA之间很有缘份。Clark的老板（企业发展部门副总Jim Curry）的老爸是一名在NASA服务四十年的工程师，他的工作主要是研发供给太空梭与太空船使用的隔热系统，因此Curry从小就在德州休士顿的NASA太空中心底下长大。Curry在NASA跟Kemp搭上线的一个星期后，几个Rackspace的员工就飞到矽谷跟NASA的团队开会。他们跟NASA的团队先是在艾姆斯研究中心碰头，然后一起在附近的泰国餐厅吃饭。此时Rackspace跟NASA之间的缘分又加深了一层。</p>
+
+<p>“这好像找到失散已久的双胞兄弟”，McKenty表示，“这真是我这辈子最诡异的一个经验。我们使用同样的工具，选择同样的语言程式。我们这两个研发团队里面没有一个人曾经见过对方，而且我们两边都说：哇！你们刚写的程式码正是我们正打算要写的。”</p>
+
+<p>更巧的是，两边的程式码基底（code base）是相容的。当NASA在打造Nova的时候，Rackspace已经完成一个叫做Swift的平台；Nova提供虚拟伺服器，也就是运算处理能力，而Swift提供资料储存功能；Nova是仿造亚马逊弹性云端运算的功能，而Swift则是仿造亚马逊简易储存服务（Amazon&#8217;s Simple Storage Service，S3）的功能。在晚餐席间，两个团队决定将这两个专案结合在一起，并且开放程式原始码，同时决定使用“OpenStack”这个名称作为新专案名称。</p>
+
+<p>不过离这样的目标还有很长的一段路要走。当餐后要付帐的时候，这群工程师意识到没有一个简单付帐的办法，在NASA，公务员与承包商必须付自己的餐点费。“去吃饭的人大概有20个人吧，而且我们是共享所有的泰式餐点，所以我们得试着按照人头来分配费用”，任职于Rackspace的Jonathan Bryce表示，“当时我想，如果这就是跟政府一起工作的缩影，这专案永远不会成功吧”。</p>
+
+<p>这的确是跟政府合作的缩影，这也难怪Nova面世是多么令人跌破眼镜的一件事。</p>
+
+<p><strong>Google 跟用不完的基础设施</strong></p>
+
+<p>2006年，艾姆斯研究中心为了将这个NASA的矽谷前哨站带入网路新纪元，所以换了个新的主任。新主任上任后，马上招揽新血，其中就包括Chris Kemp与其他四个后来搬进彩虹馆的员工。彩虹馆距离艾姆斯研究中心大约只有15分钟的车程，而Kemp的新工作就是改变NASA。</p>
+
+<p>Kemp原本是Silicon Graphics驻阿拉巴马州亨茨维尔（Huntsville, Alabama）办事处的系统工程师；这个办事处的任务，主要在于支援NASA马歇尔太空飞行中心（Marshall Space Flight Center）的火箭科学家。后来，他成为Classmates.com的首席网路架构师，这间公司正是90年代网路泡沫热潮中的佼佼者之一。</p>
+
+<p>在NASA艾姆斯研究中心编号200号的建筑地下室安顿好之后的七个月内，Kemp马不停蹄地到处奔走。他敲定Google与NASA间的合作案，让网路巨人Google 能够协助NASA在公共网路上传送月球与火星影像。然后，作为Kemp的第二个功绩，他让Google的高阶主管把他们的私人喷射机停在艾姆斯研究中心的飞机场上。</p>
+
+<p>这笔开放飞机场给Google使用的生意，每年为NASA带来一、两百万美金以上的额外收入。不过相较于机场交易，Google Moon与Google Mars给NASA带来的影响更为重大。在此之前，Kemp曾经在微软进行类似的网路服务，所以对于Google和微软之间处理通讯基础设施（backend infrastructure）的手法不同，深感冲击。</p>
+
+<p>“在Google，基础设施像是不用钱的一样”，Kemp 表示，“Google那种自由放任（laissez-faire）态度就像是在说：‘没问题，我们随时都有几千个TB的空间可以用。’微软的态度跟Google则是完全相反。在微软，资料储存空间是被某些特定单位所把持，所以你必须跪下来求他们，想尽办法去借或是去偷一些运算资源来用。在NASA的情况就更艰难了，因为NASA完全没有任何基础设施来容纳这些东西。”</p>
+
+<p>过去这几年来，Google建造了无以伦比的基础设施：一个横跨众多服务器的软体平台，让Google的研发人员可以任意扩增或缩减他们的应用程序。而这个基础设施仅供Google本身使用，并不需要像亚马逊弹性云端运算一样跟整个世界共用。同时，亚马逊弹性云端运算跟Google基础设施的技术概念其实是类似的。</p>
+
+<p>因此，Kemp认为类似亚马逊弹性云端运算与Google的基础设施，正是NASA所需要的。他希望NASA毋须藉由Google、微软或亚马逊的协助，就可以自己传递自家的高解析度影像。</p>
+
+<p>“我认为NASA应该要能够传递这份宝贵资料，好让类似Google Earth和微软的太空望远镜（WorldWide Telescope） 的平台能够使用这份珍贵的资料”，Kemp 表示，“我们不能总是说这是Google或微软要解决的问题。而当时现实的情况是我们还没有自己的基础设施。这就是为什么我们会想要发起这个专案原因。”他帮这个专案取名为“NASA， Nebula”，而这个专案最终导致了Nova的诞生。Joshua McKenty表示，在接下来的那几年里，大部分的策略会议以及一大堆的加班写程式，都是在彩虹馆的餐桌上完成的。</p>
+
+<p><strong>白宫拯救Nebula 免于被摧毁的危机</strong></p>
+
+<p>NASA Nebula本来仅是亚马逊公有云的仿制品，或是另外一个失败的政府专案。不过在2009年的时候，事情有了转机，这个专案获得美国第一位联邦资讯长Vivek Kundra的青睐。当奥巴马在2009年就职美国总统的时候，他创造了资讯长这个职位，希望能够借此大幅改善政府科技基础设施的体质，而NASA Nebula刚好提供了这个机会。Kundra把Nebula视为一个平台，可以让包括NASA在内的的联邦政府部门，都在上面使用应用程式。</p>
+
+<p>“在那个时候，技术的部分还很青涩”，Kundra表示，“不过当时我可以预见，采用这个技术之后，很可能会打破我们过去使用科技的模式，这也就是我们所说的数位油田（ digital oil）。旧模式非常不经济，会消耗很多资源，每个政府单位都必须准备足够的空间，好应付尖峰使用时段，不过除了尖峰时刻之外，大部分的空间都不会用到。”Kundra表示，政府的资料中心只会用到所有资料储存空间的40%左右，以及大约27%的运算处理能力。而Nebula的降临，将改变这一切。Nebula不但具备运算处理能力，也有资料储存空间功能，让每个单位要用到的时候就可以拿去用。</p>
+
+<p>所以Kundra把Chris Kemp转调到白宫，并利用NASA Nebula，打造了网站“USAspending.gov”，用来将政府花费的相关资料公布给大众。同时Kundra也拟订了相关专案，希望能够推广这个平台到其他政府单位。</p>
+
+<p>这时候遇到的问题是，某些美国立法者和NASA官僚打算要中止这个专案。Kemp表示，反对者中的领导者是参议员Richard Shelby，他是参议院拨款委员会（Senate Appropriations Committee）的主席。Shelby的办公室并没有针对这件事给《Wired》回覆，不过Kemp表示，参议员认为Nebula会让很多人失业。“每次我在华盛顿提到云端技术可以让资料中心在无人状态下运作时，我的话就会被解读为工作机会将因此消失”，Kemp表示，“这个专案面对了很艰辛的政治挑战，之前掌管整个NASA的长官，甚至打电话要求我解释这件事。”</p>
+
+<p>Kundra谈到这件事的态度比较委婉。他表示，这不过是在推行新观念时面临了一些阻力。而现任NASA艾姆斯研究中心IT技术长的Ray O&#8217;Brien，说法和Kundra也很类似。不过据Kemp所言，当时这个专案很可能拿不到任何资金，甚至因而无法继续下去。</p>
+
+<p>华盛顿方面施加的压力，差不多在2009年秋天时到了临界点。那年秋天，Kundra飞到矽谷艾姆斯研究中心，亲自主持联邦政府云端策略（cloud computing strategy）的正式运作，以表示他个人于公于私都支持Nebula专案。“没有Vivek在白宫为我们奔走，我们没办法完成这个专案」，Kemp说，「当时我的团队正在全力制作可能会在国会调查用到的文件。不过Vivek才是那个真正出力阻止他们的人。”在这种状况下，NASA Nebula运作的状况不如预期，则是另一个令人头疼的问题。</p>
+
+<p><img src="http://cms.csdnimg.cn/articlev1/uploads/allimg/120828/145_120828090711_1.jpg"></p>
+
+<p><strong>开源的难题</strong></p>
+
+<p>Nebula的第一版是建构在已发布的开源Eucalyptus之上，这个平台主要由加州大学圣塔芭芭拉分校的团队所打造；不过Chris Kemp和Joshua McKenty都认为，Eucalyptus并不具备所有他们团队想要的功能，“基本上，Eucalyptus的架构不能满足我们的需求”，McKenty表示，“代码的品质则是另外一个问题。他们的代码里面有些很严重的漏洞。”</p>
+
+<p>雪上加霜的是，Eucalyptus的创办人刚为了Eucalyptus设立一间公司，显然他们不会愿意把某些代码放在开源平台上，因为他们想要保留那部分，好作为将来的卖点。这个开放核心协议的运作模式（open-core，开放项目本身的核心，但是不开放其他的相关代码），并没有打消Kemp、McKenty与整个NASA团队，希望打造一个每个人都可以使用并修改的开放式平台的念头。</p>
+
+<p>Kemp、McKenty和常常在周末拜访彩虹馆的Nebula软件工程总监Jesse Andrews，花了很长的时间讨论NASA是不是有可能从零开始，打造一个新的开放软件专案，不过他们心知肚明这是件困难的事。NASA官僚系统运作的方式，倾向于使用现存开放式软体专案的程式码，而通常在经过一些法律行动之后，最后的结果就会变成NASA拿自己写好的部分来协助其他的专案。NASA实在是没有自己从零开始进行一个专案的经验，尤其这个专案将会让NASA跟外面的世界紧密合作。</p>
+
+<p>“NASA​开发的往往是价值数十亿元的系统，这些系统的软体通常是长时间投资的成果，所以软体里面会包含许多智慧财产和敏感国家安全资讯，也不是件令人意外的事”， Kemp表示，“而我们就是在这种环境下，试着开放我们的程式码，打算让Nebula采取合作的模式；但是NASA并不是一个对这种模式友善的环境，我们必须另辟蹊径，重新创造一个软体发行以及开放程式码的方法。”</p>
+
+<p>McKenty和Andrews最终找到了漏洞可钻：让整个团队牺牲自己周末的时间，打造属于自己的Eucalyptus，这样一来，这个作品就不属于NASA的专案了；然后他们在正常上班时间时，又以NASA承包商的身份，协助改进这个专案。Mckenty表示，这样一来，NASA就不用面对开放程式码的难题，因为从技术层面上看来，NASA只是在“协助”一个非NASA的专案。</p>
+
+<p>Kemp等人就真的这样做了。他们利用私人时间在HouseKu加班赶工，这里是另一个NASA承包商Andy Smith在旧金山的住处，也是个类似彩虹馆的地方。最后，他们花了两周完成新专案的原型，也就是Nova。</p>
+
+<p><strong>震惊全世界的云软件</strong></p>
+
+<p>在NASA与Rackspace团队于艾姆斯研究中心附近的泰式餐厅，筹画OpenStack相关细节的五周后，他们已经准备好要在美国奥勒冈州波特兰OSCON开放软体展（O&#8217;Reilly Media&#8217;s Open Source Developers Conference）上发表他们的心血结晶。开源软件展的前几天，两个供应商跟几间德州的公司碰面，其中某些公司已同意加入这个项目。虽然如此，直到预定发表日的前一天晚上，Kemp还没有拿到NASA的许可，好确保能够他们能够在Apache许可证的前提下开放Nova的程式码。</p>
+
+<p>没错，从Andrews和McKenty的立场来看，他们已经开放了Nova的代码。但是他们顶着NASA承包商的名义所做的工作，却还不能公开，这个项目还是需要NASA的默许。</p>
+
+<p>如果是在NASA自家许可证的前提下开放Nova代码，整件事就会简单许多。NASA在几年前就为了开源软体，而开发了相关的许可证。但是Kemp与Rackspace的Jim Curry都认为，如果OpenStack不能在Apache许可证的前提下开放，以及取得两边的供应商支持，那么OpenStack的接受度就不可能会高。HP的Zorawar Singh现在回顾当初Kemp跟Curry的这个决定，他认为他们所做的决定是正确的。Singh表示，这个平台能够在许多不同的情况派上用场，就是因为Apache许可证的存在，即便使用者无法对原本的开放式软体专案有所贡献，也可以使用它。</p>
+
+<p>但是NASA的官僚系统还没有准备好以这样的方式去开放代码。“让NASA在Apache许可证的前提下开放代码，是一件几乎不可能的事”，Kemp表示，“我的组员里面有些人是从法律系毕业的，虽然他们不是NASA的律师，但是他们协助我跟NASA的律师合作，好让开放程式码成真。”最后，Kemp还是胜利了。Kemp在7月19日一大早拿到NASA的最终许可，离OpenStack的正式问世只差几个小时而已。</p>
+
+<p>发表OpenStack简直是Kemp与Rackspace团队梦寐以求的事。“发表的时候轰动了全场”，McKenty说，“轰动的程度远远超过我们的预期。”NTT Data马上宣布跟进采用OpenStack，NTT Data是日本通讯龙头、日本电信电话株式会社（NTT）的咨询子公司。在OpenStack问世之后的四个月，这个专案得到微软的支持。要知道，微软对开放式软体的支持可是一件很罕见的事。隔年，Dell、HP和Cisco也相继加入这个专案。</p>
+
+<p>当Rick Clark还在Canonical工作的时候，Canonical使用Ubuntu Linux distro重新包装Eucalyptus，期望能让整个世界都可以使用开放式云端。OpenStack问世后不到一年之后，Canonical在2011年5月把Ubuntu的重心从Eucalyptus 转向OpenStack。就如同Kemp、McKenty、Andrews和其他NASA的研发人员所盼望的，Canonical希望打造一个任何人都可以使用的开放式平台，可以同时让任何人去编辑它，因为这是唯一一个能够跟亚马逊互别苗头的方法。</p>
+
+<p><img src="http://cms.csdnimg.cn/articlev1/uploads/allimg/120828/145_120828090644_1.jpg"></p>
+
+<p><strong>亚马逊 VS.  全世界</strong></p>
+
+<p>“亚马逊正在跟所有的IT系统供应商竞争”，Sebastian Stadil说。Sebastian Stadil是开放式云端管理供应商Scalr的CEO，矽谷云端运算小组（Silicon Valley Cloud Computing group）的创办人，也是彩虹馆的前房客。“老实说，我认为OpenStack能够在这种前途未卜的情况之下，能获得众多助力的其中一个原因就是，它是业界其他公司能够生存下去的唯一希望。”</p>
+
+<p>很难估计到底有多少人使用亚马逊的服务。光去年，亚马逊网路服务系统（Amazon Web Services）的生意就成长了70％，年运转收入（annual run rate）逼近10亿美元之谱。如果你使用亚马逊弹性云端运算，你就不可能向HP或Dell之类的公司购买伺服器，也不会购买可能用来管理这些服务器的众多软体。一旦你使用亚马逊基于弹性云端运算与简易储存所提供的其他服务，像是资料库跟其他的工具，你会购买的产品就真的是屈指可数了。</p>
+
+<p>OpenStack提供了一个打造足以和亚马逊匹敌的公有云的可能性，它同时也是这类公用云服务的替代品。透过OpenStack，一般的企业也可以设置私有云服务，以满足公司内部的特定业务需求。许多公司犹豫着要不要把企业资料放到其他人的服务器上，如果他们在自家的资料中心使用OpenStack，他们就可以在不把资料交给亚马逊的前提之下，享受亚马逊弹性云端运算带来的好处。</p>
+
+<p>Amazon颠覆了IT世界的现状。而现在，OpenStack打算扳倒Amazon，不过这需要大家一起努力，才有办法做到。要打乱目前的市场现状，不能只靠一间公司，需要很多间公司一起参与。Chris Kemp现在主持一间叫做Nebula Inc.的公司，并按照当初他在NASA进行的专案所命名，公司的业务是销售OpenStack相关的云端运算系统软硬体。Joshua McKenty现在是Piston Cloud Computing的CEO，主要业务则是提供OpenStack distro给传统企业供应商。而Jesse Andrews跟几个一起进行Nebula专案的NASA承包商，现在则在Rackspace就职，帮助这间公司打造公用云端服务，同时也协助其他供应商打造属于自己的OpenStack云端服务。</p>
+
+<p>Josh McKenty表示， Nebula这个点子于2008年萌芽，并在彩虹馆的团体环境下成长茁壮。因此彩虹馆虽然只是OpenStack创立故事的一小部分，却是很重要的一部份。</p>
+
+<p>(本文转载自：<a href="http://www.csdn.net/article/2012-08-27/2809205">CSDN</a>)
+(本文转载自：<a href="http://qing.weibo.com/1884769567/70574d1f330021pe.html?rnd=0.707411996088922">杨炳富新浪微博</a>)</p>
+
+<p>原文链接：<a href="http://www.wired.com/wiredenterprise/2012/04/openstack/">The Secret History of OpenStack, the Free Cloud Software That’s Changing Everything</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[python 设计模式之单例 singleton]]></title>
+    <link href="http://danielscai.github.com/blog/2013/04/25/python-singleton/"/>
+    <updated>2013-04-25T12:52:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/04/25/python-singleton</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://danielscai.github.com/images/main/python-logo.gif" width="250" height="150" title="openstack" alt="openstack">
+python单例实现大概有3种，各有优缺点</p>
+
+<ul>
+<li>装饰器</li>
+</ul>
+
+
+<p>优点：直接添加在类定义代码上面，比多重继承更加直观
+缺点： 类调用的时候 myclass()是一个单例对象，但是myclass本身变成了一个方法，而不是一个类，因此不能调用这个类的类方法</p>
+
+<!-- more -->
+
+
+<ul>
+<li>基类</li>
+</ul>
+
+
+<p>优点：相比装饰器，这是一个真正的类
+缺点： 需要使用多重继承， <code>__new__</code>方法可能会被重写，单例实现可能会被覆盖</p>
+
+<ul>
+<li>元类</li>
+</ul>
+
+
+<p>优点：是一个真正的类，达到了多重继承的效果，而不会被重写
+缺点：相对来说没有其他两个清晰，但是还是比较清晰的</p>
+
+<p>使用metaclass实现单例，
+示例代码</p>
+
+<pre><code>class Singleton(type):
+    _instances = {}
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
+
+class MyClass(BaseClass):
+    __metaclass__ = Singleton
+</code></pre>
+
+<p><strong>代码分析</strong></p>
+
+<p>定义了一个Singleton类，
+使用类变量_instances字典记录类是否存在，
+该类实现了一个 <code>__call__</code>方法查询类是否在类变量<code>_instances中</code>，如果存在，直接返回改类，如果不存在，使用super生成一个该类，并记录到类变量<code>_instances</code>中</p>
+
+<p>参考
+<a href="http://stackoverflow.com/questions/6760685/creating-a-singleton-in-python">http://stackoverflow.com/questions/6760685/creating-a-singleton-in-python</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[python 框架flask介绍 (python flask web framework intro)]]></title>
+    <link href="http://danielscai.github.com/blog/2013/04/25/python-flask-web-framework-intro/"/>
+    <updated>2013-04-25T12:45:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/04/25/python-flask-web-framework-intro</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://danielscai.github.com/images/main/python-logo.gif" width="250" height="150" title="openstack" alt="openstack"></p>
+
+<p>flask action是python轻量级框架flask的一个管理器，</p>
+
+<p>可以帮助我们自动生成代码框架，实现一些管理功能，</p>
+
+<p>理论上来说给予wsgi的python程序都可以管理，不仅限于flask</p>
+
+<!-- more -->
+
+
+<p>1.安装flask action</p>
+
+<pre><code> pip install Flask-Actions
+</code></pre>
+
+<ol>
+<li><p>生成一个项目</p>
+
+<p>  flask_admin.py startproject helloproject</p></li>
+</ol>
+
+
+<p>3.运行该项目</p>
+
+<pre><code> ./manager runserver 
+</code></pre>
+
+<h2>4.部署到nginx </h2>
+
+<h2>4.1 启用 <code>default_server_actions</code></h2>
+
+<pre><code>manager = Manager(app,default_server_actions=True)
+</code></pre>
+
+<h2>4.4 运行daemon</h2>
+
+<pre><code>python manage.py runfcgi --protocol=fcgi --daemonize --pidfile=/var/run/flaskapp.pid --host=0.0.0.0 --port=8056
+</code></pre>
+
+<h2>4.5 配置nginx </h2>
+
+<pre><code>upstream flaskapp {
+   server 0.0.0.0:8056;
+   }
+
+server {
+listen 8055;
+server_name  0.0.0.0;
+
+
+location / {
+  fastcgi_pass  flaskapp;
+  fastcgi_param REQUEST_METHOD    $request_method;
+  fastcgi_param QUERY_STRING      $query_string;
+  fastcgi_param CONTENT_TYPE      $content_type;
+  fastcgi_param CONTENT_LENGTH    $content_length;
+  fastcgi_param SERVER_ADDR       $server_addr;
+  fastcgi_param SERVER_PORT       $server_port;
+  fastcgi_param SERVER_NAME       $server_name;
+  fastcgi_param SERVER_PROTOCOL   $server_protocol;
+  fastcgi_param PATH_INFO         $fastcgi_script_name;
+  fastcgi_param REMOTE_ADDR       $remote_addr;
+  fastcgi_param REMOTE_PORT       $remote_port;
+  fastcgi_pass_header Authorization;
+  fastcgi_intercept_errors off;
+}
+}
+</code></pre>
+
+<h2>5. 编写init.d脚本</h2>
+
+<p>参考django fastcgi init.d脚本，编写一个启动脚本,将脚本copy到/etc/init.d/flask
+运行update-rc.d flask defaults 添加到开机启动服务</p>
+
+<pre><code>#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          FastCGI servers for Django
+# Required-Start:    networking
+# Required-Stop:     networking
+# Default-Start:     2 3 4 5
+# Default-Stop:      S 0 1 6
+# Short-Description: Start FastCGI servers with Django.
+# Description:       Django, in order to operate with FastCGI, must be started
+#                    in a very specific way with manage.py. This must be done
+#                    for each DJango web server that has to run.
+### END INIT INFO
+#
+# Author:  Guillermo Fernandez Castellanos
+#          &lt;guillermo.fernandez.castellanos AT gmail.com&gt;.
+#
+# Version: @(#)fastcgi 0.1 11-Jan-2007 guillermo.fernandez.castellanos AT gmail.com
+#
+
+#### SERVER SPECIFIC CONFIGURATION
+DJANGO_SITES="zeusapi"
+SITES_PATH=/opt
+RUNFILES_PATH="/var/run"
+HOST=127.0.0.1
+PORT_START=8056
+RUN_AS=www-data
+FCGI_METHOD=threaded
+#### DO NOT CHANGE ANYTHING AFTER THIS LINE!
+
+set -e
+
+#PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DESC="Python Flask FastCGI servers"
+NAME=$0
+SCRIPTNAME=/etc/init.d/$NAME
+
+#
+#       Function that starts the daemon/service.
+#
+d_start()
+{
+    # Starting all Django FastCGI processes
+    PORT=$PORT_START
+    for SITE in $DJANGO_SITES
+    do
+        echo -n " $SITE"
+        if [ -f $RUNFILES_PATH/$SITE.pid ]; then
+            echo -n " already running"
+        else
+            start-stop-daemon --start --quiet \
+                       --pidfile $RUNFILES_PATH/$SITE.pid \
+                       --exec /usr/bin/env -- python \
+                       $SITES_PATH/$SITE/manage.py runfcgi \
+                       --daemonize \
+                       --host=$HOST --port=$PORT --pidfile=$RUNFILES_PATH/$SITE.pid
+            chmod 400 $RUNFILES_PATH/$SITE.pid
+        fi
+        #let "PORT = $PORT + 1"
+    done
+}
+
+#
+#       Function that stops the daemon/service.
+#
+d_stop() {
+    # Killing all Django FastCGI processes running
+    for SITE in $DJANGO_SITES
+    do
+        echo -n " $SITE"
+        start-stop-daemon --stop --quiet --pidfile $RUNFILES_PATH/$SITE.pid \
+                          || echo -n " not running"
+        if [ -f $RUNFILES_PATH/$SITE.pid ]; then
+           rm -f $RUNFILES_PATH/$SITE.pid
+        fi
+    done
+}
+
+d_status() {
+    # Killing all Django FastCGI processes running
+    for SITE in $DJANGO_SITES
+    do
+        echo -n " $SITE"
+        start-stop-daemon --status --quiet --pidfile $RUNFILES_PATH/$SITE.pid \
+                          &amp;&amp; echo -n " is running" \
+                          || echo -n " not running"
+    done
+}
+
+ACTION="$1"
+case "$ACTION" in
+    start)
+        echo -n "Starting $DESC: "
+        echo
+        d_start
+        echo "."
+        ;;
+
+    stop)
+        echo -n "Stopping $DESC: "
+        echo
+        d_stop
+        echo "."
+        ;;
+
+    status)
+        echo -n "status $DESC: "
+        echo
+        d_status
+        echo "."
+        ;;
+
+
+    restart|force-reload)
+        echo -n "Restarting $DESC: "
+        echo
+        d_stop
+        sleep 1
+        d_start
+        echo "."
+        ;;
+
+    *)
+        echo "Usage: $NAME {start|stop|restart|force-reload}" &gt;&amp;2
+        exit 3
+        ;;
+esac
+
+exit 0
+</code></pre>
+
+<h2>6.启用flask action调试模式</h2>
+
+<p>flask action中并没有直接提供调试模式，使用起来非常不方便，
+开启debug模式需要在<code>settings.py</code> 中设置 <code>DEBUG=True</code></p>
+
+<p>参考
+<a href="https://code.djangoproject.com/wiki/InitdScriptForLinux">https://code.djangoproject.com/wiki/InitdScriptForLinux</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[openstack 启动时指定使用子网 (openstack boot with subnet port)]]></title>
+    <link href="http://danielscai.github.com/blog/2013/04/25/openstack-boot-with-subnet-port/"/>
+    <updated>2013-04-25T12:36:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/04/25/openstack-boot-with-subnet-port</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://danielscai.github.com/images/main/OpenStack.jpeg" width="250" height="150" title="openstack" alt="openstack"></p>
+
+<p>openstack 启动时指定使用子网</p>
+
+<p>在调用<code>nova boot</code>命令时，默认是创建所有网络的所有接口</p>
+
+<p>那么有没有办法指定使用某个网络，或者使用某个子网呢</p>
+
+<p>答案是肯定的</p>
+
+<!-- more -->
+
+
+<p></p>
+
+<p>首先我们先创建一个网络，在这个网络下创建2个子网用来测试</p>
+
+<h2>1. 创建网络和子网</h2>
+
+<p><strong>创建网络</strong></p>
+
+<p>创建一个名称为<code>demo-net2</code>的网络</p>
+
+<pre><code>root@qa-controller1:~# quantum net-create demo-net2
+Created a new network:
++---------------------------+--------------------------------------+
+| Field                     | Value                                |
++---------------------------+--------------------------------------+
+| admin_state_up            | True                                 |
+| id                        | f9d3bd8e-377b-4f21-bfc6-64ae4257e44d |
+| name                      | demo-net2                            |
+| provider:network_type     | gre                                  |
+| provider:physical_network |                                      |
+| provider:segmentation_id  | 4                                    |
+| router:external           | False                                |
+| shared                    | False                                |
+| status                    | ACTIVE                               |
+| subnets                   |                                      |
+| tenant_id                 | 82da519b676d400ab24e9ee38d138c3c     |
++---------------------------+--------------------------------------+
+</code></pre>
+
+<p><strong>创建两个子网</strong></p>
+
+<p>在<code>demo-net2</code>下面创建两个子网 <code>20.20.1.0/24</code>和 <code>20.20.2.0/24</code></p>
+
+<pre><code>root@qa-controller1:~# quantum subnet-create demo-net2 20.20.1.0/24 
+Created a new subnet:
++------------------+----------------------------------------------+
+| Field            | Value                                        |
++------------------+----------------------------------------------+
+| allocation_pools | {"start": "20.20.1.2", "end": "20.20.1.254"} |
+| cidr             | 20.20.1.0/24                                 |
+| dns_nameservers  |                                              |
+| enable_dhcp      | True                                         |
+| gateway_ip       | 20.20.1.1                                    |
+| host_routes      |                                              |
+| id               | 3a6c08b6-cb0e-4949-9e3f-dae76fc98741         |
+| ip_version       | 4                                            |
+| name             |                                              |
+| network_id       | f9d3bd8e-377b-4f21-bfc6-64ae4257e44d         |
+| tenant_id        | 82da519b676d400ab24e9ee38d138c3c             |
++------------------+----------------------------------------------+
+
+root@qa-controller1:~# quantum subnet-create demo-net2 20.20.2.0/24 
+Created a new subnet:
++------------------+----------------------------------------------+
+| Field            | Value                                        |
++------------------+----------------------------------------------+
+| allocation_pools | {"start": "20.20.2.2", "end": "20.20.2.254"} |
+| cidr             | 20.20.2.0/24                                 |
+| dns_nameservers  |                                              |
+| enable_dhcp      | True                                         |
+| gateway_ip       | 20.20.2.1                                    |
+| host_routes      |                                              |
+| id               | dfe2a150-5a87-4256-80c7-fd88b9dae113         |
+| ip_version       | 4                                            |
+| name             |                                              |
+| network_id       | f9d3bd8e-377b-4f21-bfc6-64ae4257e44d         |
+| tenant_id        | 82da519b676d400ab24e9ee38d138c3c             |
++------------------+----------------------------------------------+
+</code></pre>
+
+<h2>2. 启动虚拟机，应用一个网络的所有子网</h2>
+
+<p>这个比较简单，在nova boot的时候加上<code>--nic net-id=net-uuid</code>就可以了
+下面主要介绍一下如何在启动虚拟机时，应用一个子网</p>
+
+<h2>3. 启动虚拟机，应用一个子网</h2>
+
+<p>首先需要从这个子网中获得一个port-id ,比如我们想使用demo-net2中的 <code>20.20.2.0/24</code> 子网地址</p>
+
+<p>运行下面的命令，获得一个port-id (53770585-e26b-488e-916c-cede86087084 )</p>
+
+<pre><code>root@qa-controller1:~# quantum port-create --fixed-ip subnet_id=dfe2a150-5a87-4256-80c7-fd88b9dae113 f9d3bd8e-377b-4f21-bfc6-64ae4257e44d 
+Created a new port:
++----------------------+----------------------------------------------------------------------------------+
+| Field                | Value                                                                            |
++----------------------+----------------------------------------------------------------------------------+
+| admin_state_up       | True                                                                             |
+| binding:capabilities | {"port_filter": false}                                                           |
+| binding:vif_type     | ovs                                                                              |
+| device_id            |                                                                                  |
+| device_owner         |                                                                                  |
+| fixed_ips            | {"subnet_id": "dfe2a150-5a87-4256-80c7-fd88b9dae113", "ip_address": "20.20.2.3"} |
+| id                   | 53770585-e26b-488e-916c-cede86087084                                             |
+| mac_address          | fa:16:3e:7a:e8:36                                                                |
+| name                 |                                                                                  |
+| network_id           | f9d3bd8e-377b-4f21-bfc6-64ae4257e44d                                             |
+| status               | DOWN                                                                             |
+| tenant_id            | 82da519b676d400ab24e9ee38d138c3c                                                 |
++----------------------+----------------------------------------------------------------------------------+
+</code></pre>
+
+<p>启动虚拟机，指定该 port-id</p>
+
+<pre><code># nova boot --flavor 1 --block_device_mapping vda=21f4dfc5-9752-4f5e-8133-0540a1dc3eb5:::0 --nic port-id=53770585-e26b-488e-916c-cede86087084 m1
++-------------------------------------+-------------------------------------------------+
+| Property                            | Value                                           |
++-------------------------------------+-------------------------------------------------+
+| OS-EXT-STS:task_state               | scheduling                                      |
+| image                               | Attempt to boot from volume - no image supplied |
+| OS-EXT-STS:vm_state                 | building                                        |
+| OS-EXT-SRV-ATTR:instance_name       | instance-00000072                               |
+| flavor                              | m1.tiny                                         |
+| id                                  | e1122239-9dbb-40db-870e-2810ed07a1fd            |
+| security_groups                     | [{u'name': u'default'}]                         |
+| user_id                             | 6f8e4ee659b642ce898aaefe201d0eaa                |
+| OS-DCF:diskConfig                   | MANUAL                                          |
+| accessIPv4                          |                                                 |
+| accessIPv6                          |                                                 |
+| progress                            | 0                                               |
+| OS-EXT-STS:power_state              | 0                                               |
+| OS-EXT-AZ:availability_zone         | None                                            |
+| config_drive                        |                                                 |
+| status                              | BUILD                                           |
+| updated                             | 2013-04-25T02:21:26Z                            |
+| hostId                              |                                                 |
+| OS-EXT-SRV-ATTR:host                | None                                            |
+| key_name                            | None                                            |
+| OS-EXT-SRV-ATTR:hypervisor_hostname | None                                            |
+| name                                | m1                                              |
+| adminPass                           | 6UFo62FEcMUQ                                    |
+| tenant_id                           | 82da519b676d400ab24e9ee38d138c3c                |
+| created                             | 2013-04-25T02:21:26Z                            |
+| metadata                            | {}                                              |
++-------------------------------------+-------------------------------------------------+
+</code></pre>
+
+<p>删除虚拟机后，该port也会被删除</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[folsom trystack on RHEL]]></title>
+    <link href="http://danielscai.github.com/blog/2013/04/24/folsom-trystack-on-rhel/"/>
+    <updated>2013-04-24T21:39:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/04/24/folsom-trystack-on-rhel</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://danielscai.github.com/images/main/trystack_front.png" width="249" height="150" title="puppet" alt="puppet"></p>
+
+<p>try stack 发布了新的openstack folsom x86 zone</p>
+
+<p>登录地址 <a href="https://x86.trystack.org/dashboard/">https://x86.trystack.org/dashboard/</a></p>
+
+<p>支持facebook 登录，但是好像需要先加到trystack group 里</p>
+
+<!-- more -->
+
+
+<p>目前已经有很多人加入了，有3627等待加入，估计很难加进去了</p>
+
+<p>以下是原文</p>
+
+<blockquote><p>   Hi TryStack Users</p>
+
+<p>   Please take my apologies for delaying deploy x86 Zones.
+  We are happy to announce new Folsom X86 zone.</p>
+
+<p>   http://trystack.org/
+  http://x86.trystack.org/dashboard/</p>
+
+<p>   One great news is Red Hat&#8217;s starts contributing,
+  The cluster is now managed by Redhat and it is running on RHEL.
+  Some people may think &#8220;Oh it&#8217;s Folsom version?&#8221;.
+  No worries, Redhat has already started the planning to
+  upgrade it to Grizzly!</p>
+
+<p>   The cluster has only 20 machines, so please use it kindly :)
+  There are already 4713 members of the TryStack Facebook group, and
+  3627 requests to join.
+  So if all of users start boot vm at same time, the cluster may get upset.
+  We will check the status of the cluster, gradually adding new users
+  for the clusters.</p>
+
+<p>   Best.
+  Trystack admin team</p></blockquote>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[quantum's metadata with or without l3agnt ]]></title>
+    <link href="http://danielscai.github.com/blog/2013/04/24/quantums-metadata-with-or-without-l3agnt/"/>
+    <updated>2013-04-24T21:00:00-07:00</updated>
+    <id>http://danielscai.github.com/blog/2013/04/24/quantums-metadata-with-or-without-l3agnt</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://danielscai.github.com/images/main/grizzly.jpg" width="250" height="150" title="puppet" alt="puppet"></p>
+
+<p>openstack grizzly 中的 quantum 的<code>metadata</code>可以和<code>l3 agent</code>一起工作</p>
+
+<p>也可以不依赖<code>l3 agent</code>独立工作</p>
+
+<p>或者l3 agent 配合 dhcp agent ，不需要metadata agent</p>
+
+<!-- more -->
+
+
+<h2>1.当和l3 agent一起工作时</h2>
+
+<p>网络包直接发送到 169.254.169.254的包被发送到默认网关,<code>l3 agent</code>会为没一个路由启动一个<code>metadata proxy</code> 将流量转到 nova metadata server 上</p>
+
+<h2>2. 当没有l3 agent 时</h2>
+
+<p>没有<code>l3 agent</code>的时候，需要在<code>dhcp agent</code>的配置文件中加入</p>
+
+<pre><code>enable_isolated_metadata_proxy= True
+</code></pre>
+
+<p>这样 dhcp agent 会往所有主机中加入一条静态路由 <code>169.254.0.0/16</code>
+dhcp agent 会为没一个网络启动一个<code>metadata proxy</code> ，将流量转到nova metadata server 上</p>
+
+<h2>3. 有l3 agent ，却不想部署metadata agent </h2>
+
+<p>依然是有办法部署这一套系统的，只需要添加如下配置文件到<code>dhcp agent</code>的配置文件</p>
+
+<pre><code>enable_metadata_network=True
+</code></pre>
+
+<p>以下是原文</p>
+
+<blockquote><p>   Quantum&#8217;s metadata solution for Grizzly can run either with or without the l3 agent.</p>
+
+<p>   When running within the l3 agent, packets directed to 169.254.169.254 are sent to the default gateway; the l3 agent will spawn a metadata proxy for each router; the metadata proxy forwards them to the metadata agent using a datagram socket, and finally the agent reaches the Nova metadata server.</p>
+
+<p>   Without the l3 agent, the &#8216;isolated&#8217; mode can be enabled for the metadata access service. This is achieved by setting the flag enable_isolated_metadata_proxy to True in the dhcp_agent configuration file. When the isolated proxy is enabled, the dhcp agent will send an additional static route to each VM. This static route will have the dhcp agent as next hop and 169.254.0.0/16 as destination CIDR; the dhcp agent will spawn a metadata proxy for each network. Once the packet reaches the proxy, the procedure works as above. This should also explain why the metadata agent does not depend on the l3 agent.</p>
+
+<p>   If you are deploying the l3 agent, but do not want to deploy the metadata agent on the same host, the &#8216;metadata access network&#8217; can be considered. This option is enabled by setting enable_metadata_network on the dhcp agent configuration file. When enabled, quantum networks whose cidr is included in 169.254.0.0/16 will be regarded as &#8216;metadata networks&#8217;, and will spawn a metadata proxy. The user can then connect such network to any logical router through the quantum API; thus granting metadata access to all the networks connected to such router.</p>
+
+<p>   I think the documentation for quantum metadata has not yet been merged in the admin guide.
+   I hope this clarifies the matter a little&#8230; although this thread has gone a little bit off-topic. Can you consider submitting one or more questions to ask.openstack.org?</p></blockquote>
+]]></content>
+  </entry>
+  
+</feed>

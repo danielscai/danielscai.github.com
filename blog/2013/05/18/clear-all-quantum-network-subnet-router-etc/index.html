@@ -1,0 +1,322 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>清空 quantum 网络 子网 路由 floatingip  - Daniels Cai's Blog</title>
+  <meta name="author" content="Daniels Cai">
+
+  
+  <meta name="description" content="清空 quantum 数据 作者: Daniels Cai
+主页: http://dnscai.com 1.清空floatingip for i in `quantum floatingip-list | grep -v "\---" | grep -v "^| id" | awk '{ &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://danielscai.github.com/blog/2013/05/18/clear-all-quantum-network-subnet-router-etc">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Daniels Cai's Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.useso.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.useso.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.useso.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-36496703-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Daniels Cai's Blog</a></h1>
+  
+    <h2>proficient in Linux, proficient in Thinking.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:danielscai.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">博客</a></li>
+  <li><a href="/blog/archives">归档</a></li>
+  <li><a href="/course">公开课程</a></li>
+  <li><a href="/slides">演示</a></li>
+  <li><a href="/about">本人</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">清空 Quantum 网络 子网 路由 Floatingip</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-18T12:45:00-07:00" pubdate data-updated="true">May 18<span>th</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img class="right" src="/images/main/OpenStack.jpeg" width="200" height="100" title="openstack" alt="openstack"></p>
+
+<p>清空 quantum 数据</p>
+
+<p><em>作者: Daniels Cai
+</em>主页: http://dnscai.com</p>
+
+<h2>1.清空floatingip </h2>
+
+<!--more-->
+
+
+<pre><code>for i in `quantum floatingip-list  | grep -v "\---"  | grep -v "^| id" | awk '{print $2}' `; do quantum floatingip-delete $i ; done
+</code></pre>
+
+<h2>2.清空路由gateway </h2>
+
+<pre><code>for i in `quantum router-list  | grep -v "\---"  | grep -v "^| id" | awk '{print $2}' `; do quantum router-gateway-clear $i ; done
+</code></pre>
+
+<p>查看路由下的 port</p>
+
+<pre><code>quantum port-list -- --device_id 64ffbf96-5cba-4043-bef2-b3a846d1ab42 --device_owner network:router_gateway
+</code></pre>
+
+<p>查看路由本身的port</p>
+
+<pre><code>quantum port-list -- --device_id 64ffbf96-5cba-4043-bef2-b3a846d1ab42 
+</code></pre>
+
+<h2>3. 清空路由所有的interface</h2>
+
+<pre><code>for i in `quantum router-list  | grep -v "\---"  | grep -v "^| id" | awk '{print $2}' `; do quantum router-interface-delete $i  `quantum port-list -- --device_id  $i  | grep subnet_id | sed 's/.*subnet_id": "\([^"]*\).*/\1/g'` ; done 
+</code></pre>
+
+<h2>4.删除路由</h2>
+
+<pre><code>for i in `quantum router-list  | grep -v "\---"  | grep -v "^| id" | awk '{print $2}' `; do quantum router-delete $i  `quantum port-list -- --device_id  $i  | grep subnet_id | sed 's/.*subnet_id": "\([^"]*\).*/\1/g'` ; done 
+</code></pre>
+
+<h2>5.清空port</h2>
+
+<pre><code>for i in `quantum port-list  | grep -v "\---"  | grep -v "^| id" | awk '{print $2}' `;do quantum port-delete $i ; done 
+</code></pre>
+
+<h2>6. 删除subnet </h2>
+
+<pre><code>for i in `quantum  subnet-list | grep -v "\---"  | grep -v "^| id" | awk '{print $2}' `;do  quantum subnet-delete $i ; done
+</code></pre>
+
+<h2>7. 删除网络</h2>
+
+<pre><code>for i in `quantum  net-list | grep -v "\---"  | grep -v "^| id" | awk '{print $2}' `;do  quantum net-delete $i ; done
+</code></pre>
+
+<h2>8. 清空所有agent </h2>
+
+<p>清空所有agent后，重启相关service ，agent 可以自动重新注册</p>
+
+<pre><code>for i in ` quantum agent-list | grep -v "\---"  | grep -v "^\ id" | awk '{print $2}' `;do quantum agent-delete $i ; done
+</code></pre>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Daniels Cai</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-18T12:45:00-07:00" pubdate data-updated="true">May 18<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/openstack/'>openstack</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/05/18/quantum-create-network-guide/" title="Previous Post: quantum 网络创建使用指南(quantum create network guide)">&laquo; quantum 网络创建使用指南(quantum create network guide)</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/05/31/openstack-database-chinese-character-encoding/" title="Next Post: openstack 数据库中文乱码问题">openstack 数据库中文乱码问题 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+<h1>加微信<abbr title="The word 'QR Code' is a registered trademark of DENSO WAVE INCORPORATED. It applies only for the word 'QR Code', not for image."></abbr></h1>
+<a href="http://danielscai.github.com/blog/2013/05/18/clear-all-quantum-network-subnet-router-etc/"><img src="/images/weixin_qr_code.jpeg" alt="post-qrcode"></a></section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/05/31/openstack-migrate-to-new-enviroment-pemission-denided-error/">openstack迁移环境引起的permission denied 错误</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/31/quantum-exceeded-maximim-amount-of-fixed-ips-per-port-error/">quantum Exceeded maximim amount of fixed ips per port 错误 </a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/31/openstack-database-chinese-character-encoding/">openstack 数据库中文乱码问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/18/clear-all-quantum-network-subnet-router-etc/">清空 quantum 网络 子网 路由 floatingip </a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/05/18/quantum-create-network-guide/">quantum 网络创建使用指南(quantum create network guide)</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>分类</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/coding/'>coding (7)</a></li>
+<li class='category'><a href='/blog/categories/git/'>git (1)</a></li>
+<li class='category'><a href='/blog/categories/octopress/'>octopress (1)</a></li>
+<li class='category'><a href='/blog/categories/openstack/'>openstack (14)</a></li>
+<li class='category'><a href='/blog/categories/statup/'>statup (1)</a></li>
+<li class='category'><a href='/blog/categories/virtualization/'>virtualization (1)</a></li>
+
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Daniels Cai -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'danielscai';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://danielscai.github.com/blog/2013/05/18/clear-all-quantum-network-subnet-router-etc/';
+        var disqus_url = 'http://danielscai.github.com/blog/2013/05/18/clear-all-quantum-network-subnet-router-etc/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
